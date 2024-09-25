@@ -1,3 +1,17 @@
+local function DisableScreenEffectsAndSetCameraDistance()
+    SetCVar("ffxGlow", 0)
+    SetCVar("ffxDeath", 0)
+    SetCVar("ffxNether", 0)
+    SetCVar("cameraDistanceMaxZoomFactor", 2.4)
+end
+
+local CVarEvents = CreateFrame("Frame")
+CVarEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+CVarEvents:SetScript("OnEvent", DisableScreenEffectsAndSetCameraDistance)
+
+
+
+
 -- HIDE TARGET FRAME AND FOCUS FRAME AURAS, ADJUST TARGET FRAME SPELL BAR
 
 local function HideTargetFrameAuras()
@@ -160,24 +174,6 @@ end
 local MerchantEvents = CreateFrame("Frame")
 MerchantEvents:SetScript("OnEvent", AutoSellRepair)
 MerchantEvents:RegisterEvent("MERCHANT_SHOW")
-
-
-
-
--- HIDE DEFAULT ACTIONBUTTON GLOW
-
-hooksecurefunc("ActionButton_ShowOverlayGlow", function(actionButton)
-    if actionButton and actionButton.action then
-        local spellType, id = GetActionInfo(actionButton.action)
-        if id and (spellType == "spell" or spellType == "macro") then
-            if actionButton.SpellActivationAlert then
-                actionButton.SpellActivationAlert:Hide()
-            elseif actionButton.overlay then
-                actionButton.overlay:Hide()
-            end
-        end
-    end
-end)
 
 
 
