@@ -230,6 +230,14 @@ end)
 
 
 
+-- HIDE VEHICLE SEAT INDICATOR
+local VehicleSeatIndicator = _G["VehicleSeatIndicator"]
+VehicleSeatIndicator:Hide()
+VehicleSeatIndicator:SetScript("OnShow", VehicleSeatIndicator.Hide)
+
+
+
+
 -- AUTO REBIND TAB KEY FOR PVP AND PVE
 
 local function RebindTabKey()
