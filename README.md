@@ -1,6 +1,6 @@
 # WoW Addon: Quality of Life Enhancements
 
-This addon enhances your World of Warcraft experience by modifying several in-game behaviors and interface elements for improved convenience. Here's a brief overview of the features:
+This addon enhances your World of Warcraft experience by modifying several in-game behaviors and interface elements for improved convenience.
 
 ## Features
 
@@ -43,8 +43,3 @@ This addon enhances your World of Warcraft experience by modifying several in-ga
 
 - **PvP Queue Timer**
   - Displays a countdown timer when a PvP queue is ready.
-
-## Installation
-
-1. Download and unzip the addon into your WoW `AddOns` folder.
-2. Launch the game and enjoy the improved quality of life features!
