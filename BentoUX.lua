@@ -1,3 +1,5 @@
+-- DISABLE SCREEN EFFECTS AND INCREASE MAXIMUM CAMERA DISTANCE
+
 local function DisableScreenEffectsAndSetCameraDistance()
     SetCVar("ffxGlow", 0)
     SetCVar("ffxDeath", 0)
@@ -81,64 +83,6 @@ end)
 
 
 
--- HIDE ACHIEVEMENT ALERTS
-
-local original_AddAlert = AchievementAlertSystem.AddAlert
-
-AchievementAlertSystem.AddAlert = function(self, achievementID, name, points, alreadyEarned, icon, rewardText)
-    if hiddenAchievements[achievementID] then
-        MuteSoundFile(569143)
-        C_Timer.After(0.5, function() UnmuteSoundFile(569143) end)
-        return
-    end
-    return original_AddAlert(self, achievementID, name, points, alreadyEarned, icon, rewardText)
-end
-
-local AchievementEvents = CreateFrame("Frame")
-AchievementEvents:RegisterEvent("ACHIEVEMENT_EARNED")
-AchievementEvents:SetScript("OnEvent", function(self, event, achievementID)
-    if hiddenAchievements[achievementID] then return end
-end)
-
-
-
-
--- HIDE TALKING HEAD FRAME
-
-hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
-    self:Hide()
-end)
-
-
-
-
--- AUTOMATICALLY HANDLE LOOT CONFIRMATIONS
-
-local function ConfirmLootDialog(self, event, arg1, arg2, ...)
-    if event == "CONFIRM_LOOT_ROLL" or event == "CONFIRM_DISENCHANT_ROLL" then
-        ConfirmLootRoll(arg1, arg2)
-        StaticPopup_Hide("CONFIRM_LOOT_ROLL")
-    elseif event == "LOOT_BIND_CONFIRM" then
-        ConfirmLootSlot(arg1, arg2)
-        StaticPopup_Hide("LOOT_BIND", ...)
-    elseif event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
-        SellCursorItem()
-    elseif event == "MAIL_LOCK_SEND_ITEMS" then
-        RespondMailLockSendItem(arg1, true)
-    end
-end
-
-local LootDialogEvents = CreateFrame("Frame")
-LootDialogEvents:SetScript("OnEvent", ConfirmLootDialog)
-LootDialogEvents:RegisterEvent("CONFIRM_LOOT_ROLL")
-LootDialogEvents:RegisterEvent("CONFIRM_DISENCHANT_ROLL")
-LootDialogEvents:RegisterEvent("LOOT_BIND_CONFIRM")
-LootDialogEvents:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL")
-LootDialogEvents:RegisterEvent("MAIL_LOCK_SEND_ITEMS")
-
-
-
-
 -- AUTO SELL GREY ITEMS AND REPAIR GEAR
 
 local function AutoSellRepair()
@@ -178,6 +122,82 @@ MerchantEvents:RegisterEvent("MERCHANT_SHOW")
 
 
 
+-- FASTER AUTO LOOTING
+
+local EPOCH = 0
+local DELAY = 0.1
+
+local function AutoLoot()
+    if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
+        if (GetTime() - EPOCH) >= DELAY then
+            for i = GetNumLootItems(), 1, -1 do
+                LootSlot(i)
+            end
+            EPOCH = GetTime()
+        end
+    end
+end
+
+local FastLootEvents = CreateFrame("Frame")
+FastLootEvents:RegisterEvent("LOOT_READY")
+FastLootEvents:SetScript("OnEvent", AutoLoot)
+
+
+
+
+-- AUTOMATICALLY HANDLE LOOT CONFIRMATIONS
+
+local function ConfirmLootDialog(self, event, arg1, arg2, ...)
+    if event == "CONFIRM_LOOT_ROLL" or event == "CONFIRM_DISENCHANT_ROLL" then
+        ConfirmLootRoll(arg1, arg2)
+        StaticPopup_Hide("CONFIRM_LOOT_ROLL")
+    elseif event == "LOOT_BIND_CONFIRM" then
+        ConfirmLootSlot(arg1, arg2)
+        StaticPopup_Hide("LOOT_BIND", ...)
+    elseif event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
+        SellCursorItem()
+    elseif event == "MAIL_LOCK_SEND_ITEMS" then
+        RespondMailLockSendItem(arg1, true)
+    end
+end
+
+local LootDialogEvents = CreateFrame("Frame")
+LootDialogEvents:SetScript("OnEvent", ConfirmLootDialog)
+LootDialogEvents:RegisterEvent("CONFIRM_LOOT_ROLL")
+LootDialogEvents:RegisterEvent("CONFIRM_DISENCHANT_ROLL")
+LootDialogEvents:RegisterEvent("LOOT_BIND_CONFIRM")
+LootDialogEvents:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL")
+LootDialogEvents:RegisterEvent("MAIL_LOCK_SEND_ITEMS")
+
+
+
+
+-- HIDE CHAT BUTTONS WHEN PLAYER ENTERS WORLD
+
+local function HideChatButtons()
+    QuickJoinToastButton:Hide()
+    ChatFrameChannelButton:Hide()
+    ChatFrameToggleVoiceDeafenButton:Hide()
+    ChatFrameToggleVoiceMuteButton:Hide()
+    ChatFrameMenuButton:Hide()
+
+    for i = 1, 20 do
+        local chatFrameButtonFrame = _G["ChatFrame" .. i .. "ButtonFrame"]
+        if chatFrameButtonFrame then
+            chatFrameButtonFrame:Hide()
+            chatFrameButtonFrame:SetScript("OnShow", chatFrameButtonFrame.Hide)
+        end
+    end
+end
+
+local ChatButtonEvents = CreateFrame("Frame")
+ChatButtonEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+ChatButtonEvents:RegisterEvent("CHAT_MSG_WHISPER")
+ChatButtonEvents:SetScript("OnEvent", HideChatButtons)
+
+
+
+
 -- HIDE STATUS TRACKING BARS
 
 local function HideStatusTrackingBars()
@@ -196,6 +216,15 @@ local StatusTrackingEvents = CreateFrame("Frame")
 StatusTrackingEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 StatusTrackingEvents:SetScript("OnEvent", function(self, event)
     C_Timer.After(1, HideStatusTrackingBars)
+end)
+
+
+
+
+-- HIDE TALKING HEAD FRAME
+
+hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
+    self:Hide()
 end)
 
 
@@ -242,6 +271,22 @@ TabBindEvents:SetScript("OnEvent", RebindTabKey)
 
 
 
+-- HIDE AND MUTE ALERTS
+
+local function MuteAndHideAlerts()
+    MuteSoundFile(569143)
+
+    hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
+        AlertFrame:UnregisterEvent(event)
+    end)
+    AlertFrame:UnregisterAllEvents()
+end
+
+MuteAndHideAlerts()
+
+
+
+
 -- AUTO RELEASE GHOST IN PVP ZONES
 
 local function AutoGhostRelease()
@@ -260,3 +305,41 @@ end
 local GhostReleaseEvents = CreateFrame("Frame")
 GhostReleaseEvents:RegisterEvent("PLAYER_DEAD")
 GhostReleaseEvents:SetScript("OnEvent", AutoGhostRelease)
+
+
+
+
+-- PVP QUEUE TIMER
+local TimeLeft = -1
+
+local QueueTimer = PVPReadyDialog:CreateFontString(nil, "ARTWORK")
+QueueTimer:SetFontObject(GameFontNormal)
+QueueTimer:SetFont(GameFontNormal:GetFont(), 24)
+QueueTimer:SetTextColor(1, 1, 1)
+QueueTimer:SetPoint("TOP", PVPReadyDialog, "BOTTOM", 0, -8)
+
+local function UpdatePvPTimer(self, elapsed)
+    TimeLeft = TimeLeft - elapsed
+    if TimeLeft > 0 then
+        QueueTimer:SetText(SecondsToTime(floor(TimeLeft + 0.5)))
+    else
+        QueueTimer:Hide()
+        self:SetScript("OnUpdate", nil)
+    end
+end
+
+hooksecurefunc("PVPReadyDialog_Display", function(self, id)
+    TimeLeft = GetBattlefieldPortExpiration(id)
+    if TimeLeft and TimeLeft > 0 then
+        PVPReadyDialog:SetScript("OnUpdate", UpdatePvPTimer)
+        QueueTimer:Show()
+    else
+        QueueTimer:Hide()
+        PVPReadyDialog:SetScript("OnUpdate", nil)
+    end
+end)
+
+PVPReadyDialog:HookScript("OnHide", function()
+    QueueTimer:Hide()
+    PVPReadyDialog:SetScript("OnUpdate", nil)
+end)
