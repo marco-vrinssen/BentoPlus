@@ -308,7 +308,7 @@ MuteAndHideAlerts()
 
 -- AUTO RELEASE GHOST IN PVP ZONES
 
-local function AutoGhostRelease()
+local function AutoReleaseGhost()
     if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then
         return
     end
@@ -316,14 +316,41 @@ local function AutoGhostRelease()
     local inInstance, instanceType = IsInInstance()
     local pvpType = C_PvP.GetZonePVPInfo()
 
-    if instanceType == "arena" or instanceType == "pvp" or pvpType == "combat" then
-        C_Timer.After(0, function() StaticPopupDialogs["DEATH"].button1:Click() end)
+    if (instanceType == "pvp" or pvpType == "combat") then
+        C_Timer.After(0.5, function()
+            local deathDialog = StaticPopup_FindVisible("DEATH")
+            if deathDialog and deathDialog.button1:IsEnabled() then
+                deathDialog.button1:Click()
+            end
+        end)
     end
 end
 
-local GhostReleaseEvents = CreateFrame("Frame")
-GhostReleaseEvents:RegisterEvent("PLAYER_DEAD")
-GhostReleaseEvents:SetScript("OnEvent", AutoGhostRelease)
+local ReleaseEvents = CreateFrame("Frame")
+ReleaseEvents:RegisterEvent("PLAYER_DEAD")
+ReleaseEvents:SetScript("OnEvent", AutoReleaseGhost)
+
+
+
+
+-- HIDE OBJECTIVE TRACKER FRAME IN PVP
+
+local function HideObjectiveTrackerInPvP()
+    local inInstance, instanceType = IsInInstance()
+    local pvpType = C_PvP.GetZonePVPInfo()
+
+    if instanceType == "pvp" or pvpType == "combat" then
+        ObjectiveTrackerFrame:Hide()
+    else
+        ObjectiveTrackerFrame:Show()
+    end
+end
+
+local ObjectiveTrackerEvents = CreateFrame("Frame")
+ObjectiveTrackerEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+ObjectiveTrackerEvents:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+ObjectiveTrackerEvents:RegisterEvent("PLAYER_DEAD")
+ObjectiveTrackerEvents:SetScript("OnEvent", HideObjectiveTrackerInPvP)
 
 
 
