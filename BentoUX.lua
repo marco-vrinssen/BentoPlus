@@ -4,12 +4,31 @@ local function DisableScreenEffectsAndSetCameraDistance()
     SetCVar("ffxGlow", 0)
     SetCVar("ffxDeath", 0)
     SetCVar("ffxNether", 0)
-    SetCVar("cameraDistanceMaxZoomFactor", 2.4)
+    SetCVar("cameraDistanceMaxZoomFactor", 2.6)
 end
 
 local CVarEvents = CreateFrame("Frame")
 CVarEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 CVarEvents:SetScript("OnEvent", DisableScreenEffectsAndSetCameraDistance)
+
+
+
+
+-- COMMAND TO TOGGLE LUA ERRORS DISPLAY
+
+local function ToggleLuaErrors()
+    local currentSetting = GetCVar("scriptErrors")
+    if currentSetting == "1" then
+        SetCVar("scriptErrors", 0)
+        print("LUA Errors Off")
+    else
+        SetCVar("scriptErrors", 1)
+        print("LUA Errors On")
+    end
+end
+
+SLASH_TOGGLELUA1 = "/lua"
+SlashCmdList["TOGGLELUA"] = ToggleLuaErrors
 
 
 
@@ -145,33 +164,6 @@ FastLootEvents:SetScript("OnEvent", AutoLoot)
 
 
 
--- AUTOMATICALLY HANDLE LOOT CONFIRMATIONS
-
-local function ConfirmLootDialog(self, event, arg1, arg2, ...)
-    if event == "CONFIRM_LOOT_ROLL" or event == "CONFIRM_DISENCHANT_ROLL" then
-        ConfirmLootRoll(arg1, arg2)
-        StaticPopup_Hide("CONFIRM_LOOT_ROLL")
-    elseif event == "LOOT_BIND_CONFIRM" then
-        ConfirmLootSlot(arg1, arg2)
-        StaticPopup_Hide("LOOT_BIND", ...)
-    elseif event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
-        SellCursorItem()
-    elseif event == "MAIL_LOCK_SEND_ITEMS" then
-        RespondMailLockSendItem(arg1, true)
-    end
-end
-
-local LootDialogEvents = CreateFrame("Frame")
-LootDialogEvents:SetScript("OnEvent", ConfirmLootDialog)
-LootDialogEvents:RegisterEvent("CONFIRM_LOOT_ROLL")
-LootDialogEvents:RegisterEvent("CONFIRM_DISENCHANT_ROLL")
-LootDialogEvents:RegisterEvent("LOOT_BIND_CONFIRM")
-LootDialogEvents:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL")
-LootDialogEvents:RegisterEvent("MAIL_LOCK_SEND_ITEMS")
-
-
-
-
 -- HIDE CHAT BUTTONS WHEN PLAYER ENTERS WORLD
 
 local function HideChatButtons()
@@ -242,6 +234,7 @@ end)
 
 
 -- HIDE VEHICLE SEAT INDICATOR
+
 local VehicleSeatIndicator = _G["VehicleSeatIndicator"]
 VehicleSeatIndicator:Hide()
 VehicleSeatIndicator:SetScript("OnShow", VehicleSeatIndicator.Hide)
@@ -306,55 +299,6 @@ MuteAndHideAlerts()
 
 
 
--- AUTO RELEASE GHOST IN PVP ZONES
-
-local function AutoReleaseGhost()
-    if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then
-        return
-    end
-
-    local inInstance, instanceType = IsInInstance()
-    local pvpType = C_PvP.GetZonePVPInfo()
-
-    if (instanceType == "pvp" or pvpType == "combat") then
-        C_Timer.After(0.5, function()
-            local deathDialog = StaticPopup_FindVisible("DEATH")
-            if deathDialog and deathDialog.button1:IsEnabled() then
-                deathDialog.button1:Click()
-            end
-        end)
-    end
-end
-
-local ReleaseEvents = CreateFrame("Frame")
-ReleaseEvents:RegisterEvent("PLAYER_DEAD")
-ReleaseEvents:SetScript("OnEvent", AutoReleaseGhost)
-
-
-
-
--- HIDE OBJECTIVE TRACKER FRAME IN PVP
-
-local function HideObjectiveTrackerInPvP()
-    local inInstance, instanceType = IsInInstance()
-    local pvpType = C_PvP.GetZonePVPInfo()
-
-    if instanceType == "pvp" or pvpType == "combat" then
-        ObjectiveTrackerFrame:Hide()
-    else
-        ObjectiveTrackerFrame:Show()
-    end
-end
-
-local ObjectiveTrackerEvents = CreateFrame("Frame")
-ObjectiveTrackerEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
-ObjectiveTrackerEvents:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-ObjectiveTrackerEvents:RegisterEvent("PLAYER_DEAD")
-ObjectiveTrackerEvents:SetScript("OnEvent", HideObjectiveTrackerInPvP)
-
-
-
-
 -- PVP QUEUE TIMER
 local TimeLeft = -1
 
@@ -367,7 +311,7 @@ QueueTimer:SetPoint("TOP", PVPReadyDialog, "BOTTOM", 0, -8)
 local function UpdatePvPTimer(self, elapsed)
     TimeLeft = TimeLeft - elapsed
     if TimeLeft > 0 then
-        QueueTimer:SetText(SecondsToTime(floor(TimeLeft + 0.5)))
+        QueueTimer:SetText(tostring(floor(TimeLeft + 0.5)))
     else
         QueueTimer:Hide()
         self:SetScript("OnUpdate", nil)
@@ -389,3 +333,63 @@ PVPReadyDialog:HookScript("OnHide", function()
     QueueTimer:Hide()
     PVPReadyDialog:SetScript("OnUpdate", nil)
 end)
+
+
+
+
+-- AUTO RELEASE GHOST IN PVP ZONES
+
+local function AutoReleaseGhost()
+    if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then
+        return
+    end
+
+    local inInstance, instanceType = IsInInstance()
+    local pvpType = C_PvP.GetZonePVPInfo()
+
+    if (instanceType == "pvp" or pvpType == "combat") then
+        C_Timer.After(0, function()
+            local deathDialog = StaticPopup_FindVisible("DEATH")
+            if deathDialog and deathDialog.button1:IsEnabled() then
+                deathDialog.button1:Click()
+            end
+        end)
+    end
+end
+
+local ReleaseEvents = CreateFrame("Frame")
+ReleaseEvents:RegisterEvent("PLAYER_DEAD")
+ReleaseEvents:SetScript("OnEvent", AutoReleaseGhost)
+
+
+
+
+
+-- AUTOMATICALLY HANDLE LOOT CONFIRMATIONS
+
+local function ConfirmLootDialog(self, event, arg1, arg2, ...)
+    print("Event triggered:", event, arg1, arg2, ...)
+    if event == "CONFIRM_LOOT_ROLL" or event == "CONFIRM_DISENCHANT_ROLL" then
+        ConfirmLootRoll(arg1, arg2)
+        StaticPopup_Hide("CONFIRM_LOOT_ROLL")
+    elseif event == "LOOT_BIND_CONFIRM" then
+        ConfirmLootSlot(arg1)
+        StaticPopup_Hide("LOOT_BIND", ...)
+    elseif event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
+        SellCursorItem()
+    elseif event == "MAIL_LOCK_SEND_ITEMS" then
+        RespondMailLockSendItem(arg1, true)
+    elseif event == "EQUIP_BIND_CONFIRM" then
+        EquipPendingItem(arg1)
+        StaticPopup_Hide("EQUIP_BIND", ...)
+    end
+end
+
+local LootDialogEvents = CreateFrame("Frame")
+LootDialogEvents:SetScript("OnEvent", ConfirmLootDialog)
+LootDialogEvents:RegisterEvent("CONFIRM_LOOT_ROLL")
+LootDialogEvents:RegisterEvent("CONFIRM_DISENCHANT_ROLL")
+LootDialogEvents:RegisterEvent("LOOT_BIND_CONFIRM")
+LootDialogEvents:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL")
+LootDialogEvents:RegisterEvent("MAIL_LOCK_SEND_ITEMS")
+LootDialogEvents:RegisterEvent("EQUIP_BIND_CONFIRM")
