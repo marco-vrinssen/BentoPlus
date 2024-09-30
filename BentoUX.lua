@@ -102,6 +102,35 @@ end)
 
 
 
+-- HIDE RAID FRAME AURAS
+local function HideBuffs()
+    for i = 1, 40 do
+        local unitFrame = _G["CompactPartyFrameMember" .. i]
+        if unitFrame then
+            for j = 1, 32 do
+                local buffIcon = _G["CompactPartyFrameMember" .. i .. "Buff" .. j .. "Icon"]
+                local buffCooldown = _G["CompactPartyFrameMember" .. i .. "Buff" .. j .. "Cooldown"]
+                if buffIcon then
+                    buffIcon:Hide()
+                end
+                if buffCooldown then
+                    buffCooldown:Hide()
+                end
+            end
+        end
+    end
+end
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_LOGIN")
+frame:RegisterEvent("GROUP_ROSTER_UPDATE")
+frame:SetScript("OnEvent", HideBuffs)
+
+hooksecurefunc("CompactUnitFrame_UpdateAuras", HideBuffs)
+
+
+
+
 -- AUTO SELL GREY ITEMS AND REPAIR GEAR
 
 local function AutoSellRepair()
@@ -360,36 +389,3 @@ end
 local ReleaseEvents = CreateFrame("Frame")
 ReleaseEvents:RegisterEvent("PLAYER_DEAD")
 ReleaseEvents:SetScript("OnEvent", AutoReleaseGhost)
-
-
-
-
-
--- AUTOMATICALLY HANDLE LOOT CONFIRMATIONS
-
-local function ConfirmLootDialog(self, event, arg1, arg2, ...)
-    print("Event triggered:", event, arg1, arg2, ...)
-    if event == "CONFIRM_LOOT_ROLL" or event == "CONFIRM_DISENCHANT_ROLL" then
-        ConfirmLootRoll(arg1, arg2)
-        StaticPopup_Hide("CONFIRM_LOOT_ROLL")
-    elseif event == "LOOT_BIND_CONFIRM" then
-        ConfirmLootSlot(arg1)
-        StaticPopup_Hide("LOOT_BIND", ...)
-    elseif event == "MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL" then
-        SellCursorItem()
-    elseif event == "MAIL_LOCK_SEND_ITEMS" then
-        RespondMailLockSendItem(arg1, true)
-    elseif event == "EQUIP_BIND_CONFIRM" then
-        EquipPendingItem(arg1)
-        StaticPopup_Hide("EQUIP_BIND", ...)
-    end
-end
-
-local LootDialogEvents = CreateFrame("Frame")
-LootDialogEvents:SetScript("OnEvent", ConfirmLootDialog)
-LootDialogEvents:RegisterEvent("CONFIRM_LOOT_ROLL")
-LootDialogEvents:RegisterEvent("CONFIRM_DISENCHANT_ROLL")
-LootDialogEvents:RegisterEvent("LOOT_BIND_CONFIRM")
-LootDialogEvents:RegisterEvent("MERCHANT_CONFIRM_TRADE_TIMER_REMOVAL")
-LootDialogEvents:RegisterEvent("MAIL_LOCK_SEND_ITEMS")
-LootDialogEvents:RegisterEvent("EQUIP_BIND_CONFIRM")
