@@ -5,6 +5,12 @@ local function DisableScreenEffectsAndSetCameraDistance()
     SetCVar("ffxDeath", 0)
     SetCVar("ffxNether", 0)
     SetCVar("cameraDistanceMaxZoomFactor", 2.6)
+    SetCVar("floatingCombatTextCombatHealing", 0)
+    SetCVar("floatingCombatTextCombatDamage", 0)
+    SetCVar("nameplateVerticalScale", 2)
+    SetCVar("nameplateOverlapV", 0.5)
+    SetCVar("nameplateMotion", 1)
+    SetCVar("nameplateMotionSpeed", 0.1)
 end
 
 local CVarEvents = CreateFrame("Frame")
@@ -231,7 +237,7 @@ local function HideStatusTrackingBars()
             MainStatusTrackingBarContainer:SetScript("OnShow", nil)
         end
     else
-        if MainStatusTrackingBarContainer then
+        if MainStatusTrackingBarContainer then 
             MainStatusTrackingBarContainer:Hide()
             MainStatusTrackingBarContainer:SetScript("OnShow", MainStatusTrackingBarContainer.Hide)
         end
@@ -377,7 +383,7 @@ local function AutoReleaseGhost()
     local pvpType = C_PvP.GetZonePVPInfo()
 
     if (instanceType == "pvp" or pvpType == "combat") then
-        C_Timer.After(0, function()
+        C_Timer.After(0.25, function()
             local deathDialog = StaticPopup_FindVisible("DEATH")
             if deathDialog and deathDialog.button1:IsEnabled() then
                 deathDialog.button1:Click()
