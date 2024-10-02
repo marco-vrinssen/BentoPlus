@@ -75,20 +75,6 @@ end)
 
 
 
--- HIDE ACTION BUTTON GLOWS
-hooksecurefunc("ActionButton_ShowOverlayGlow", function(actionButton)
-    if actionButton and actionButton.action then
-        if actionButton.SpellActivationAlert then
-            actionButton.SpellActivationAlert:Hide()
-        elseif actionButton.overlay then
-            actionButton.overlay:Hide()
-        end
-    end
-end)
-
-
-
-
 -- HIDE NAMEPLATE AND PLAYER AURAS
 
 local function HideNameplateAuras(unitId)
