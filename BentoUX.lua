@@ -109,13 +109,13 @@ end)
 
 
 -- HIDE RAID FRAME AURAS
-local function HideBuffs()
-    for i = 1, 40 do
-        local unitFrame = _G["CompactPartyFrameMember" .. i]
+local function HideBuffsForUnit(unitPrefix, unitCount)
+    for i = 1, unitCount do
+        local unitFrame = _G[unitPrefix .. i]
         if unitFrame then
             for j = 1, 32 do
-                local buffIcon = _G["CompactPartyFrameMember" .. i .. "Buff" .. j .. "Icon"]
-                local buffCooldown = _G["CompactPartyFrameMember" .. i .. "Buff" .. j .. "Cooldown"]
+                local buffIcon = _G[unitPrefix .. i .. "Buff" .. j .. "Icon"]
+                local buffCooldown = _G[unitPrefix .. i .. "Buff" .. j .. "Cooldown"]
                 if buffIcon then
                     buffIcon:Hide()
                 end
@@ -127,10 +127,15 @@ local function HideBuffs()
     end
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:RegisterEvent("GROUP_ROSTER_UPDATE")
-frame:SetScript("OnEvent", HideBuffs)
+local function HideBuffs()
+    HideBuffsForUnit("CompactPartyFrameMember", 40)
+    HideBuffsForUnit("CompactRaidFrame", 40)
+end
+
+local RaidFrameEvents = CreateFrame("Frame")
+RaidFrameEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+RaidFrameEvents:RegisterEvent("GROUP_ROSTER_UPDATE")
+RaidFrameEvents:SetScript("OnEvent", HideBuffs)
 
 hooksecurefunc("CompactUnitFrame_UpdateAuras", HideBuffs)
 
