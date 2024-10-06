@@ -7,10 +7,11 @@ local function DisableScreenEffectsAndSetCameraDistance()
     SetCVar("cameraDistanceMaxZoomFactor", 2.6)
     SetCVar("floatingCombatTextCombatHealing", 0)
     SetCVar("floatingCombatTextCombatDamage", 0)
-    SetCVar("nameplateVerticalScale", 2)
+    SetCVar("nameplateVerticalScale", 2.5)
+    SetCVar("nameplateHorizontalScale", 1)
     SetCVar("nameplateOverlapV", 0.5)
     SetCVar("nameplateMotion", 1)
-    SetCVar("nameplateMotionSpeed", 0.1)
+    SetCVar("nameplateMotionSpeed", 0.05)
 end
 
 local CVarEvents = CreateFrame("Frame")
@@ -282,6 +283,37 @@ VehicleSeatIndicator:SetScript("OnShow", VehicleSeatIndicator.Hide)
 
 
 
+-- OPEN WARBAND BANK WHEN OPENING BANK FRAME
+
+local function OpenWarbandBank()
+    BankFrameTab3:Click()
+end
+
+local BankFrameEvents = CreateFrame("Frame")
+BankFrameEvents:RegisterEvent("BANKFRAME_OPENED")
+BankFrameEvents:SetScript("OnEvent", function()
+    C_Timer.After(0, OpenWarbandBank)
+end)
+
+
+
+
+-- HIDE AND MUTE ALERTS
+
+local function MuteAndHideAlerts()
+    MuteSoundFile(569143)
+
+    hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
+        AlertFrame:UnregisterEvent(event)
+    end)
+    AlertFrame:UnregisterAllEvents()
+end
+
+MuteAndHideAlerts()
+
+
+
+
 -- AUTO REBIND TAB KEY FOR PVP AND PVE
 
 local function RebindTabKey()
@@ -319,22 +351,6 @@ local TabBindEvents = CreateFrame("Frame")
 TabBindEvents:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 TabBindEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 TabBindEvents:SetScript("OnEvent", RebindTabKey)
-
-
-
-
--- HIDE AND MUTE ALERTS
-
-local function MuteAndHideAlerts()
-    MuteSoundFile(569143)
-
-    hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
-        AlertFrame:UnregisterEvent(event)
-    end)
-    AlertFrame:UnregisterAllEvents()
-end
-
-MuteAndHideAlerts()
 
 
 
