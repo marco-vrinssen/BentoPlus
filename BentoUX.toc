@@ -1,4 +1,4 @@
-## Interface: 110000
+## Interface: 110000, 110002
 ## Title: BentoUX
 ## Notes: Basic user experience improvements.
 ## Author: MIYANKO

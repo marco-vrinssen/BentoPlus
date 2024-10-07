@@ -4,9 +4,12 @@ local function DisableScreenEffectsAndSetCameraDistance()
     SetCVar("ffxGlow", 0)
     SetCVar("ffxDeath", 0)
     SetCVar("ffxNether", 0)
-    SetCVar("cameraDistanceMaxZoomFactor", 2.6)
+
+    SetCVar("cameraDistanceMaxZoomFactor", 2.4)
+
     SetCVar("floatingCombatTextCombatHealing", 0)
     SetCVar("floatingCombatTextCombatDamage", 0)
+
     SetCVar("nameplateVerticalScale", 2.5)
     SetCVar("nameplateHorizontalScale", 1)
     SetCVar("nameplateOverlapV", 0.5)
@@ -36,6 +39,40 @@ end
 
 SLASH_TOGGLELUA1 = "/lua"
 SlashCmdList["TOGGLELUA"] = ToggleLuaErrors
+
+
+
+
+-- COMMAND TO RELOAD THE UI
+
+local function CustomReloadUI()
+    ReloadUI()
+end
+
+SLASH_RELOADUI1 = "/ui"
+SlashCmdList["RELOADUI"] = CustomReloadUI
+
+
+
+
+-- COMMAND TO SURRENDER IN ARENA
+
+SlashCmdList["GGFORFEIT"] = function()
+    if IsInInstance() then
+        local instanceType = select(2, GetInstanceInfo())
+        if instanceType == "arena" then
+            if SurrenderMatch then
+                SurrenderMatch()
+            else
+                LeaveBattlefield()
+            end
+        elseif instanceType == "pvp" then
+            LeaveBattlefield()
+        end
+    end
+end
+
+SLASH_GGFORFEIT1 = "/gg"
 
 
 
