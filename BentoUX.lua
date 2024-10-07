@@ -1,25 +1,25 @@
 -- DISABLE SCREEN EFFECTS AND INCREASE MAXIMUM CAMERA DISTANCE
 
-local function DisableScreenEffectsAndSetCameraDistance()
+local function SetupCVar()
     SetCVar("ffxGlow", 0)
     SetCVar("ffxDeath", 0)
     SetCVar("ffxNether", 0)
 
-    SetCVar("cameraDistanceMaxZoomFactor", 2.4)
+    SetCVar("cameraDistanceMaxZoomFactor", 2.6)
 
     SetCVar("floatingCombatTextCombatHealing", 0)
     SetCVar("floatingCombatTextCombatDamage", 0)
 
     SetCVar("nameplateVerticalScale", 2.5)
     SetCVar("nameplateHorizontalScale", 1)
-    SetCVar("nameplateOverlapV", 0.5)
+    SetCVar("nameplateOverlapV", 0.025)
     SetCVar("nameplateMotion", 1)
     SetCVar("nameplateMotionSpeed", 0.05)
 end
 
 local CVarEvents = CreateFrame("Frame")
 CVarEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
-CVarEvents:SetScript("OnEvent", DisableScreenEffectsAndSetCameraDistance)
+CVarEvents:SetScript("OnEvent", SetupCVar)
 
 
 
@@ -224,6 +224,7 @@ local function AutoLoot()
             EPOCH = GetTime()
         end
     end
+    LootFrame:Hide() -- Hide the LootFrame element
 end
 
 local FastLootEvents = CreateFrame("Frame")
