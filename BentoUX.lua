@@ -58,17 +58,8 @@ SlashCmdList["RELOADUI"] = CustomReloadUI
 -- COMMAND TO SURRENDER IN ARENA
 
 SlashCmdList["GGFORFEIT"] = function()
-    if IsInInstance() then
-        local instanceType = select(2, GetInstanceInfo())
-        if instanceType == "arena" then
-            if SurrenderMatch then
-                SurrenderMatch()
-            else
-                LeaveBattlefield()
-            end
-        elseif instanceType == "pvp" then
-            LeaveBattlefield()
-        end
+    if IsInInstance() and select(2, GetInstanceInfo()) == "arena" then
+        LeaveBattlefield()
     end
 end
 
