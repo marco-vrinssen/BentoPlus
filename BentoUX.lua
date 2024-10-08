@@ -1,5 +1,4 @@
 -- DISABLE SCREEN EFFECTS AND INCREASE MAXIMUM CAMERA DISTANCE
-
 local function SetupCVar()
     SetCVar("ffxGlow", 0)
     SetCVar("ffxDeath", 0)
@@ -15,6 +14,8 @@ local function SetupCVar()
     SetCVar("nameplateOverlapV", 0.025)
     SetCVar("nameplateMotion", 1)
     SetCVar("nameplateMotionSpeed", 0.05)
+
+    SetCVar("rawMouseEnable", 1)
 end
 
 local CVarEvents = CreateFrame("Frame")
