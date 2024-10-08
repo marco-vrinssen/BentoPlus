@@ -224,7 +224,7 @@ local function AutoLoot()
             EPOCH = GetTime()
         end
     end
-    LootFrame:Hide() -- Hide the LootFrame element
+    LootFrame:Hide()
 end
 
 local FastLootEvents = CreateFrame("Frame")
