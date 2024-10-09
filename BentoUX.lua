@@ -237,30 +237,6 @@ MerchantEvents:RegisterEvent("MERCHANT_SHOW")
 
 
 
--- FASTER AUTO LOOTING
-
-local EPOCH = 0
-local DELAY = 0.1
-
-local function AutoLoot()
-    if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-        if (GetTime() - EPOCH) >= DELAY then
-            for i = GetNumLootItems(), 1, -1 do
-                LootSlot(i)
-            end
-            EPOCH = GetTime()
-        end
-    end
-    LootFrame:Hide()
-end
-
-local FastLootEvents = CreateFrame("Frame")
-FastLootEvents:RegisterEvent("LOOT_READY")
-FastLootEvents:SetScript("OnEvent", AutoLoot)
-
-
-
-
 -- HIDE CHAT BUTTONS WHEN PLAYER ENTERS WORLD
 
 local function HideChatButtons()
