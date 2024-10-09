@@ -10,8 +10,8 @@ local function SetupCVar()
     SetCVar("floatingCombatTextCombatDamage", 0)
 
     SetCVar("nameplateVerticalScale", 2.5)
-    SetCVar("nameplateHorizontalScale", 1)
-    SetCVar("nameplateOverlapV", 0.025)
+    SetCVar("nameplateHorizontalScale", 1.5)
+    SetCVar("nameplateOverlapV", 0.5)
     SetCVar("nameplateMotion", 1)
     SetCVar("nameplateMotionSpeed", 0.05)
 
@@ -25,7 +25,7 @@ CVarEvents:SetScript("OnEvent", SetupCVar)
 
 
 
--- COMMAND TO TOGGLE LUA ERRORS DISPLAY
+-- COMMAND TO TOGGLE LUA ERRORS
 
 local function ToggleLuaErrors()
     local currentSetting = GetCVar("scriptErrors")
@@ -56,6 +56,18 @@ SlashCmdList["RELOADUI"] = CustomReloadUI
 
 
 
+-- COMMAND TO RESTART GRAPHICS
+
+local function CustomGXRestart()
+    ConsoleExec("gxRestart")
+end
+
+SLASH_GXRESTART1 = "/gx"
+SlashCmdList["GXRESTART"] = CustomGXRestart
+
+
+
+
 -- COMMAND TO SURRENDER IN ARENA
 
 SlashCmdList["GGFORFEIT"] = function()
@@ -65,6 +77,19 @@ SlashCmdList["GGFORFEIT"] = function()
 end
 
 SLASH_GGFORFEIT1 = "/gg"
+
+
+
+
+-- COMMAND TO RELOAD AND RESTART GRAPHICS
+
+local function CustomReloadAndRestart()
+    ReloadUI()
+    ConsoleExec("gxRestart")
+end
+
+SLASH_RELOADANDRESTART1 = "/rl"
+SlashCmdList["RELOADANDRESTART"] = CustomReloadAndRestart
 
 
 
