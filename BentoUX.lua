@@ -1,4 +1,5 @@
 -- DISABLE SCREEN EFFECTS AND INCREASE MAXIMUM CAMERA DISTANCE
+
 local function SetupCVar()
     SetCVar("ffxGlow", 0)
     SetCVar("ffxDeath", 0)
