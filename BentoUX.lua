@@ -24,24 +24,6 @@ CVarEvents:SetScript("OnEvent", SetupCVar)
 
 
 
-local function CompleteTutorials()
-    for i = 1, 1000 do
-        if GetCVar("showTutorials") == "1" then
-            SetCVar("showTutorials", 0)
-        end
-        if GetCVar("tutorialProgress") ~= "1000" then
-            SetCVar("tutorialProgress", 1000)
-        end
-    end
-end
-
-local TutorialEvents = CreateFrame("Frame")
-TutorialEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
-TutorialEvents:SetScript("OnEvent", CompleteTutorials)
-
-
-
-
 -- COMMAND TO TOGGLE LUA ERRORS
 
 local function ToggleLuaErrors()
@@ -107,6 +89,30 @@ SlashCmdList["GGFORFEIT"] = function()
 end
 
 SLASH_GGFORFEIT1 = "/gg"
+
+
+
+
+SlashCmdList["GGQUIT"] = function()
+    if IsInGroup() or IsInRaid() then
+        LeaveParty()
+    end
+end
+
+SLASH_GGQUIT1 = "/q"
+
+
+
+
+-- HIDE NATIVE ACTION BUTTON GLOWS
+
+hooksecurefunc("ActionButton_ShowOverlayGlow", function(actionButton)
+    if actionButton.SpellActivationAlert then
+        actionButton.SpellActivationAlert:Hide()
+    elseif actionButton.overlay then
+        actionButton.overlay:Hide()
+    end
+end)
 
 
 
