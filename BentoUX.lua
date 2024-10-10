@@ -15,7 +15,7 @@ local function SetupCVar()
     SetCVar("nameplateOverlapV", 0.5)
 
     SetCVar("rawMouseEnable", 0)
-    SetCVar("autoLootRate", 0.25)
+    SetCVar("autoLootRate", 0.025)
 end
 
 local CVarEvents = CreateFrame("Frame")
