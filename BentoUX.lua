@@ -5,25 +5,39 @@ local function SetupCVar()
     SetCVar("ffxDeath", 0)
     SetCVar("ffxNether", 0)
 
-    SetCVar("cameraDistanceMaxZoomFactor", 2.6)
+    SetCVar("cameraDistanceMaxZoomFactor", 2.4)
 
     SetCVar("floatingCombatTextCombatHealing", 0)
     SetCVar("floatingCombatTextCombatDamage", 0)
-
-    SetCVar("nameplateVerticalScale", 2.5)
-    SetCVar("nameplateHorizontalScale", 1.5)
 
     SetCVar("nameplateMotion", 1)
     SetCVar("nameplateMotionSpeed", 0.05)
     SetCVar("nameplateOverlapV", 0.5)
 
     SetCVar("rawMouseEnable", 0)
-
 end
 
 local CVarEvents = CreateFrame("Frame")
 CVarEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 CVarEvents:SetScript("OnEvent", SetupCVar)
+
+
+
+
+local function CompleteTutorials()
+    for i = 1, 1000 do
+        if GetCVar("showTutorials") == "1" then
+            SetCVar("showTutorials", 0)
+        end
+        if GetCVar("tutorialProgress") ~= "1000" then
+            SetCVar("tutorialProgress", 1000)
+        end
+    end
+end
+
+local TutorialEvents = CreateFrame("Frame")
+TutorialEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+TutorialEvents:SetScript("OnEvent", CompleteTutorials)
 
 
 
@@ -71,19 +85,6 @@ SlashCmdList["GXRESTART"] = CustomGXRestart
 
 
 
--- COMMAND TO SURRENDER IN ARENA
-
-SlashCmdList["GGFORFEIT"] = function()
-    if IsInInstance() and select(2, GetInstanceInfo()) == "arena" then
-        LeaveBattlefield()
-    end
-end
-
-SLASH_GGFORFEIT1 = "/gg"
-
-
-
-
 -- COMMAND TO RELOAD AND RESTART GRAPHICS
 
 local function CustomReloadAndRestart()
@@ -93,6 +94,19 @@ end
 
 SLASH_RELOADANDRESTART1 = "/rl"
 SlashCmdList["RELOADANDRESTART"] = CustomReloadAndRestart
+
+
+
+
+-- COMMAND TO SURRENDER IN ARENA
+
+SlashCmdList["GGFORFEIT"] = function()
+    if IsInInstance() and select(2, GetInstanceInfo()) == "arena" then
+        LeaveBattlefield()
+    end
+end
+
+SLASH_GGFORFEIT1 = "/gg"
 
 
 
@@ -202,16 +216,10 @@ hooksecurefunc("CompactUnitFrame_UpdateAuras", HideBuffs)
 
 -- SPEED UP AUTO LOOTING
 
-local EPOCH = 0
-local DELAY = 0.25
-
 local function AutoLoot()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-        if (GetTime() - EPOCH) >= DELAY then
-            for i = GetNumLootItems(), 1, -1 do
-                LootSlot(i)
-            end
-            EPOCH = GetTime()
+        for i = GetNumLootItems(), 1, -1 do
+            LootSlot(i)
         end
     end
 end
