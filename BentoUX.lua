@@ -15,6 +15,7 @@ local function SetupCVar()
     SetCVar("nameplateOverlapV", 0.5)
 
     SetCVar("rawMouseEnable", 0)
+    SetCVar("autoLootRate", 0.25)
 end
 
 local CVarEvents = CreateFrame("Frame")
@@ -216,23 +217,6 @@ RaidFrameEvents:RegisterEvent("GROUP_ROSTER_UPDATE")
 RaidFrameEvents:SetScript("OnEvent", HideBuffs)
 
 hooksecurefunc("CompactUnitFrame_UpdateAuras", HideBuffs)
-
-
-
-
--- SPEED UP AUTO LOOTING
-
-local function AutoLoot()
-    if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-        for i = GetNumLootItems(), 1, -1 do
-            LootSlot(i)
-        end
-    end
-end
-
-local FastLootEvents = CreateFrame("Frame")
-FastLootEvents:RegisterEvent("LOOT_READY")
-FastLootEvents:SetScript("OnEvent", AutoLoot)
 
 
 
