@@ -15,7 +15,6 @@ local function SetupCVar()
     SetCVar("nameplateOverlapV", 0.5)
 
     SetCVar("rawMouseEnable", 0)
-    SetCVar("autoLootRate", 0.025)
 end
 
 local CVarEvents = CreateFrame("Frame")
@@ -256,6 +255,24 @@ end
 local MerchantEvents = CreateFrame("Frame")
 MerchantEvents:SetScript("OnEvent", AutoSellRepair)
 MerchantEvents:RegisterEvent("MERCHANT_SHOW")
+
+
+
+
+-- SPEED UP AUTO LOOTING ITEMS
+function AutoLootItems()
+    if GetCVar("autoLootDefault") == "1" and not IsModifiedClick("AUTOLOOTTOGGLE") then
+        if GetNumLootItems() > 0 then
+            for i = 1, GetNumLootItems() do
+                LootSlot(i)
+            end
+        end
+    end
+end
+
+local LootEvents = CreateFrame("Frame")
+LootEvents:RegisterEvent("LOOT_READY")
+LootEvents:SetScript("OnEvent", AutoLootItems)
 
 
 
