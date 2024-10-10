@@ -369,6 +369,20 @@ end)
 
 
 
+-- HIDE PVP BADGES ON TARGET AND PLAYER FRAMES
+
+local function HidePvPBadges()
+    PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual:Hide()
+    TargetFrame.TargetFrameContent.TargetFrameContentContextual:Hide()
+end
+
+local PvPBadgeEvents = CreateFrame("Frame")
+PvPBadgeEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+PvPBadgeEvents:SetScript("OnEvent", HidePvPBadges)
+
+
+
+
 -- HIDE AND MUTE ALERTS
 
 local function MuteAndHideAlerts()
