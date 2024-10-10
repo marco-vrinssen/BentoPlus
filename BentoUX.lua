@@ -106,19 +106,6 @@ SLASH_LEAVEGROUP = "/q"
 
 
 
--- HIDE NATIVE ACTION BUTTON GLOWS
-
-hooksecurefunc("ActionButton_ShowOverlayGlow", function(actionButton)
-    if actionButton.SpellActivationAlert then
-        actionButton.SpellActivationAlert:Hide()
-    elseif actionButton.overlay then
-        actionButton.overlay:Hide()
-    end
-end)
-
-
-
-
 -- HIDE TARGET FRAME AND FOCUS FRAME AURAS, ADJUST TARGET FRAME SPELL BAR
 
 local function HideTargetFrameAuras()
