@@ -93,13 +93,15 @@ SLASH_GGFORFEIT1 = "/gg"
 
 
 
-SlashCmdList["GGQUIT"] = function()
-    if IsInGroup() or IsInRaid() then
-        LeaveParty()
+-- ADD COMMAND TO LEAVE GROUP
+
+SlashCmdList["LEAVEGROUP"] = function()
+    if IsInGroup() then
+        C_PartyInfo.LeaveParty()
     end
 end
 
-SLASH_GGQUIT1 = "/q"
+SLASH_LEAVEGROUP = "/q"
 
 
 
