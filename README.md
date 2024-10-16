@@ -1,6 +1,6 @@
-# WoW Addon: Quality of Life Enhancements
+# Bento UX
 
-This addon enhances your World of Warcraft experience by modifying several in-game behaviors and interface elements for improved convenience.
+Addon for World of Warcraft Retail with extensive, resource-efficient improvements to the user experience.
 
 ## Features
 
