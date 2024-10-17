@@ -1,3 +1,29 @@
+-- DISABLE SCREEN EFFECTS AND INCREASE MAXIMUM CAMERA DISTANCE
+
+local function SetupCVar()
+    SetCVar("ffxGlow", 0)
+    SetCVar("ffxDeath", 0)
+    SetCVar("ffxNether", 0)
+
+    SetCVar("cameraDistanceMaxZoomFactor", 2.4)
+
+    SetCVar("floatingCombatTextCombatHealing", 0)
+    SetCVar("floatingCombatTextCombatDamage", 0)
+
+    SetCVar("nameplateMotion", 1)
+    SetCVar("nameplateMotionSpeed", 0.05)
+    SetCVar("nameplateOverlapV", 0.5)
+
+    SetCVar("autoLootRate", 0.1)
+end
+
+local CVarEvents = CreateFrame("Frame")
+CVarEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+CVarEvents:SetScript("OnEvent", SetupCVar)
+
+
+
+
 -- COMMAND TO TOGGLE LUA ERRORS
 
 local function ToggleLuaErrors()
@@ -50,19 +76,6 @@ end
 
 SLASH_RELOADANDRESTART1 = "/rl"
 SlashCmdList["RELOADANDRESTART"] = CustomReloadAndRestart
-
-
-
-
--- COMMAND TO SURRENDER IN ARENA
-
-SlashCmdList["GGFORFEIT"] = function()
-    if IsInInstance() and select(2, GetInstanceInfo()) == "arena" then
-        LeaveBattlefield()
-    end
-end
-
-SLASH_GGFORFEIT1 = "/gg"
 
 
 

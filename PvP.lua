@@ -100,3 +100,40 @@ end
 local ReleaseEvents = CreateFrame("Frame")
 ReleaseEvents:RegisterEvent("PLAYER_DEAD")
 ReleaseEvents:SetScript("OnEvent", AutoReleaseGhost)
+
+
+
+
+-- COMMAND TO SURRENDER OR LEAVE IN ARENA
+
+local function CanSurrenderArena()
+    return C_PvP and C_PvP.CanSurrenderArena and C_PvP.CanSurrenderArena()
+end
+
+local function SurrenderArena()
+    if C_PvP and C_PvP.SurrenderArena then
+        C_PvP.SurrenderArena()
+        return true
+    end
+    return false
+end
+
+SlashCmdList["GGFORFEIT"] = function()
+    if IsInInstance() and select(2, GetInstanceInfo()) == "arena" then
+        if CanSurrenderArena() then
+            if SurrenderArena() then
+                print("Surrendering arena match...")
+            else
+                print("Failed to surrender. Leaving battlefield...")
+                LeaveBattlefield()
+            end
+        else
+            print("Cannot surrender. Leaving battlefield...")
+            LeaveBattlefield()
+        end
+    else
+        print("You are not in an arena match.")
+    end
+end
+
+SLASH_GGFORFEIT1 = "/gg"
