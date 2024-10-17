@@ -6,7 +6,7 @@ local function OnKeyPress(self, key)
     if key == "SPACE" then
         if AuctionHouseFrame and AuctionHouseFrame:IsShown() then
             local commoditiesSellFrame = AuctionHouseFrame.CommoditiesSellFrame
-            local itemsSellFrame = AuctionHouseFrame.ItemsSellFrame
+            local itemsSellFrame = AuctionHouseFrame.ItemSellFrame
 
             if (commoditiesSellFrame and commoditiesSellFrame:IsShown()) or (itemsSellFrame and itemsSellFrame:IsShown()) then
                 if commoditiesSellFrame and commoditiesSellFrame:IsShown() then
