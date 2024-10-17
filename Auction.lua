@@ -6,13 +6,13 @@ local function OnKeyPress(self, key)
     if key == "SPACE" then
         if AuctionHouseFrame and AuctionHouseFrame:IsShown() then
             local commoditiesSellFrame = AuctionHouseFrame.CommoditiesSellFrame
-            local itemsSellFrame = AuctionHouseFrame.ItemSellFrame
+            local itemSellFrame = AuctionHouseFrame.ItemSellFrame
 
-            if (commoditiesSellFrame and commoditiesSellFrame:IsShown()) or (itemsSellFrame and itemsSellFrame:IsShown()) then
+            if (commoditiesSellFrame and commoditiesSellFrame:IsShown()) or (itemSellFrame and itemSellFrame:IsShown()) then
                 if commoditiesSellFrame and commoditiesSellFrame:IsShown() then
                     commoditiesSellFrame.PostButton:Click()
-                elseif itemsSellFrame and itemsSellFrame:IsShown() then
-                    itemsSellFrame.PostButton:Click()
+                elseif itemSellFrame and itemSellFrame:IsShown() then
+                    itemSellFrame.PostButton:Click()
                 end
                 self:SetPropagateKeyboardInput(false)
                 return
