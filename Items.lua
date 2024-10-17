@@ -3,7 +3,9 @@
 local function AutoSellRepair()
     MerchantSellAllJunkButton:Click()
     StaticPopup1Button1:Click()
-    MerchantRepairAllButton:Click()
+    C_Timer.After(0.1, function()
+        MerchantRepairAllButton:Click()
+    end)
 end
 
 local MerchantEvents = CreateFrame("Frame")
@@ -13,12 +15,14 @@ MerchantEvents:RegisterEvent("MERCHANT_SHOW")
 
 
 
--- AUTO LOOT ALL ITEMS
+-- SPEED UP AUTO LOOTING
+
 local function AutoLootAllItems()
-    if GetCVarBool("autoLootDefault") and not IsModifiedClick("AUTOLOOTTOGGLE") then
+    if GetCVar("autoLootDefault") == "1" and not IsModifiedClick("AUTOLOOTTOGGLE") then
         for i = GetNumLootItems(), 1, -1 do
             LootSlot(i)
         end
+        LootFrame:Hide()
     end
 end
 
