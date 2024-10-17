@@ -3,7 +3,7 @@
 local function AutoSellRepair()
     MerchantSellAllJunkButton:Click()
     StaticPopup1Button1:Click()
-    C_Timer.After(0.1, function()
+    C_Timer.After(0, function()
         MerchantRepairAllButton:Click()
     end)
 end
