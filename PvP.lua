@@ -40,6 +40,7 @@ TabBindEvents:SetScript("OnEvent", RebindTabKey)
 
 
 -- PVP QUEUE TIMER
+
 local TimeLeft = -1
 
 local QueueTimer = PVPReadyDialog:CreateFontString(nil, "ARTWORK")
