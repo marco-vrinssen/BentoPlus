@@ -5,8 +5,8 @@
 
 Bank.lua
 Chat.lua
-ConfigUtility.lua
 HideAuras.lua
 HideElements.lua
 Items.lua
 PvP.lua
+Utility.lua
