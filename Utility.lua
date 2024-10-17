@@ -14,7 +14,7 @@ local function SetupCVar()
     SetCVar("nameplateMotionSpeed", 0.05)
     SetCVar("nameplateOverlapV", 0.5)
 
-    SetCVar("autoLootRate", 100)
+    SetCVar("autoLootRate", 50)
 end
 
 local CVarEvents = CreateFrame("Frame")
@@ -83,9 +83,7 @@ SlashCmdList["RELOADANDRESTART"] = CustomReloadAndRestart
 -- ADD COMMAND TO LEAVE GROUP
 
 SlashCmdList["LEAVEGROUP"] = function()
-    if IsInGroup() then
-        C_PartyInfo.LeaveParty()
-    end
+    C_PartyInfo.LeaveParty()
 end
 
-SLASH_LEAVEGROUP = "/q"
+SLASH_LEAVEGROUP1 = "/q"
