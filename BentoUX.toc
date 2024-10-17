@@ -3,10 +3,10 @@
 ## Notes: Basic user experience improvements.
 ## Author: MIYANKO
 
+Auras.lua
 Bank.lua
 Chat.lua
-HideAuras.lua
-HideElements.lua
+Elements.lua
 Items.lua
 PvP.lua
 Utility.lua
