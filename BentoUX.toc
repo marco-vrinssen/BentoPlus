@@ -10,5 +10,6 @@ Chat.lua
 Commands.lua
 Config.lua
 Elements.lua
-Items.lua
+Loot.lua
+Merchant.lua
 PvP.lua
