@@ -8,8 +8,7 @@ Auras.lua
 Bank.lua
 Chat.lua
 Commands.lua
-Config.lua
+CVar.lua
 Elements.lua
-Loot.lua
-Merchant.lua
+Items.lua
 PvP.lua
