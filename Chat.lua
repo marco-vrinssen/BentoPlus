@@ -17,7 +17,7 @@ end
 
 local function RepositionQuickJoinToastButton()
     QuickJoinToastButton:ClearAllPoints()
-    QuickJoinToastButton:SetPoint("TOPRIGHT", GeneralDockManager, "TOPLEFT", 0, -4)
+    QuickJoinToastButton:SetPoint("BOTTOMRIGHT", GeneralDockManager, "TOPLEFT", 0, -4)
 end
 
 local function OnEvent(self, event, ...)

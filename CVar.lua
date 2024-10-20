@@ -14,7 +14,7 @@ local function SetupCVar()
     SetCVar("nameplateMotionSpeed", 0.05)
     SetCVar("nameplateOverlapV", 0.5)
 
-    SetCVar("autoLootRate", 0.1)
+    SetCVar("autoLootRate", 0)
 end
 
 local CVarEvents = CreateFrame("Frame")

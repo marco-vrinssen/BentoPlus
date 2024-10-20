@@ -9,6 +9,6 @@ Bank.lua
 Chat.lua
 Commands.lua
 CVar.lua
-Elements.lua
-Merchant.lua
+Items.lua
+Miscellaneous.lua
 PvP.lua
