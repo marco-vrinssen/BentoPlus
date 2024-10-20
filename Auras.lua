@@ -75,11 +75,15 @@ local function HideBuffsForUnit(unitPrefix, unitCount)
             for j = 1, 32 do
                 local buffIcon = _G[unitPrefix .. i .. "Buff" .. j .. "Icon"]
                 local buffCooldown = _G[unitPrefix .. i .. "Buff" .. j .. "Cooldown"]
+                local buffCount = _G[unitPrefix .. i .. "Buff" .. j .. "Count"]
                 if buffIcon then
                     buffIcon:Hide()
                 end
                 if buffCooldown then
                     buffCooldown:Hide()
+                end
+                if buffCount then
+                    buffCount:Hide()
                 end
             end
         end
