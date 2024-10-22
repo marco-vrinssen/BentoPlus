@@ -64,15 +64,17 @@ PvPBadgeEvents:SetScript("OnEvent", HidePvPBadges)
 
 
 
--- HIDE AND MUTE ALERTS
+-- HIDE ALERT BANNERS AND THEIR SOUND
 
 local function MuteAndHideAlerts()
-    MuteSoundFile(569143)
-
     hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
         AlertFrame:UnregisterEvent(event)
     end)
+
+    MuteSoundFile(569143)
     AlertFrame:UnregisterAllEvents()
 end
 
-MuteAndHideAlerts()
+local AlertEvents = CreateFrame("Frame")
+AlertEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+AlertEvents:SetScript("OnEvent", MuteAndHideAlerts)
