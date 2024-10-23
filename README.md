@@ -6,7 +6,7 @@ Addon for World of Warcraft Retail with extensive, resource-efficient improvemen
 
 - **Disable Screen Effects & Increase Camera Distance**
   - Disables visual effects like glow, death effects, and netherworld effects.
-  - Sets maximum camera distance to 2.4 for better visibility.
+  - Sets maximum camera distance to 2.6 for better visibility.
 
 - **Hide Target/Focus Frame Auras & Adjust Target Spell Bar**
   - Removes buffs and debuffs from target and focus frames to declutter the UI.
@@ -43,3 +43,27 @@ Addon for World of Warcraft Retail with extensive, resource-efficient improvemen
 
 - **PvP Queue Timer**
   - Displays a countdown timer when a PvP queue is ready.
+
+- **Post Items on Auction House with Spacebar**
+  - Allows posting items on the Auction House using the Spacebar key.
+
+- **Open Warband Bank Automatically**
+  - Opens the Warband Bank tab when accessing the bank.
+
+- **Toggle Lua Errors Command**
+  - Adds a command to toggle Lua errors on or off.
+
+- **Reload UI and Restart Graphics Commands**
+  - Adds commands to reload the UI and restart graphics.
+
+- **Leave Group Command**
+  - Adds a command to leave the current group.
+
+- **Update Loot Rate Configuration**
+  - Configures loot rate settings for faster looting.
+
+- **Hide Raid Frame Auras**
+  - Hides buffs and debuffs on raid frames.
+
+- **Update Nameplate Configuration**
+  - Adjusts nameplate settings for better visibility.

@@ -1,5 +1,4 @@
--- AUTO SELL JUNK AND REPAIR ITEMS
-
+-- Function to automatically sell junk and repair items
 local function AutoSellRepair()
     MerchantSellAllJunkButton:Click()
     StaticPopup1Button1:Click()
@@ -8,6 +7,7 @@ local function AutoSellRepair()
     end)
 end
 
+-- Create a frame to handle merchant events
 local MerchantEvents = CreateFrame("Frame")
 MerchantEvents:SetScript("OnEvent", AutoSellRepair)
 MerchantEvents:RegisterEvent("MERCHANT_SHOW")

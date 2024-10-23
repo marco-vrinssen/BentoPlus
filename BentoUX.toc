@@ -7,7 +7,7 @@ Auction.lua
 Bank.lua
 Chat.lua
 Commands.lua
-CVar.lua
+Graphics.lua
 Loot.lua
 Merchant.lua
 Miscellaneous.lua
