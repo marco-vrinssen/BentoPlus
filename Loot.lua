@@ -1,20 +1,3 @@
--- AUTO SELL JUNK AND REPAIR ITEMS
-
-local function AutoSellRepair()
-    MerchantSellAllJunkButton:Click()
-    StaticPopup1Button1:Click()
-    C_Timer.After(0, function()
-        MerchantRepairAllButton:Click()
-    end)
-end
-
-local MerchantEvents = CreateFrame("Frame")
-MerchantEvents:SetScript("OnEvent", AutoSellRepair)
-MerchantEvents:RegisterEvent("MERCHANT_SHOW")
-
-
-
-
 -- SPEED UP AUTO LOOTING
 
 local function FasterLooting()
@@ -25,8 +8,10 @@ local function FasterLooting()
             for ItemCount = 1, ItemsTotal do
                 LootSlot(ItemCount)
             end
-            LootFrame:Hide()
         end
+        C_Timer.After(0, function()
+            LootFrame:Hide()
+        end)
     end
 end
 

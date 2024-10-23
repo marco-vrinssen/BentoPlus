@@ -1,14 +1,17 @@
-## Interface: 110000, 110002, 110500
+## Interface: 110500
 ## Title: BentoUX
 ## Notes: Basic user experience improvements.
 ## Author: MIYANKO
 
 Auction.lua
-Auras.lua
 Bank.lua
 Chat.lua
 Commands.lua
 CVar.lua
-Items.lua
+Loot.lua
+Merchant.lua
 Miscellaneous.lua
+Nameplates.lua
 PvP.lua
+Raidframes.lua
+Unitframes.lua
