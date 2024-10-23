@@ -1,5 +1,4 @@
--- COMMAND TO TOGGLE LUA ERRORS
-
+-- Function to toggle Lua errors on or off
 local function ToggleLuaErrors()
     local currentSetting = GetCVar("scriptErrors")
     if currentSetting == "1" then
@@ -14,11 +13,7 @@ end
 SLASH_TOGGLELUA1 = "/lua"
 SlashCmdList["TOGGLELUA"] = ToggleLuaErrors
 
-
-
-
--- COMMAND TO RELOAD THE UI
-
+-- Function to reload the UI
 local function CustomReloadUI()
     ReloadUI()
 end
@@ -26,11 +21,7 @@ end
 SLASH_RELOADUI1 = "/ui"
 SlashCmdList["RELOADUI"] = CustomReloadUI
 
-
-
-
--- COMMAND TO RESTART GRAPHICS
-
+-- Function to restart graphics
 local function CustomGXRestart()
     ConsoleExec("gxRestart")
 end
@@ -38,11 +29,7 @@ end
 SLASH_GXRESTART1 = "/gx"
 SlashCmdList["GXRESTART"] = CustomGXRestart
 
-
-
-
--- COMMAND TO RELOAD AND RESTART GRAPHICS
-
+-- Function to reload the UI and restart graphics
 local function CustomReloadAndRestart()
     ReloadUI()
     ConsoleExec("gxRestart")
@@ -51,13 +38,22 @@ end
 SLASH_RELOADANDRESTART1 = "/rl"
 SlashCmdList["RELOADANDRESTART"] = CustomReloadAndRestart
 
-
-
-
--- ADD COMMAND TO LEAVE GROUP
-
+-- Function to leave the current group
 SlashCmdList["LEAVEGROUP"] = function()
     C_PartyInfo.LeaveParty()
 end
 
 SLASH_LEAVEGROUP1 = "/q"
+
+-- Function to leave the arena or battleground match
+SlashCmdList["LEAVEARENA"] = function()
+    if IsInInstance() then
+        if C_PvP.IsBattleground() then
+            C_PvP.LeaveBattlefield()
+        elseif C_PvP.IsArena() then
+            C_PvP.SurrenderArena()
+        end
+    end
+end
+
+SLASH_LEAVEARENA1 = "/gg"

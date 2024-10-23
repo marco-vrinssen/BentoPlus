@@ -1,5 +1,4 @@
--- POST ITEMS ON THE AUCTION HOUSE WITH SPACEBAR, ONLY WHEN AT AUCTION HOUSE
-
+-- Function to handle key press events
 local function OnKeyPress(self, key)
     if key == "SPACE" then
         if InCombatLockdown() then
@@ -25,11 +24,14 @@ local function OnKeyPress(self, key)
     self:SetPropagateKeyboardInput(true)
 end
 
+-- Create a frame to handle auction house events
 local KeyPressFrame = CreateFrame("Frame")
 
+-- Register events for showing and closing the auction house
 KeyPressFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
 KeyPressFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
 
+-- Set scripts for handling the registered events
 KeyPressFrame:SetScript("OnEvent", function(self, event)
     if event == "AUCTION_HOUSE_SHOW" then
         self:SetScript("OnKeyDown", OnKeyPress)
