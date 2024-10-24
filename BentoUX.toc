@@ -1,17 +1,17 @@
 ## Interface: 110500
 ## Title: BentoUX
-## Notes: Basic user experience improvements.
+## Notes: Extensive, resource-efficient improvements to the user interface and experience.
 ## Author: MIYANKO
 
-Auction.lua
-Bank.lua
-Chat.lua
-Commands.lua
-Graphics.lua
-Loot.lua
-Merchant.lua
-Miscellaneous.lua
-Nameplates.lua
-PvP.lua
-Raidframes.lua
-Unitframes.lua
+Modules/Auction.lua
+Modules/Bank.lua
+Modules/Chat.lua
+Modules/Commands.lua
+Modules/Graphics.lua
+Modules/Loot.lua
+Modules/Merchant.lua
+Modules/Miscellaneous.lua
+Modules/Nameplates.lua
+Modules/PvP.lua
+Modules/Raidframes.lua
+Modules/Unitframes.lua
