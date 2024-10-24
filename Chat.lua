@@ -1,4 +1,5 @@
--- Function to update chat frame settings
+-- Hide and reposition chat buttons
+
 local function UpdateChatFrame()
     ChatFrameChannelButton:Hide()
     ChatFrameToggleVoiceDeafenButton:Hide()
@@ -17,7 +18,6 @@ local function UpdateChatFrame()
     end
 end
 
--- Create a frame to handle chat button events
 local ChatButtonEvents = CreateFrame("Frame")
 ChatButtonEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 ChatButtonEvents:RegisterEvent("CHAT_MSG_WHISPER")

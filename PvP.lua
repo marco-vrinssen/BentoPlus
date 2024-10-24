@@ -1,4 +1,5 @@
--- Function to rebind the Tab key based on the player's location (PvP or PvE)
+-- Eebind Tab key based on the player's environment (PvP or PvE)
+
 local function RebindTabKey()
     local inInstance, instanceType = IsInInstance()
     local pvpType = C_PvP.GetZonePVPInfo()
@@ -30,13 +31,16 @@ local function RebindTabKey()
     end
 end
 
--- Event frame to handle zone changes and player entering the world
 local TabBindEvents = CreateFrame("Frame")
 TabBindEvents:RegisterEvent("ZONE_CHANGED_NEW_AREA")
 TabBindEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 TabBindEvents:SetScript("OnEvent", RebindTabKey)
 
--- PvP Queue Timer
+
+
+
+-- Display the time remaining in the PvP queue dialog
+
 local TimeLeft = -1
 
 local QueueTimer = PVPReadyDialog:CreateFontString(nil, "ARTWORK")
@@ -45,7 +49,6 @@ QueueTimer:SetFont(GameFontNormal:GetFont(), 24)
 QueueTimer:SetTextColor(1, 1, 1)
 QueueTimer:SetPoint("TOP", PVPReadyDialog, "BOTTOM", 0, -8)
 
--- Function to update the PvP queue timer
 local function UpdatePvPTimer(self, elapsed)
     TimeLeft = TimeLeft - elapsed
     if TimeLeft > 0 then
@@ -56,7 +59,6 @@ local function UpdatePvPTimer(self, elapsed)
     end
 end
 
--- Hook to display the PvP queue timer
 hooksecurefunc("PVPReadyDialog_Display", function(self, id)
     TimeLeft = GetBattlefieldPortExpiration(id)
     if TimeLeft and TimeLeft > 0 then
@@ -68,13 +70,16 @@ hooksecurefunc("PVPReadyDialog_Display", function(self, id)
     end
 end)
 
--- Hook to hide the PvP queue timer when the dialog is hidden
 PVPReadyDialog:HookScript("OnHide", function()
     QueueTimer:Hide()
     PVPReadyDialog:SetScript("OnUpdate", nil)
 end)
 
--- Function to automatically release the ghost in PvP zones
+
+
+
+-- Automatically release the ghost in PvP zones
+
 local function AutoReleaseGhost()
     if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then
         return
@@ -93,7 +98,6 @@ local function AutoReleaseGhost()
     end
 end
 
--- Event frame to handle player death
 local ReleaseEvents = CreateFrame("Frame")
 ReleaseEvents:RegisterEvent("PLAYER_DEAD")
 ReleaseEvents:SetScript("OnEvent", AutoReleaseGhost)

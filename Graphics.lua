@@ -1,4 +1,5 @@
--- Function to update graphics configuration settings
+-- Update graphics related configuration
+
 local function UpdateGraphicsConfig()
     SetCVar("ffxGlow", 0)
     SetCVar("ffxDeath", 0)
@@ -6,7 +7,6 @@ local function UpdateGraphicsConfig()
     SetCVar("cameraDistanceMaxZoomFactor", 2.6)
 end
 
--- Create a frame to handle graphics configuration events
 local GraphicsConfigFrame = CreateFrame("Frame")
 GraphicsConfigFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 GraphicsConfigFrame:SetScript("OnEvent", UpdateGraphicsConfig)

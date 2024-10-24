@@ -1,14 +1,18 @@
--- Function to update loot rate configuration settings
+-- Update loot rate configuration
+
 local function UpdateLootRate()
     SetCVar("autoLootRate", 0)
 end
 
--- Create a frame to handle loot rate configuration events
 local LootConfigFrame = CreateFrame("Frame")
 LootConfigFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 LootConfigFrame:SetScript("OnEvent", UpdateLootRate)
 
--- Function to handle faster looting process
+
+
+
+-- Speed up the auto looting process
+
 local function FasterLooting()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
         local ItemsTotal = GetNumLootItems()
@@ -24,7 +28,6 @@ local function FasterLooting()
     end
 end
 
--- Create a frame to handle loot events
 local LootEvents = CreateFrame("Frame")
 LootEvents:RegisterEvent("LOOT_READY")
 LootEvents:SetScript("OnEvent", FasterLooting)
