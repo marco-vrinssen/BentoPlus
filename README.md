@@ -19,8 +19,10 @@ Addon for World of Warcraft Retail with extensive, resource-efficient improvemen
 - PvP queue timer.
 - Post items on Auction House with Spacebar.
 - Open Warband Bank automatically.
-- Toggle Lua errors command.
-- Reload UI and restart graphics commands.
+- Toggle Lua errors command: [`ToggleLuaErrors`](Commands.lua)
+- Reload UI command: [`CustomReloadUI`](Commands.lua)
+- Restart graphics command: [`CustomGXRestart`](Commands.lua)
+- Reload UI and restart graphics command: [`CustomReloadAndRestart`](Commands.lua)
 - Leave group command.
 - Update loot rate configuration.
 - Hide raid frame auras.
