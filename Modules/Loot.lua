@@ -17,11 +17,9 @@ local function FasterLooting()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
         local ItemsTotal = GetNumLootItems()
         if ItemsTotal > 0 then
-            C_Timer.After(0, function() LootFrame:Hide() end)
             for ItemCount = 1, ItemsTotal do
                 LootSlot(ItemCount)
             end
-            C_Timer.After(0, function() LootFrame:Hide() end)
         end
     end
 end
