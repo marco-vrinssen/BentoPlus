@@ -5,9 +5,7 @@ local function UpdateChatFrame()
     ChatFrameToggleVoiceDeafenButton:Hide()
     ChatFrameToggleVoiceMuteButton:Hide()
     ChatFrameMenuButton:Hide()
-
-    QuickJoinToastButton:ClearAllPoints()
-    QuickJoinToastButton:SetPoint("BOTTOMRIGHT", GeneralDockManager, "TOPLEFT", 0, -4)
+    QuickJoinToastButton:Hide()
 
     for i = 1, 16 do
         local chatFrameButtonFrame = _G["ChatFrame" .. i .. "ButtonFrame"]
