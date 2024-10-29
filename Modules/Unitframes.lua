@@ -1,4 +1,5 @@
 -- Hide target and focus frame auras
+
 local function HideTargetFrameAuras()
     MAX_TARGET_BUFFS = 0
     MAX_TARGET_DEBUFFS = 0

@@ -1,4 +1,4 @@
--- Eebind Tab key based on the player's environment (PvP or PvE)
+-- Rebind Tab key based on the player's environment (PvP or PvE)
 
 local function RebindTabKey()
     local inInstance, instanceType = IsInInstance()

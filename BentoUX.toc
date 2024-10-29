@@ -1,6 +1,6 @@
 ## Interface: 110500
 ## Title: BentoUX
-## Notes: Extensive, resource-efficient improvements to the user interface and experience.
+## Notes: Simple, resource-efficient adjustments to user experience and user interface.
 ## Author: MIYANKO
 
 Modules/Auction.lua

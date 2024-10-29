@@ -1,4 +1,4 @@
--- Automatically open Warband Bank tab when the bank frame is opened
+-- Auto-open Warband Bank tab when the bank frame is accessed.
 
 local function openWarbandBank()
     BankFrameTab3:Click()

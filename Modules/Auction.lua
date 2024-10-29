@@ -1,4 +1,4 @@
--- Enable posting items with the space bar once an item is placed in the sale slot
+-- Enable posting items in the auction house post slot by pressing SPACE BAR.
 
 local function OnKeyPress(self, key)
     if key == "SPACE" then
@@ -44,7 +44,7 @@ KeyPressFrame:SetPropagateKeyboardInput(true)
 
 
 
--- Through toggle command, have the Current Expansion Only filter pre-set and automatically focus the search bar when opening the auction house, crafting orders, and Auctionator shopping tab.
+-- Automatically set the Current Expansion Only filter and focus the search bar when opening the auction house, crafting orders, and Auctionator shopping tab.
 
 local AuctionConfig = {}
 AuctionConfig.config = {
