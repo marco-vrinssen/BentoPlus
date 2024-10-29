@@ -15,11 +15,8 @@ LootConfigFrame:SetScript("OnEvent", UpdateLootRate)
 
 local function FasterLooting()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-        local ItemsTotal = GetNumLootItems()
-        if ItemsTotal > 0 then
-            for ItemCount = 1, ItemsTotal do
-                LootSlot(ItemCount)
-            end
+        for ItemCount = 1, GetNumLootItems() do
+            LootSlot(ItemCount)
         end
     end
 end
