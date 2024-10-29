@@ -44,22 +44,14 @@ KeyPressFrame:SetPropagateKeyboardInput(true)
 
 
 
--- Automatically set the Current Expansion Only filter and focus the search bar when opening the auction house, crafting orders, and Auctionator shopping tab.
+-- Automatically set the Current Expansion Only filter when opening the auction house, crafting orders, and Auctionator shopping tab.
 
 local AuctionConfig = {}
 AuctionConfig.config = {
     forAuctionHouseOverwrite = true,
     forCraftOrdersOverwrite = true,
     forAuctionatorOverwrite = true,
-    forAuctionHouseFocusSearchBar = true,
-    forCraftOrdersFocusSearchBar = true,
 }
-
-local MyAuctionAddonFrame = CreateFrame("Frame")
-MyAuctionAddonFrame:RegisterEvent("ADDON_LOADED")
-MyAuctionAddonFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-MyAuctionAddonFrame:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
-MyAuctionAddonFrame:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 
 local function EnableCurrentExpansionFilter(searchBar, configValue)
     if searchBar and searchBar.FilterButton then
@@ -68,25 +60,11 @@ local function EnableCurrentExpansionFilter(searchBar, configValue)
     end
 end
 
-local function FocusSearchBar(searchBox, shouldFocus)
-    if shouldFocus then
-        if not searchBox:HasFocus() then
-            searchBox:SetFocus()
-        end
-    else
-        if searchBox:HasFocus() then
-            searchBox:ClearFocus()
-        end
-    end
-end
-
 local function OnAuctionHouseShow()
     if AuctionConfig.config.forAuctionHouseOverwrite then
         local searchBar = AuctionHouseFrame.SearchBar
-        local searchBox = searchBar and searchBar.SearchBox
         if searchBar then
             EnableCurrentExpansionFilter(searchBar, AuctionConfig.config.forAuctionHouseOverwrite)
-            FocusSearchBar(searchBox, AuctionConfig.config.forAuctionHouseFocusSearchBar)
         end
     end
 end
@@ -94,11 +72,9 @@ end
 local function OnCraftingOrdersShow()
     if AuctionConfig.config.forCraftOrdersOverwrite then
         local filterDropdown = ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.FilterDropdown
-        local searchBox = ProfessionsCustomerOrdersFrame.BrowseOrders.SearchBar.SearchBox
         if filterDropdown then
             filterDropdown.filters[Enum.AuctionHouseFilter.CurrentExpansionOnly] = AuctionConfig.config.forCraftOrdersOverwrite or false
             filterDropdown:ValidateResetState()
-            FocusSearchBar(searchBox, AuctionConfig.config.forCraftOrdersFocusSearchBar)
         end
     end
 end
@@ -113,7 +89,13 @@ local function OnAuctionatorShow()
     end
 end
 
-MyAuctionAddonFrame:SetScript("OnEvent", function(self, event, ...)
+local BentoAuctionEvents = CreateFrame("Frame")
+BentoAuctionEvents:RegisterEvent("ADDON_LOADED")
+BentoAuctionEvents:RegisterEvent("AUCTION_HOUSE_SHOW")
+BentoAuctionEvents:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
+BentoAuctionEvents:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+
+BentoAuctionEvents:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local addonName = ...
         if addonName == "AuctionConfig" then
@@ -130,10 +112,3 @@ MyAuctionAddonFrame:SetScript("OnEvent", function(self, event, ...)
         end
     end
 end)
-
-SLASH_BENTOAUCTION1 = "/bentoauction"
-SlashCmdList["BENTOAUCTION"] = function()
-    AuctionConfig.config.forAuctionHouseOverwrite = not AuctionConfig.config.forAuctionHouseOverwrite
-    local state = AuctionConfig.config.forAuctionHouseOverwrite and "On" or "Off"
-    print("Auction Auto Filter: " .. state)
-end
