@@ -45,9 +45,9 @@ local TimeLeft = -1
 
 local QueueTimer = PVPReadyDialog:CreateFontString(nil, "ARTWORK")
 QueueTimer:SetFontObject(GameFontNormal)
-QueueTimer:SetFont(GameFontNormal:GetFont(), 24)
+QueueTimer:SetFont(GameFontNormal:GetFont(), 32, "OUTLINE")
 QueueTimer:SetTextColor(1, 1, 1)
-QueueTimer:SetPoint("TOP", PVPReadyDialog, "BOTTOM", 0, -8)
+QueueTimer:SetPoint("TOP", PVPReadyDialog, "CENTER", 0, 32)
 
 local function UpdatePvPTimer(self, elapsed)
     TimeLeft = TimeLeft - elapsed
