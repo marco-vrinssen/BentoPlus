@@ -47,26 +47,20 @@ KeyPressFrame:SetPropagateKeyboardInput(true)
 -- This script reduces the price of an item by 20% when the auction house throttled system is ready
 
 local function setReducedPrice()
-    -- Ensure that the ItemSellFrame is shown and not the CommoditiesSellFrame
     if AuctionHouseFrame.ItemSellFrame:IsShown() and not AuctionHouseFrame.CommoditiesSellFrame:IsShown() then
-        -- Get the suggested price from the GoldBox input field
-        local goldBox = AuctionHouseFrame.ItemSellFrame.PriceInput.MoneyInputFrame.GoldBox
-        if goldBox then
-            local currentPrice = tonumber(goldBox:GetText()) or 0
-            -- Calculate 20% off the current price
-            local newPrice = math.floor(currentPrice * 0.9)
-            -- Set the new price in the GoldBox input field
-            goldBox:SetText(newPrice)
+        local priceInput = AuctionHouseFrame.ItemSellFrame.PriceInput.MoneyInputFrame.GoldBox
+        if priceInput then
+            local currentPrice = tonumber(priceInput:GetText()) or 0
+            local reducedPrice = math.floor(currentPrice * 0.9)
+            priceInput:SetText(reducedPrice)
         end
     end
 end
 
--- Wait 500ms and then set the reduced price if conditions are met
 local function onEvent()
     C_Timer.After(0, setReducedPrice)
 end
 
--- Register the event and attach the onEvent function
 local ItemSellEvents = CreateFrame("Frame")
 ItemSellEvents:RegisterEvent("AUCTION_HOUSE_THROTTLED_SYSTEM_READY")
 ItemSellEvents:SetScript("OnEvent", onEvent)
