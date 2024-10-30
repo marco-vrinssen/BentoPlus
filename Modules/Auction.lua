@@ -54,7 +54,7 @@ local function setReducedPrice()
         if goldBox then
             local currentPrice = tonumber(goldBox:GetText()) or 0
             -- Calculate 20% off the current price
-            local newPrice = math.floor(currentPrice * 0.8)
+            local newPrice = math.floor(currentPrice * 0.9)
             -- Set the new price in the GoldBox input field
             goldBox:SetText(newPrice)
         end
