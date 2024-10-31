@@ -113,13 +113,13 @@ local function OnAuctionatorShow()
     end
 end
 
-local BentoAuctionEvents = CreateFrame("Frame")
-BentoAuctionEvents:RegisterEvent("ADDON_LOADED")
-BentoAuctionEvents:RegisterEvent("AUCTION_HOUSE_SHOW")
-BentoAuctionEvents:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
-BentoAuctionEvents:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
+local AuctionEvents = CreateFrame("Frame")
+AuctionEvents:RegisterEvent("ADDON_LOADED")
+AuctionEvents:RegisterEvent("AUCTION_HOUSE_SHOW")
+AuctionEvents:RegisterEvent("CRAFTINGORDERS_SHOW_CUSTOMER")
+AuctionEvents:RegisterEvent("PLAYER_INTERACTION_MANAGER_FRAME_SHOW")
 
-BentoAuctionEvents:SetScript("OnEvent", function(self, event, ...)
+AuctionEvents:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local addonName = ...
         if addonName == "AuctionConfig" then
