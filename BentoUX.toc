@@ -14,5 +14,4 @@ Modules/Miscellaneous.lua
 Modules/Nameplates.lua
 Modules/PvP.lua
 Modules/Raidframes.lua
-Modules/Social.lua
 Modules/Unitframes.lua
