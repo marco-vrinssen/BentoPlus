@@ -42,8 +42,7 @@ local function CustomizeChatFrame(chatFrame)
         "EditBoxHeaderSuffix", "TabUpButton", "TabDownButton",
         "TabBottomButton", "TabMinimizeButton",
         "EditBoxFocusLeft", "EditBoxFocusMid", "EditBoxFocusRight",
-        "ScrollBar", "ScrollToBottomButton",
-        "QuickJoinToastButton" -- Added QuickJoinToastButton to the list
+        "ScrollBar", "ScrollToBottomButton"
     }
     
     HideChildElements(chatFrame, elementsToHide)
@@ -89,6 +88,17 @@ local function UpdateChatScroll()
     end
 end
 
+local function HideStaticElements()
+    if QuickJoinToastButton then
+        QuickJoinToastButton:Hide()
+        QuickJoinToastButton:SetScript("OnShow", QuickJoinToastButton.Hide)
+    end
+end
+
+local function OnPlayerEnteringWorld()
+    HideStaticElements()
+end
+
 local chatEvents = CreateFrame("Frame")
 chatEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 chatEvents:RegisterEvent("UPDATE_FLOATING_CHAT_WINDOWS")
@@ -107,3 +117,7 @@ hooksecurefunc("FCF_OpenTemporaryWindow", function()
         AlignEditBoxHeader()
     end
 end)
+
+local eventFrame = CreateFrame("Frame")
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+eventFrame:SetScript("OnEvent", OnPlayerEnteringWorld)
