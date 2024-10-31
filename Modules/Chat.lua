@@ -42,7 +42,8 @@ local function CustomizeChatFrame(chatFrame)
         "EditBoxHeaderSuffix", "TabUpButton", "TabDownButton",
         "TabBottomButton", "TabMinimizeButton",
         "EditBoxFocusLeft", "EditBoxFocusMid", "EditBoxFocusRight",
-        "ScrollBar", "ScrollToBottomButton"
+        "ScrollBar", "ScrollToBottomButton",
+        "QuickJoinToastButton" -- Added QuickJoinToastButton to the list
     }
     
     HideChildElements(chatFrame, elementsToHide)
