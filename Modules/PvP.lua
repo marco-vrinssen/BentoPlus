@@ -47,7 +47,7 @@ local QueueTimer = PVPReadyDialog:CreateFontString(nil, "ARTWORK")
 QueueTimer:SetFontObject(GameFontNormal)
 QueueTimer:SetFont(GameFontNormal:GetFont(), 32, "OUTLINE")
 QueueTimer:SetTextColor(1, 1, 1)
-QueueTimer:SetPoint("TOP", PVPReadyDialog, "CENTER", 0, 32)
+QueueTimer:SetPoint("TOP", PVPReadyDialog, "BOTTOM", 0, -16)
 
 local function UpdatePvPTimer(self, elapsed)
     TimeLeft = TimeLeft - elapsed
@@ -89,7 +89,7 @@ local function AutoReleaseGhost()
     local pvpType = C_PvP.GetZonePVPInfo()
 
     if (instanceType == "pvp" or pvpType == "combat") then
-        C_Timer.After(0.5, function()
+        C_Timer.After(0, function()
             local deathDialog = StaticPopup_FindVisible("DEATH")
             if deathDialog and deathDialog.button1:IsEnabled() then
                 deathDialog.button1:Click()
