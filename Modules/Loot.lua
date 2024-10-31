@@ -21,8 +21,10 @@ local function FasterLooting()
             for ItemCount = 1, numLootItems do
                 LootSlot(ItemCount)
             end
+            LootFrame:Hide()
+        else
+            CloseLoot()
         end
-        LootFrame:Hide()
     end
 end
 
