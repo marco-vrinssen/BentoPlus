@@ -51,7 +51,7 @@ local function setReducedPrice()
         local priceInput = AuctionHouseFrame.ItemSellFrame.PriceInput.MoneyInputFrame.GoldBox
         if priceInput then
             local currentPrice = tonumber(priceInput:GetText()) or 0
-            local reducedPrice = math.floor(currentPrice * 0.9)
+            local reducedPrice = math.floor(currentPrice * 0.8)
             priceInput:SetText(reducedPrice)
         end
     end
