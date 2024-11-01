@@ -1,7 +1,7 @@
 -- Update loot rate configuration
 
 local function UpdateLootRate()
-    SetCVar("autoLootRate", 0)
+    SetCVar("autoLootRate", 0.0001)
 end
 
 local LootConfigFrame = CreateFrame("Frame")
@@ -17,13 +17,10 @@ local function FasterLooting()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
         local numLootItems = GetNumLootItems()
         if numLootItems > 0 then
-            LootFrame:Hide()
+            LootFrame:Hide() -- Hide the loot frame
             for ItemCount = 1, numLootItems do
                 LootSlot(ItemCount)
             end
-            LootFrame:Hide()
-        else
-            CloseLoot()
         end
     end
 end
