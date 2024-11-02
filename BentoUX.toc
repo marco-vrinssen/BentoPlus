@@ -3,7 +3,7 @@
 ## Notes: Simple, resource-efficient adjustments to user experience and user interface.
 ## Author: MIYANKO
 
-Modules/Alerts
+Modules/Alerts.lua
 Modules/Auction.lua
 Modules/Bank.lua
 Modules/Buttons.lua
