@@ -3,16 +3,18 @@
 ## Notes: Simple, resource-efficient adjustments to user experience and user interface.
 ## Author: MIYANKO
 
+Modules/Alerts
 Modules/Auction.lua
 Modules/Bank.lua
 Modules/Buttons.lua
 Modules/Chat.lua
 Modules/Commands.lua
+Modules/Dialogs.lua
 Modules/Graphics.lua
 Modules/Loot.lua
 Modules/Merchant.lua
 Modules/Nameplates.lua
-Modules/PopUps.lua
+Modules/Notifications.lua
 Modules/PvP.lua
 Modules/Raidframes.lua
 Modules/StatusBars.lua
