@@ -2,12 +2,9 @@
 
 local function MuteAndHideAllAlerts()
     MuteSoundFile(569143)
+    AlertFrame:UnregisterAllEvents()
 end
 
 local AlertEvents = CreateFrame("Frame")
 AlertEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 AlertEvents:SetScript("OnEvent", MuteAndHideAllAlerts)
-
-hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
-    self:UnregisterEvent(event)
-end)
