@@ -1,0 +1,13 @@
+-- Function to mute and hide all alerts by unregistering events and muting sound
+
+local function MuteAndHideAllAlerts()
+    MuteSoundFile(569143)
+end
+
+local AlertEvents = CreateFrame("Frame")
+AlertEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+AlertEvents:SetScript("OnEvent", MuteAndHideAllAlerts)
+
+hooksecurefunc(AlertFrame, "RegisterEvent", function(self, event)
+    self:UnregisterEvent(event)
+end)
