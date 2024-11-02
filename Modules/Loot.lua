@@ -17,10 +17,11 @@ local function FasterLooting()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
         local numLootItems = GetNumLootItems()
         if numLootItems > 0 then
-            LootFrame:Hide() -- Hide the loot frame
+            LootFrame:Hide()
             for ItemCount = 1, numLootItems do
                 LootSlot(ItemCount)
             end
+            LootFrame:Hide()
         end
     end
 end
