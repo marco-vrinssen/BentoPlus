@@ -1,24 +1,17 @@
--- Hide XP and status bars based on player level
+-- Hide XP status bar based on player level
 
 local function HideStatusTrackingBars()
     local playerLevel = UnitLevel("player")
     local maxLevel = GetMaxPlayerLevel()
 
-    if playerLevel < maxLevel then
-        if MainStatusTrackingBarContainer then
+    if MainStatusTrackingBarContainer then
+        if playerLevel < maxLevel then
             MainStatusTrackingBarContainer:Show()
             MainStatusTrackingBarContainer:SetScript("OnShow", nil)
-        end
-    else
-        if MainStatusTrackingBarContainer then 
+        else
             MainStatusTrackingBarContainer:Hide()
             MainStatusTrackingBarContainer:SetScript("OnShow", MainStatusTrackingBarContainer.Hide)
         end
-    end
-
-    if SecondaryStatusTrackingBarContainer then
-        SecondaryStatusTrackingBarContainer:Hide()
-        SecondaryStatusTrackingBarContainer:SetScript("OnShow", SecondaryStatusTrackingBarContainer.Hide)
     end
 end
 
