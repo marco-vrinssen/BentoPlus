@@ -6,36 +6,46 @@ end)
 
 
 
--- Reposition QuickJoinToastButton and BNToastFrame
+-- Create a new frame in the top left corner to attach the BNToastFrame and QuickJoinToastButton
 
-local BannerFrame = CreateFrame("Frame", "BannerFrame", UIParent)
-BannerFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 24, -24)
-BannerFrame:SetSize(200, 200)
+local NotificationFrame = CreateFrame("Frame", "NotificationFrame", UIParent)
+NotificationFrame:SetSize(200, 100)
+NotificationFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 24, -24)
 
-local function HandleQuickJoinToastButton()
+local function UpdateToastElements()
+
     QuickJoinToastButton:Hide()
 
     if QuickJoinToastButton.Toast1 then
-        QuickJoinToastButton.Toast1:SetParent(BannerFrame)
         QuickJoinToastButton.Toast1:ClearAllPoints()
-        QuickJoinToastButton.Toast1:SetPoint("TOPLEFT", BannerFrame, "TOPLEFT", 0, 0)
+        QuickJoinToastButton.Toast1:SetParent(NotificationFrame)
+        QuickJoinToastButton.Toast1:SetPoint("TOPLEFT", NotificationFrame, "TOPLEFT", 0, 0)
     end
 
     if QuickJoinToastButton.Toast2 then
-        QuickJoinToastButton.Toast2:SetParent(BannerFrame)
         QuickJoinToastButton.Toast2:ClearAllPoints()
-        if QuickJoinToastButton.Toast1 then
-            QuickJoinToastButton.Toast2:SetPoint("TOPLEFT", BannerFrame, "TOPLEFT", 0, -QuickJoinToastButton.Toast1:GetHeight())
-        else
-            QuickJoinToastButton.Toast2:SetPoint("TOPLEFT", BannerFrame, "TOPLEFT", 0, 0)
-        end
+        QuickJoinToastButton.Toast2:SetParent(NotificationFrame)
+        QuickJoinToastButton.Toast2:SetPoint("TOPLEFT", QuickJoinToastButton.Toast1 or NotificationFrame, "BOTTOMLEFT", 0, -8)
     end
 end
 
-local QuickJoinToastEvents = CreateFrame("Frame")
-QuickJoinToastEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
-QuickJoinToastEvents:SetScript("OnEvent", HandleQuickJoinToastButton)
+local NotificationEvents = CreateFrame("Frame")
+NotificationEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
+NotificationEvents:SetScript("OnEvent", OnPlayerEnteringWorld)
 
-BNToastFrame:SetParent(BannerFrame)
-BNToastFrame:ClearAllPoints()
-BNToastFrame:SetPoint("TOPLEFT", BannerFrame, "TOPLEFT", 0, 0)
+QuickJoinToastButton:HookScript("OnShow", UpdateToastElements)
+QuickJoinToastButton.Toast1:HookScript("OnShow", UpdateToastElements)
+QuickJoinToastButton.Toast2:HookScript("OnShow", UpdateToastElements)
+
+
+
+
+-- Function to re-anchor the BNToastFrame
+
+local function RepositionBNToastFrame()
+    BNToastFrame:ClearAllPoints()
+    BNToastFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 24, -24)
+end
+
+-- Hook the function to the BNToastFrame's OnShow event
+BNToastFrame:HookScript("OnShow", RepositionBNToastFrame)
