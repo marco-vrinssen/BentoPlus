@@ -88,15 +88,8 @@ local function UpdateChatScroll()
     end
 end
 
-local function HideStaticElements()
-    if QuickJoinToastButton then
-        QuickJoinToastButton:Hide()
-        QuickJoinToastButton:SetScript("OnShow", QuickJoinToastButton.Hide)
-    end
-end
-
 local function OnPlayerEnteringWorld()
-    HideStaticElements()
+    -- Removed HideStaticElements call
 end
 
 local chatEvents = CreateFrame("Frame")
