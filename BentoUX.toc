@@ -9,7 +9,6 @@ Modules/Bank.lua
 Modules/Buttons.lua
 Modules/Chat.lua
 Modules/Commands.lua
-Modules/Dialogs.lua
 Modules/Graphics.lua
 Modules/Loot.lua
 Modules/Merchant.lua
