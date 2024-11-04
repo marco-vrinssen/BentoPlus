@@ -1,7 +1,7 @@
 -- Update loot rate configuration
 
 local function UpdateLootRate()
-    SetCVar("autoLootRate", 0.0001)
+    SetCVar("autoLootRate", 0)
 end
 
 local LootConfigFrame = CreateFrame("Frame")
@@ -11,20 +11,23 @@ LootConfigFrame:SetScript("OnEvent", UpdateLootRate)
 
 
 
--- Speed up the auto looting process
+-- Speed up auto looting while hiding the loot frame during the looting
+
+local LootEpoch = 0
+local LootDelay = 0.1
 
 local function FasterLooting()
-    if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-        local numLootItems = GetNumLootItems()
-        if numLootItems > 0 then
-            for ItemCount = 1, numLootItems do
-                LootSlot(ItemCount)
-            end
+	if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
+		if (GetTime() - LootEpoch) >= LootDelay then
+			for i = GetNumLootItems(), 1, -1 do
+				LootSlot(i)
+			end    
+			LootEpoch = GetTime()
             LootFrame:Hide()
-        end
-    end
+		end
+	end
 end
 
-local LootEvents = CreateFrame("Frame")
-LootEvents:RegisterEvent("LOOT_READY")
-LootEvents:SetScript("OnEvent", FasterLooting)
+local LootTrigger = CreateFrame("Frame")
+LootTrigger:RegisterEvent("LOOT_READY")
+LootTrigger:SetScript("OnEvent", FasterLooting)
