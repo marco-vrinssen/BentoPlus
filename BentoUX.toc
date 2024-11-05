@@ -14,8 +14,7 @@ Modules/Loot.lua
 Modules/Merchant.lua
 Modules/Nameplates.lua
 Modules/Notifications.lua
-Modules/ProfessionGear.lua
 Modules/PvP.lua
 Modules/Raidframes.lua
-Modules/StatusBars.lua
+Modules/TrackingBars.lua
 Modules/Unitframes.lua
