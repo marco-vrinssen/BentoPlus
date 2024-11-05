@@ -6,12 +6,12 @@ end)
 
 
 
--- Create a new frame in the top left corner to attach the BNToastFrame and QuickJoinToastButton
-local NotificationFrame = CreateFrame("Frame", "NotificationFrame", UIParent)
-NotificationFrame:SetSize(200, 100)
-NotificationFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 24, -24)
-
 local function UpdateToastElements()
+
+    local NotificationFrame = CreateFrame("Frame", "NotificationFrame", UIParent)
+    NotificationFrame:SetSize(200, 100)
+    NotificationFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 24, -24)
+
     QuickJoinToastButton:Hide()
 
     if QuickJoinToastButton.Toast1 then
