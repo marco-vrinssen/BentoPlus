@@ -66,3 +66,81 @@ AuctionEvents:SetScript("OnEvent", function(self, event, ...)
         end
     end
 end)
+
+
+
+
+
+
+
+
+
+
+
+
+-- -- Enable posting items in the auction house post slot by pressing SPACE BAR.
+
+-- local function OnKeyPress(self, key)
+--     if key == "SPACE" then
+--         if InCombatLockdown() then
+--             self:SetPropagateKeyboardInput(true)
+--             return
+--         end
+
+--         if AuctionHouseFrame and AuctionHouseFrame:IsShown() then
+--             local commoditiesSellFrame = AuctionHouseFrame.CommoditiesSellFrame
+--             local itemSellFrame = AuctionHouseFrame.ItemSellFrame
+
+--             if (commoditiesSellFrame and commoditiesSellFrame:IsShown()) or (itemSellFrame and itemSellFrame:IsShown()) then
+--                 if commoditiesSellFrame and commoditiesSellFrame:IsShown() then
+--                     commoditiesSellFrame.PostButton:Click()
+--                 elseif itemSellFrame and itemSellFrame:IsShown() then
+--                     itemSellFrame.PostButton:Click()
+--                 end
+--                 self:SetPropagateKeyboardInput(false)
+--                 return
+--             end
+--         end
+--     end
+--     self:SetPropagateKeyboardInput(true)
+-- end
+
+-- local KeyPressFrame = CreateFrame("Frame")
+
+-- KeyPressFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+-- KeyPressFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
+-- KeyPressFrame:SetScript("OnEvent", function(self, event)
+--     if event == "AUCTION_HOUSE_SHOW" then
+--         self:SetScript("OnKeyDown", OnKeyPress)
+--         self:EnableKeyboard(true)
+--     elseif event == "AUCTION_HOUSE_CLOSED" then
+--         self:SetScript("OnKeyDown", nil)
+--         self:EnableKeyboard(false)
+--     end
+-- end)
+
+-- KeyPressFrame:SetPropagateKeyboardInput(true)
+
+
+
+
+-- -- This script reduces the price of an item by 20% when the auction house throttled system is ready
+
+-- local function setReducedPrice()
+--     if AuctionHouseFrame.ItemSellFrame:IsShown() and not AuctionHouseFrame.CommoditiesSellFrame:IsShown() then
+--         local priceInput = AuctionHouseFrame.ItemSellFrame.PriceInput.MoneyInputFrame.GoldBox
+--         if priceInput then
+--             local currentPrice = tonumber(priceInput:GetText()) or 0
+--             local reducedPrice = math.floor(currentPrice * 0.8)
+--             priceInput:SetText(reducedPrice)
+--         end
+--     end
+-- end
+
+-- local function onEvent()
+--     C_Timer.After(0, setReducedPrice)
+-- end
+
+-- local ItemSellEvents = CreateFrame("Frame")
+-- ItemSellEvents:RegisterEvent("AUCTION_HOUSE_THROTTLED_SYSTEM_READY")
+-- ItemSellEvents:SetScript("OnEvent", onEvent)
