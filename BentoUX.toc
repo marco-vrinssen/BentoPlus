@@ -4,6 +4,7 @@
 ## Author: MIYANKO
 
 Modules/Alerts.lua
+Modules/Auction.lua
 Modules/Bank.lua
 Modules/Buttons.lua
 Modules/Chat.lua
