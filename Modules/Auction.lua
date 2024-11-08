@@ -70,14 +70,6 @@ end)
 
 
 
-
-
-
-
-
-
-
-
 -- -- Enable posting items in the auction house post slot by pressing SPACE BAR.
 
 -- local function OnKeyPress(self, key)
