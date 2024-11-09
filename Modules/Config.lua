@@ -6,6 +6,8 @@ local function UpdateGraphicsConfig()
     SetCVar("ffxNether", 0)
     
     SetCVar("cameraDistanceMaxZoomFactor", 2.6)
+    
+    SetCVar("rawMouseEnable", 1)
 end
 
 local GraphicsConfigFrame = CreateFrame("Frame")
