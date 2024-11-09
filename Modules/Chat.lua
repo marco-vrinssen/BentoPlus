@@ -60,6 +60,13 @@ local function AlignEditBoxHeader()
     end
 end
 
+local function HideCombatLog()
+    if (ChatFrame2.isDocked or ChatFrame2:IsShown()) then
+        FCF_Close(ChatFrame2)
+    end
+    ChatFrame2.isDocked = 1
+end
+
 local function UpdateAllChatFrames()
     for i = 1, NUM_CHAT_WINDOWS do
         CustomizeChatFrame(_G["ChatFrame" .. i])
@@ -72,6 +79,7 @@ local function UpdateAllChatFrames()
     end
     
     AlignEditBoxHeader()
+    HideCombatLog()
 end
 
 local function ChatScrollHook(chatFrameID)
@@ -89,7 +97,7 @@ local function UpdateChatScroll()
 end
 
 local function OnPlayerEnteringWorld()
-    -- Removed HideStaticElements call
+    HideCombatLog()
 end
 
 local chatEvents = CreateFrame("Frame")
