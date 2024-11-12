@@ -4,6 +4,12 @@ local function UpdateNameplateConfig()
     SetCVar("nameplateMotion", 1)
     SetCVar("nameplateMotionSpeed", 0.05)
     SetCVar("nameplateOverlapV", 0.5)
+
+    SetCVar("nameplateShowEnemyTotems", 1)
+    SetCVar("nameplateShowEnemyPets", 1)
+    SetCVar("nameplateShowEnemyMinions", 0)
+    SetCVar("nameplateShowEnemyMinus", 0)
+    SetCVar("nameplateShowEnemyGuardians", 0)
 end
 
 local NameplateConfigFrame = CreateFrame("Frame")
