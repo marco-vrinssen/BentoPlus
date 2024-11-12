@@ -8,6 +8,8 @@ local function UpdateGraphicsConfig()
     SetCVar("cameraDistanceMaxZoomFactor", 2.6)
     
     SetCVar("rawMouseEnable", 1)
+    
+    SetCVar("SpellQueueWindow", 150)
 end
 
 local GraphicsConfigFrame = CreateFrame("Frame")
