@@ -44,8 +44,8 @@ SlashCmdList["GXRESTART"] = CustomGXRestart
 -- Command to reload the UI and restart graphics engine
 
 local function CustomReloadAndRestart()
-    ReloadUI()
     ConsoleExec("gxRestart")
+    ReloadUI()
 end
 
 SLASH_RELOADANDRESTART1 = "/rl"
