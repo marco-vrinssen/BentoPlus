@@ -26,7 +26,7 @@ local function ShowCopyDialog(link)
 
     if not CopyDialog then
         CopyDialog = CreateFrame("Frame", "CopyDialog", UIParent, "BasicFrameTemplateWithInset")
-        CopyDialog:SetSize(400, 200)
+        CopyDialog:SetSize(320, 80)
         CopyDialog:SetPoint("CENTER")
         CopyDialog:SetFrameStrata("TOOLTIP")
         CopyDialog:EnableKeyboard(true)
@@ -36,9 +36,9 @@ local function ShowCopyDialog(link)
         CopyDialog.title:SetText("CheckPvP Link")
 
         CopyDialog.EditBox = CreateFrame("EditBox", nil, CopyDialog, "InputBoxTemplate")
-        CopyDialog.EditBox:SetSize(360, 40)
-        CopyDialog.EditBox:SetPoint("TOP", 0, -40)
-        CopyDialog.EditBox:SetAutoFocus(true) -- Ensure the EditBox is always auto-focused
+        CopyDialog.EditBox:SetSize(280, 40)
+        CopyDialog.EditBox:SetPoint("CENTER")
+        CopyDialog.EditBox:SetAutoFocus(true)
         CopyDialog.EditBox:SetScript("OnEscapePressed", function(self)
             CopyDialog:Hide()
         end)
