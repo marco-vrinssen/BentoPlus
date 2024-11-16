@@ -37,8 +37,6 @@ TabBindEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 TabBindEvents:SetScript("OnEvent", RebindTabKey)
 
 
-
-
 -- Display the time remaining in the PvP queue dialog
 
 local TimeLeft = -1
@@ -74,8 +72,6 @@ PVPReadyDialog:HookScript("OnHide", function()
     QueueTimer:Hide()
     PVPReadyDialog:SetScript("OnUpdate", nil)
 end)
-
-
 
 
 -- Automatically release the ghost in PvP zones
