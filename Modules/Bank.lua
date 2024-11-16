@@ -6,7 +6,6 @@ end
 
 local bankFrameEvents = CreateFrame("Frame")
 bankFrameEvents:RegisterEvent("BANKFRAME_OPENED")
-
 bankFrameEvents:SetScript("OnEvent", function()
     C_Timer.After(0, openWarbandBank)
 end)
