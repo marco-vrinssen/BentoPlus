@@ -10,9 +10,8 @@ AlertEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 AlertEvents:SetScript("OnEvent", MuteAndHideAllAlerts)
 
 
-
-
 -- Hide Talking Head frame
+
 hooksecurefunc(TalkingHeadFrame, "PlayCurrent", function(self)
     self:Hide()
 end)
