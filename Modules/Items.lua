@@ -13,11 +13,6 @@ MerchantEvents:SetScript("OnEvent", AutoSellRepair)
 MerchantEvents:RegisterEvent("MERCHANT_SHOW")
 
 
-
-
-
-
-
 -- Update loot rate configuration
 
 local function UpdateLootRate()
@@ -27,8 +22,6 @@ end
 local LootConfigFrame = CreateFrame("Frame")
 LootConfigFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 LootConfigFrame:SetScript("OnEvent", UpdateLootRate)
-
-
 
 
 -- Speed up auto looting while hiding the loot frame during the looting
