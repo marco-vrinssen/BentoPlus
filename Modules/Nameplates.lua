@@ -17,8 +17,6 @@ NameplateConfigFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 NameplateConfigFrame:SetScript("OnEvent", UpdateNameplateConfig)
 
 
-
-
 -- Hide nameplate auras
 
 local function HideNameplateAuras(unitId)
