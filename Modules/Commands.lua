@@ -15,8 +15,6 @@ SLASH_TOGGLELUA1 = "/lua"
 SlashCmdList["TOGGLELUA"] = ToggleLuaErrors
 
 
-
-
 -- Command to reload the UI
 
 local function CustomReloadUI()
@@ -27,8 +25,6 @@ SLASH_RELOADUI1 = "/ui"
 SlashCmdList["RELOADUI"] = CustomReloadUI
 
 
-
-
 -- Command to restart graphics engine
 
 local function CustomGXRestart()
@@ -37,8 +33,6 @@ end
 
 SLASH_GXRESTART1 = "/gx"
 SlashCmdList["GXRESTART"] = CustomGXRestart
-
-
 
 
 -- Command to reload the UI and restart graphics engine
@@ -52,8 +46,6 @@ SLASH_RELOADANDRESTART1 = "/rl"
 SlashCmdList["RELOADANDRESTART"] = CustomReloadAndRestart
 
 
-
-
 -- Command to leave the current group
 
 SlashCmdList["LEAVEGROUP"] = function()
@@ -61,20 +53,3 @@ SlashCmdList["LEAVEGROUP"] = function()
 end
 
 SLASH_LEAVEGROUP1 = "/q"
-
-
-
-
--- Command leave the arena or battleground match
-
-SlashCmdList["LEAVEARENA"] = function()
-    if IsInInstance() then
-        if C_PvP.IsBattleground() then
-            C_PvP.LeaveBattlefield()
-        elseif C_PvP.IsArena() then
-            C_PvP.SurrenderArena()
-        end
-    end
-end
-
-SLASH_LEAVEARENA1 = "/gg"
