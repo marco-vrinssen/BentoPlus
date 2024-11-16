@@ -68,8 +68,6 @@ AuctionEvents:SetScript("OnEvent", function(self, event, ...)
 end)
 
 
-
-
 -- -- Enable posting items in the auction house post slot by pressing SPACE BAR.
 
 -- local function OnKeyPress(self, key)
@@ -112,8 +110,6 @@ end)
 -- end)
 
 -- KeyPressFrame:SetPropagateKeyboardInput(true)
-
-
 
 
 -- -- This script reduces the price of an item by 20% when the auction house throttled system is ready
