@@ -12,7 +12,6 @@ Modules/Commands.lua
 Modules/Config.lua
 Modules/Items.lua
 Modules/Nameplates.lua
-Modules/PlayerCheck.lua
 Modules/PvP.lua
 Modules/Raidframes.lua
 Modules/TrackingBars.lua
