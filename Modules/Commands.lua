@@ -44,12 +44,3 @@ end
 
 SLASH_RELOADANDRESTART1 = "/rl"
 SlashCmdList["RELOADANDRESTART"] = CustomReloadAndRestart
-
-
--- Command to leave the current group
-
-SlashCmdList["LEAVEGROUP"] = function()
-    C_PartyInfo.LeaveParty()
-end
-
-SLASH_LEAVEGROUP1 = "/q"
