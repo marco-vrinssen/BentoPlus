@@ -31,8 +31,8 @@ local function UpdateAutoLoot()
         local numLootItems = GetNumLootItems()
         if numLootItems > 0 then
             LootFrame:Hide()
-            for i = numLootItems, 1, -1 do
-                LootSlot(i)
+            for countLootItems = numLootItems, 1, -1 do
+                LootSlot(countLootItems)
             end
         end
     end
