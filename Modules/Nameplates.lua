@@ -29,7 +29,5 @@ end
 local NameplateFrame = CreateFrame("Frame")
 NameplateFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 NameplateFrame:SetScript("OnEvent", function(self, event, unitId)
-    if event == "NAME_PLATE_UNIT_ADDED" then
-        HideNameplateAuras(unitId)
-    end
+    HideNameplateAuras(unitId)
 end)
