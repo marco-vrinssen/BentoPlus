@@ -1,21 +1,23 @@
--- Function to hide a chat element and prevent it from showing again
+-- Function to hide a chat element
 local function HideChatElement(chatElement)
     if chatElement then
-        chatElement:Hide()
-        chatElement:SetScript("OnShow", chatElement.Hide)
+        chatElement:Hide()  -- Hide the element
+        chatElement:SetScript("OnShow", chatElement.Hide)  -- Ensure it stays hidden when shown
     end
 end
 
--- Function to customize a chat frame, excluding the combat log
+-- Function to customize a chat frame
 local function CustomizeChatFrame(chatFrame)
-    if chatFrame:GetID() == 2 then return end
+    if chatFrame:GetID() == 2 then return end  -- Skip the combat log frame
 
+    -- Hide all texture regions of the chat frame
     for _, region in ipairs({chatFrame:GetRegions()}) do
         if region:IsObjectType("Texture") then
             HideChatElement(region)
         end
     end
 
+    -- List of child elements to hide
     local childElementsToHide = {
         "ButtonFrame", "EditBoxLeft", "EditBoxMid", "EditBoxRight",
         "EditBoxHeaderSuffix", "TabUpButton", "TabDownButton",
@@ -23,14 +25,17 @@ local function CustomizeChatFrame(chatFrame)
         "EditBoxFocusLeft", "EditBoxFocusMid", "EditBoxFocusRight",
         "ScrollBar", "ScrollToBottomButton"
     }
+    -- Hide each child element in the list
     for _, elementName in ipairs(childElementsToHide) do
         local childElement = _G[chatFrame:GetName() .. elementName] or chatFrame[elementName]
         HideChatElement(childElement)
     end
 
+    -- Customize the chat tab
     local chatTab = _G[chatFrame:GetName() .. "Tab"]
     local chatTabText = _G[chatFrame:GetName() .. "TabText"]
     if chatTab then
+        -- Hide all texture regions of the chat tab
         for _, region in ipairs({chatTab:GetRegions()}) do
             if region:IsObjectType("Texture") then
                 HideChatElement(region)
@@ -38,9 +43,9 @@ local function CustomizeChatFrame(chatFrame)
         end
     end
     if chatTabText then
-        chatTabText:SetFont(STANDARD_TEXT_FONT, 12)
-        chatTabText:ClearAllPoints()
-        chatTabText:SetPoint("LEFT", chatTab, "LEFT", 4, 0)
+        chatTabText:SetFont(STANDARD_TEXT_FONT, 12)  -- Set font size
+        chatTabText:ClearAllPoints()  -- Clear existing points
+        chatTabText:SetPoint("LEFT", chatTab, "LEFT", 4, 0)  -- Set new position
     end
 end
 
