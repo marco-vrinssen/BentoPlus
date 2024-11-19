@@ -1,0 +1,16 @@
+## Interface: 110500
+## Title: Bento Plus
+## Notes: Simple and efficient enhancements to user experience.
+## Author: MIYANKO
+
+Modules/Bank.lua
+Modules/Chat.lua
+Modules/Commands.lua
+Modules/Config.lua
+Modules/Items.lua
+Modules/Miscellaneous.lua
+Modules/Nameplates.lua
+Modules/PvP.lua
+Modules/Raidframes.lua
+Modules/TrackingBars.lua
+Modules/Unitframes.lua
