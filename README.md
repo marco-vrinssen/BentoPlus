@@ -1,6 +1,6 @@
 # Bento Plus
 
-## Addon for World of Warcraft Retail
+## Addon for World of Warcraft Retail with simple and resource-efficient enhancements to user experience and interface.
 
 ### Features
 
