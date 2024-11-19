@@ -1,5 +1,4 @@
 -- Function to automatically sell junk and repair items
-
 local function AutoSellRepair()
     MerchantSellAllJunkButton:Click()
     StaticPopup1Button1:Click()
@@ -12,9 +11,7 @@ local MerchantEvents = CreateFrame("Frame")
 MerchantEvents:SetScript("OnEvent", AutoSellRepair)
 MerchantEvents:RegisterEvent("MERCHANT_SHOW")
 
-
--- Update loot rate configuration
-
+-- Function to update loot rate configuration
 local function UpdateLootRate()
     SetCVar("autoLootRate", 0)
 end
@@ -23,9 +20,7 @@ local LootConfigFrame = CreateFrame("Frame")
 LootConfigFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 LootConfigFrame:SetScript("OnEvent", UpdateLootRate)
 
-
--- Speed up auto looting while hiding the loot frame during the looting
-
+-- Function to speed up auto looting while hiding the loot frame during the looting
 local function UpdateAutoLoot()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
         local numLootItems = GetNumLootItems()
