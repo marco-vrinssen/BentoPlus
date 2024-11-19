@@ -85,7 +85,7 @@ local function autoReleaseGhost()
     local pvpType = C_PvP.GetZonePVPInfo()
 
     if (instanceType == "pvp" or pvpType == "combat") then
-        C_Timer.After(0.5, function()
+        C_Timer.After(0, function()
             local deathDialog = StaticPopup_FindVisible("DEATH")
             if deathDialog and deathDialog.Button1:IsEnabled() then
                 deathDialog.Button1:Click()
