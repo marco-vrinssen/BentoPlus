@@ -1,10 +1,8 @@
 -- Update nameplate configuration
-
 local function UpdateNameplateConfig()
     SetCVar("nameplateMotion", 1)
     SetCVar("nameplateMotionSpeed", 0.05)
     SetCVar("nameplateOverlapV", 0.5)
-
     SetCVar("nameplateShowEnemyTotems", 1)
     SetCVar("nameplateShowEnemyPets", 1)
     SetCVar("nameplateShowEnemyMinions", 0)
@@ -12,13 +10,12 @@ local function UpdateNameplateConfig()
     SetCVar("nameplateShowEnemyGuardians", 0)
 end
 
+-- Create a frame to handle nameplate configuration events
 local NameplateConfigFrame = CreateFrame("Frame")
 NameplateConfigFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 NameplateConfigFrame:SetScript("OnEvent", UpdateNameplateConfig)
 
-
 -- Hide nameplate auras
-
 local function HideNameplateAuras(unitId)
     local nameplate = C_NamePlate.GetNamePlateForUnit(unitId)
     local unitFrame = nameplate and nameplate.UnitFrame
@@ -26,6 +23,7 @@ local function HideNameplateAuras(unitId)
     unitFrame.BuffFrame:SetAlpha(0)
 end
 
+-- Create a frame to handle nameplate aura events
 local NameplateFrame = CreateFrame("Frame")
 NameplateFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
 NameplateFrame:SetScript("OnEvent", function(self, event, unitId)
