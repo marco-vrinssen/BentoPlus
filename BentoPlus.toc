@@ -3,14 +3,16 @@
 ## Notes: Simple and efficient enhancements to user experience.
 ## Author: MIYANKO
 
+Modules/ArenaFrames.lua
 Modules/Bank.lua
+Modules/CastingBar.lua
 Modules/Chat.lua
 Modules/Commands.lua
 Modules/Config.lua
+Modules/GroupFrames.lua
 Modules/Items.lua
 Modules/Miscellaneous.lua
 Modules/Nameplates.lua
 Modules/PvP.lua
-Modules/Raidframes.lua
 Modules/TrackingBars.lua
 Modules/Unitframes.lua
