@@ -5,7 +5,6 @@
 
 Modules/ArenaFrames.lua
 Modules/Bank.lua
-Modules/CastingBar.lua
 Modules/Chat.lua
 Modules/Commands.lua
 Modules/Config.lua
