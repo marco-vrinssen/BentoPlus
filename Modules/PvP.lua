@@ -37,43 +37,6 @@ tabBindEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 tabBindEvents:SetScript("OnEvent", rebindTabKey)
 
 
--- Display the time remaining in the PvP queue dialog
-
-local timeLeft = -1
-
-local queueTimer = PVPReadyDialog:CreateFontString(nil, "ARTWORK")
-queueTimer:SetFontObject(GameFontNormal)
-queueTimer:SetFont(GameFontNormal:GetFont(), 32, "OUTLINE")
-queueTimer:SetTextColor(1, 1, 1)
-queueTimer:SetPoint("TOP", PVPReadyDialog, "BOTTOM", 0, -16)
-
-local function updatePvPTimer(self, elapsed)
-    timeLeft = timeLeft - elapsed
-    if timeLeft > 0 then
-        queueTimer:SetText(tostring(floor(timeLeft + 0.5)))
-    else
-        queueTimer:Hide()
-        self:SetScript("OnUpdate", nil)
-    end
-end
-
-hooksecurefunc("PVPReadyDialog_Display", function(self, id)
-    timeLeft = GetBattlefieldPortExpiration(id)
-    if timeLeft and timeLeft > 0 then
-        PVPReadyDialog:SetScript("OnUpdate", updatePvPTimer)
-        queueTimer:Show()
-    else
-        queueTimer:Hide()
-        PVPReadyDialog:SetScript("OnUpdate", nil)
-    end
-end)
-
-PVPReadyDialog:HookScript("OnHide", function()
-    queueTimer:Hide()
-    PVPReadyDialog:SetScript("OnUpdate", nil)
-end)
-
-
 -- Automatically release the ghost in PvP zones
 
 local function AutoReleaseGhost()
