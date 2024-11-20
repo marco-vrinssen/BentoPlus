@@ -76,7 +76,7 @@ end)
 
 -- Automatically release the ghost in PvP zones
 
-local function autoReleaseGhost()
+local function AutoReleaseGhost()
     if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then
         return
     end
@@ -85,15 +85,15 @@ local function autoReleaseGhost()
     local pvpType = C_PvP.GetZonePVPInfo()
 
     if (instanceType == "pvp" or pvpType == "combat") then
-        C_Timer.After(0, function()
+        C_Timer.After(0.5, function()
             local deathDialog = StaticPopup_FindVisible("DEATH")
-            if deathDialog and deathDialog.Button1:IsEnabled() then
-                deathDialog.Button1:Click()
+            if deathDialog and deathDialog.button1 and deathDialog.button1:IsEnabled() then
+                deathDialog.button1:Click()
             end
         end)
     end
 end
 
-local releaseEvents = CreateFrame("Frame")
-releaseEvents:RegisterEvent("PLAYER_DEAD")
-releaseEvents:SetScript("OnEvent", autoReleaseGhost)
+local ReleaseEvents = CreateFrame("Frame")
+ReleaseEvents:RegisterEvent("PLAYER_DEAD")
+ReleaseEvents:SetScript("OnEvent", AutoReleaseGhost)
