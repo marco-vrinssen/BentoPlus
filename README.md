@@ -1,4 +1,4 @@
-# Bento Plus
+# Bento Experience
 
 ## Addon for World of Warcraft Retail with simple and resource-efficient user experience and interface enhancements.
 
