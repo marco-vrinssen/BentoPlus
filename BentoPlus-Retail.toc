@@ -1,6 +1,6 @@
 ## Interface: 110500
 ## Title: Bento Plus
-## Notes: Simple and efficient enhancements to user experience.
+## Notes: Simple, resource-efficient interface modifications and features that enhance the user experience.
 ## Author: MIYANKO
 
 Modules/ArenaFrames.lua
