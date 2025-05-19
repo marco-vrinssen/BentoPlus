@@ -7,7 +7,6 @@ Modules/ArenaFrames.lua
 Modules/Bank.lua
 Modules/Chat.lua
 Modules/Commands.lua
-Modules/Config.lua
 Modules/GroupFrames.lua
 Modules/Items.lua
 Modules/Miscellaneous.lua
