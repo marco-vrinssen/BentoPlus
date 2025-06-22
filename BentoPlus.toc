@@ -7,10 +7,10 @@ Modules/ArenaFrames.lua
 Modules/Bank.lua
 Modules/Chat.lua
 Modules/Commands.lua
-Modules/GroupFrames.lua
 Modules/Items.lua
 Modules/Miscellaneous.lua
 Modules/Nameplates.lua
 Modules/PvP.lua
+Modules/RaidFrames.lua
 Modules/TrackingBars.lua
 Modules/Unitframes.lua
