@@ -1,23 +1,24 @@
-local function HideArenaFrameElements(arenaFrame)
+local function hideArenaElements(arenaFrame)
     if not arenaFrame then return end
 
-    local elementsToHide = {
+    local unwantedElements = {
         arenaFrame.CastingBarFrame,
         arenaFrame.CcRemoverFrame,
         arenaFrame.name,
         arenaFrame.DebuffFrame
     }
-    for _, arenaFrameElement in ipairs(elementsToHide) do
-        if arenaFrameElement then
-            arenaFrameElement:SetScript("OnShow", function(self)
+    
+    for _, frameElement in ipairs(unwantedElements) do
+        if frameElement then
+            frameElement:SetScript("OnShow", function(self)
                 self:Hide()
             end)
-            arenaFrameElement:Hide()
+            frameElement:Hide()
         end
     end
 end
 
-local function MoveStealthIconOnShow(arenaFrame)
+local function repositionStealthIcon(arenaFrame)
     if not arenaFrame or not arenaFrame.StealthIcon then return end
 
     arenaFrame.StealthIcon:SetScript("OnShow", function(self)
@@ -26,14 +27,16 @@ local function MoveStealthIconOnShow(arenaFrame)
     end)
 end
 
-local function InitializeArenaFrames()
-    for i = 1, 3 do
-        local arenaFrame = _G["CompactArenaFrameMember"..i]
-        HideArenaFrameElements(arenaFrame)
-        MoveStealthIconOnShow(arenaFrame)
+local function configureArenaFrames()
+    for i = 1, 5 do
+        local memberFrame = _G["CompactArenaFrameMember"..i]
+        hideArenaElements(memberFrame)
+        repositionStealthIcon(memberFrame)
     end
 end
 
-local arenaFrameEvents = CreateFrame("Frame")
-arenaFrameEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
-arenaFrameEvents:SetScript("OnEvent", InitializeArenaFrames)
+-- Initialize arena frame modifications
+
+local arenaEventHandler = CreateFrame("Frame")
+arenaEventHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
+arenaEventHandler:SetScript("OnEvent", configureArenaFrames)

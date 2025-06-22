@@ -1,6 +1,4 @@
--- Hide target and focus frame auras and PvP badges
-
-local function HideBadges()
+local function hideBadges()
     PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PrestigeBadge:Hide()
     PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PrestigePortrait:Hide()
 
@@ -8,7 +6,9 @@ local function HideBadges()
     TargetFrame.TargetFrameContent.TargetFrameContentContextual.PrestigePortrait:Hide()
 end
 
-local UnitFrameEvents = CreateFrame("Frame")
-UnitFrameEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
-UnitFrameEvents:RegisterEvent("PLAYER_TARGET_CHANGED")
-UnitFrameEvents:SetScript("OnEvent", HideBadges)
+-- Initialize unit frame modifications
+
+local unitFrameHandler = CreateFrame("Frame")
+unitFrameHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
+unitFrameHandler:RegisterEvent("PLAYER_TARGET_CHANGED")
+unitFrameHandler:SetScript("OnEvent", hideBadges)

@@ -4,13 +4,15 @@
 ## Author: MIYANKO
 
 Modules/ArenaFrames.lua
+Modules/AutoRelease.lua
 Modules/Bank.lua
-Modules/Chat.lua
 Modules/Commands.lua
-Modules/Items.lua
-Modules/Miscellaneous.lua
+Modules/FastLooting.lua
+Modules/HideTrackingBars.lua
+Modules/HideVehicleSeat.lua
+Modules/JunkSelling.lua
+Modules/MuteAlertBanner.lua
 Modules/Nameplates.lua
-Modules/PvP.lua
 Modules/RaidFrames.lua
-Modules/TrackingBars.lua
-Modules/Unitframes.lua
+Modules/TabBinding.lua
+Modules/UnitFrames.lua
