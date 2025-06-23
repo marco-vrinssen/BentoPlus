@@ -8,6 +8,7 @@ Modules/AutoRelease.lua
 Modules/Bank.lua
 Modules/Commands.lua
 Modules/FastLooting.lua
+Modules/HideButtonArrow.lua
 Modules/HideTrackingBars.lua
 Modules/HideVehicleSeat.lua
 Modules/JunkSelling.lua
