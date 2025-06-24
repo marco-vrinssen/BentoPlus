@@ -1,42 +1,42 @@
-local function hideArenaElements(arenaFrame)
-    if not arenaFrame then return end
+local function hideFrameElements(targetFrame)
+    if not targetFrame then return end
 
-    local unwantedElements = {
-        arenaFrame.CastingBarFrame,
-        arenaFrame.CcRemoverFrame,
-        arenaFrame.name,
-        arenaFrame.DebuffFrame
+    local elementList = {
+        targetFrame.CastingBarFrame,
+        targetFrame.CcRemoverFrame,
+        targetFrame.name,
+        targetFrame.DebuffFrame
     }
     
-    for _, frameElement in ipairs(unwantedElements) do
-        if frameElement then
-            frameElement:SetScript("OnShow", function(self)
+    for _, element in ipairs(elementList) do
+        if element then
+            element:SetScript("OnShow", function(self)
                 self:Hide()
             end)
-            frameElement:Hide()
+            element:Hide()
         end
     end
 end
 
-local function repositionStealthIcon(arenaFrame)
-    if not arenaFrame or not arenaFrame.StealthIcon then return end
+local function moveStealthIcon(targetFrame)
+    if not targetFrame or not targetFrame.StealthIcon then return end
 
-    arenaFrame.StealthIcon:SetScript("OnShow", function(self)
+    targetFrame.StealthIcon:SetScript("OnShow", function(self)
         self:ClearAllPoints()
-        self:SetPoint("TOPLEFT", arenaFrame, "TOPRIGHT")
+        self:SetPoint("TOPLEFT", targetFrame, "TOPRIGHT")
     end)
 end
 
-local function configureArenaFrames()
+local function setupArenaFrames()
     for i = 1, 5 do
         local memberFrame = _G["CompactArenaFrameMember"..i]
-        hideArenaElements(memberFrame)
-        repositionStealthIcon(memberFrame)
+        hideFrameElements(memberFrame)
+        moveStealthIcon(memberFrame)
     end
 end
 
--- Initialize arena frame modifications
+-- Configure arena frame behavior
 
-local arenaEventHandler = CreateFrame("Frame")
-arenaEventHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
-arenaEventHandler:SetScript("OnEvent", configureArenaFrames)
+local frameHandler = CreateFrame("Frame")
+frameHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
+frameHandler:SetScript("OnEvent", setupArenaFrames)

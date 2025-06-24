@@ -1,27 +1,27 @@
-local function rebindTabKey()
-    local inInstance, instanceType = IsInInstance()
-    local pvpType = C_PvP.GetZonePVPInfo()
+local function updateTabBinding()
+    local currentInstance, instanceContentType = IsInInstance()
+    local zonePvpInfo = C_PvP.GetZonePVPInfo()
     
-    local targetKey = "TAB"
-    local bindSet = GetCurrentBindingSet()
+    local tabKeyBinding = "TAB"
+    local activeBindingSet = GetCurrentBindingSet()
 
-    if InCombatLockdown() or (bindSet ~= 1 and bindSet ~= 2) then
+    if InCombatLockdown() or (activeBindingSet ~= 1 and activeBindingSet ~= 2) then
         return
     end
 
-    local currentBinding = GetBindingAction(targetKey)
-    local newBinding
+    local existingTargetAction = GetBindingAction(tabKeyBinding)
+    local desiredTargetAction
 
-    if instanceType == "arena" or instanceType == "pvp" or pvpType == "combat" then
-        newBinding = "TARGETNEARESTENEMYPLAYER"
+    if instanceContentType == "arena" or instanceContentType == "pvp" or zonePvpInfo == "combat" then
+        desiredTargetAction = "TARGETNEARESTENEMYPLAYER"
     else
-        newBinding = "TARGETNEARESTENEMY"
+        desiredTargetAction = "TARGETNEARESTENEMY"
     end
 
-    if currentBinding ~= newBinding then
-        SetBinding(targetKey, newBinding)
-        SaveBindings(bindSet)
-        if newBinding == "TARGETNEARESTENEMYPLAYER" then
+    if existingTargetAction ~= desiredTargetAction then
+        SetBinding(tabKeyBinding, desiredTargetAction)
+        SaveBindings(activeBindingSet)
+        if desiredTargetAction == "TARGETNEARESTENEMYPLAYER" then
             print("PvP Tab")
         else
             print("PvE Tab")
@@ -29,9 +29,9 @@ local function rebindTabKey()
     end
 end
 
--- Initialize tab key rebinding
+-- Configure tab key dynamic binding system
 
-local tabHandler = CreateFrame("Frame")
-tabHandler:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-tabHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
-tabHandler:SetScript("OnEvent", rebindTabKey)
+local tabBindingFrame = CreateFrame("Frame")
+tabBindingFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+tabBindingFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+tabBindingFrame:SetScript("OnEvent", updateTabBinding)

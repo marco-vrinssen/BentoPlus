@@ -1,11 +1,9 @@
-local function openWarbandTab()
-    BankFrameTab3:Click()
-end
+-- Automate warband tab selection
 
--- Initialize warband tab automation
-
-local bankEventHandler = CreateFrame("Frame")
-bankEventHandler:RegisterEvent("BANKFRAME_OPENED")
-bankEventHandler:SetScript("OnEvent", function()
-    C_Timer.After(0, openWarbandTab)
+local bankHandler = CreateFrame("Frame")
+bankHandler:RegisterEvent("BANKFRAME_OPENED")
+bankHandler:SetScript("OnEvent", function()
+    C_Timer.After(0.1, function()
+        BankFrameTab3:Click()
+    end)
 end)
