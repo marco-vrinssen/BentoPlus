@@ -4,41 +4,45 @@
 
 ### Features
 
-- **Open Warband Bank automatically**: Automatically opens the Warband Bank.
-- **Hide nameplate auras**: Hides auras on nameplates.
-- **Update nameplate configuration**: Adjusts nameplate settings.
-- **Clean up chat interface**: Hides buttons and background elements in the chat interface.
-- **Hide status tracking bars**: Hides status tracking bars. The XP bar is only hidden once max level has been reached.
-- **Hide talking head frame**: Disables the talking head frame.
-- **Hide annoying guild achievement and loot alerts or banners**: Hides guild achievement and loot alerts or banners.
-- **Hide target and focus frame auras and PvP badges**: Customizes target and focus frames.
-- **Hide vehicle seat indicator**: Hides the vehicle seat indicator.
-- **Hide raid frame auras**: Hides auras on raid frames.
-- **Update graphics related configuration**: Adjusts graphics settings.
-- **Auto sell grey items and repair gear**: Automates selling junk and repairing gear.
-- **Faster auto looting**: Speeds up the looting process.
-- **Auto release ghost in PvP zones**: Automatically releases the ghost in PvP zones.
-- **Auto rebind Tab key for PvP/PvE**: Automatically rebinds the Tab key for different modes.
-- **PvP queue timer**: Displays a timer for PvP queues.
+- **Open Warband Bank automatically**: Opens the Warband Bank tab when visiting the bank.
+- **Hide nameplate auras**: Hides buffs and debuffs on nameplates for a cleaner look.
+- **Update nameplate configuration**: Adjusts nameplate settings for improved visibility.
+- **Clean up chat interface**: Hides chat buttons and background elements for a minimal chat experience.
+- **Hide status tracking bars**: Hides status tracking bars (XP bar only hidden at max level).
+- **Hide talking head frame**: Disables the talking head frame (not currently implemented).
+- **Mute alert banners and sounds**: Mutes guild achievement and loot alert banners and their sounds.
+- **Hide target and focus frame auras and PvP badges**: Hides auras and PvP badges on target and focus frames.
+- **Hide vehicle seat indicator**: Hides the vehicle seat indicator frame.
+- **Hide raid frame auras**: (Commented out in code, not currently active.)
+- **Update graphics related configuration**: Provides slash commands to restart graphics engine and clear cache.
+- **Auto sell grey items and repair gear**: Sells junk and repairs gear automatically at merchants.
+- **Faster auto looting**: Speeds up looting by instantly looting all items.
+- **Auto release ghost in PvP zones**: Releases your ghost automatically in PvP zones.
+- **Auto rebind Tab key for PvP/PvE**: Dynamically rebinds Tab to target enemy players in PvP and all enemies in PvE.
+- **PvP queue timer**: (Not currently implemented.)
+- **Scale action button highlights**: Increases the size of action button combat highlights for better visibility.
+- **Hide button rotation arrows**: Hides combat rotation assistant arrows on action buttons.
+- **Auto-apply transmog**: Automatically applies transmog changes when opening the wardrobe.
+- **Right-click reload on main menu**: Right-clicking the main menu button reloads the UI.
 
 ### Ingame Commands
 
 - **Toggle Lua errors command**: Command to toggle Lua errors on or off.
-  - **Command**: `/lua`
-  - **Description**: This command toggles the display of Lua errors. If Lua errors are currently being shown, the command will hide them, and vice versa. Useful for debugging or hiding error messages during gameplay.
+  - **Command**: `/errors`
+  - **Description**: Toggles the display of Lua errors for debugging or hiding error messages during gameplay.
 
 - **Reload UI command**: Command to reload the user interface.
   - **Command**: `/ui`
-  - **Description**: This command reloads the user interface, which can be useful for applying changes without restarting the game.
+  - **Description**: Reloads the user interface to apply changes without restarting the game.
 
 - **Restart graphics command**: Command to restart the graphics engine.
   - **Command**: `/gx`
-  - **Description**: This command restarts the graphics engine, which can be useful for applying graphics settings changes without restarting the game.
+  - **Description**: Restarts the graphics engine, useful for applying graphics settings changes.
 
-- **Reload UI and restart graphics command**: Command to reload the UI and restart the graphics engine.
+- **Reload UI and restart graphics command**: Command to reload the UI and restart the graphics engine, and clear cache.
   - **Command**: `/rl`
-  - **Description**: This command reloads the user interface and restarts the graphics engine, combining the effects of the `/ui` and `/gx` commands.
+  - **Description**: Reloads the UI, restarts the graphics engine, and clears the cache.
 
-- **Leave group command**: Command to leave the current group.
-  - **Command**: `/q`
-  - **Description**: This command makes the player leave the current group or party.
+- **Leave group command**: (Not currently implemented.)
+
+- **Right-click Main Menu**: Right-clicking the main menu micro button will reload the UI.
