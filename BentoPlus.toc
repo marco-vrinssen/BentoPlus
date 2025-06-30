@@ -5,6 +5,7 @@
 
 Modules/ArenaFrames.lua
 Modules/AutoMerchant.lua
+Modules/AutoMog.lua
 Modules/AutoRelease.lua
 Modules/Bank.lua
 Modules/ButtonHighlight.lua
