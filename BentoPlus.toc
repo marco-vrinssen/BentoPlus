@@ -4,6 +4,7 @@
 ## Author: MIYANKO
 
 Modules/ArenaFrames.lua
+Modules/AuctionPostSpace.lua
 Modules/AutoMerchant.lua
 Modules/AutoMog.lua
 Modules/AutoRelease.lua
