@@ -1,38 +1,36 @@
 -- PostItem module: Post currently listed auction house item when pressing space bar
 
-local postItemFrame = CreateFrame("Frame")
-local isAuctionHouseOpen = false
+local auctionFrame = CreateFrame("Frame")
+local isAuctionOpen = false
 
--- Function to post the currently selected auction
-local function postCurrentAuction()
-    if not isAuctionHouseOpen then
+local SPACE_KEY = "SPACE"
+
+-- Execute auction posting for active sell frame
+local function executeAuctionPost()
+    if not isAuctionOpen then
         return
     end
     
-    -- Check if we're in the correct auction house tab (selling)
     if not AuctionHouseFrame or not AuctionHouseFrame:IsShown() then
         return
     end
     
-    -- Try commodities sell frame first (for stackable items like herbs, ore, etc.)
-    local commoditiesSellFrame = AuctionHouseFrame.CommoditiesSellFrame
-    if commoditiesSellFrame and commoditiesSellFrame:IsShown() then
-        if commoditiesSellFrame.PostButton and commoditiesSellFrame.PostButton:IsEnabled() then
-            commoditiesSellFrame.PostButton:Click()
+    local commoditiesFrame = AuctionHouseFrame.CommoditiesSellFrame
+    if commoditiesFrame and commoditiesFrame:IsShown() then
+        if commoditiesFrame.PostButton and commoditiesFrame.PostButton:IsEnabled() then
+            commoditiesFrame.PostButton:Click()
             return
         end
     end
     
-    -- Try item sell frame (for equipment and non-stackable items)
-    local itemSellFrame = AuctionHouseFrame.ItemSellFrame
-    if itemSellFrame and itemSellFrame:IsShown() then
-        if itemSellFrame.PostButton and itemSellFrame.PostButton:IsEnabled() then
-            itemSellFrame.PostButton:Click()
+    local itemFrame = AuctionHouseFrame.ItemSellFrame
+    if itemFrame and itemFrame:IsShown() then
+        if itemFrame.PostButton and itemFrame.PostButton:IsEnabled() then
+            itemFrame.PostButton:Click()
             return
         end
     end
     
-    -- Fallback to old sell frame (for compatibility)
     local sellFrame = AuctionHouseFrame.SellFrame
     if sellFrame and sellFrame:IsShown() then
         if sellFrame.PostButton and sellFrame.PostButton:IsEnabled() then
@@ -42,44 +40,39 @@ local function postCurrentAuction()
     end
 end
 
--- Handle key bindings when auction house is open
-local function handleKeyDown(self, key)
-    if key == "SPACE" and isAuctionHouseOpen then
-        postCurrentAuction()
+-- Process keyboard input for auction posting
+local function processKeyInput(self, key)
+    if key == SPACE_KEY and isAuctionOpen then
+        executeAuctionPost()
+    else
+        self:SetPropagateKeyboardInput(true)
     end
 end
 
--- Event handlers
-local function onAuctionHouseShow()
-    isAuctionHouseOpen = true
-    -- Set up key binding
-    postItemFrame:SetScript("OnKeyDown", handleKeyDown)
-    postItemFrame:SetPropagateKeyboardInput(false)
-    postItemFrame:EnableKeyboard(true)
-    postItemFrame:SetFrameStrata("HIGH")
+-- Enable keyboard handling for auction house
+local function enableAuctionKeys()
+    isAuctionOpen = true
+    auctionFrame:SetScript("OnKeyDown", processKeyInput)
+    auctionFrame:SetPropagateKeyboardInput(true)
+    auctionFrame:EnableKeyboard(true)
+    auctionFrame:SetFrameStrata("HIGH")
 end
 
-local function onAuctionHouseHide()
-    isAuctionHouseOpen = false
-    -- Clean up key binding
-    postItemFrame:SetScript("OnKeyDown", nil)
-    postItemFrame:EnableKeyboard(false)
+-- Disable keyboard handling for auction house
+local function disableAuctionKeys()
+    isAuctionOpen = false
+    auctionFrame:SetScript("OnKeyDown", nil)
+    auctionFrame:EnableKeyboard(false)
 end
 
--- Initialize event handling
-postItemFrame:RegisterEvent("ADDON_LOADED")
-postItemFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-postItemFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
+-- Initialize auction house event monitoring
+auctionFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+auctionFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
 
-postItemFrame:SetScript("OnEvent", function(self, event, ...)
-    if event == "ADDON_LOADED" then
-        local addonName = ...
-        if addonName == "BentoPlus" then
-            print("|cff00ff00[BentoPlus]|r PostItem module loaded. Press SPACE at auction house to post items (works with both commodities and items).")
-        end
-    elseif event == "AUCTION_HOUSE_SHOW" then
-        onAuctionHouseShow()
+auctionFrame:SetScript("OnEvent", function(self, event, ...)
+    if event == "AUCTION_HOUSE_SHOW" then
+        enableAuctionKeys()
     elseif event == "AUCTION_HOUSE_CLOSED" then
-        onAuctionHouseHide()
+        disableAuctionKeys()
     end
 end)
