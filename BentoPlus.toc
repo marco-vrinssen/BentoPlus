@@ -16,6 +16,7 @@ Modules/HideTrackingBars.lua
 Modules/HideVehicleSeat.lua
 Modules/MuteAlertBanner.lua
 Modules/Nameplates.lua
+Modules/PostItem.lua
 Modules/RaidFrames.lua
 Modules/TabBinding.lua
 Modules/Unitframes.lua
