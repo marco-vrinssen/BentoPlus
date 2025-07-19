@@ -3,20 +3,21 @@
 ## Notes: Simple, resource-efficient interface modifications and features that enhance the user experience.
 ## Author: MIYANKO
 
-Modules/ArenaFrames.lua
+Modules/AutoAuctionHouse.lua
 Modules/AutoMerchant.lua
-Modules/AutoMog.lua
 Modules/AutoRelease.lua
-Modules/AutoWarBank.lua
-Modules/ButtonHighlight.lua
-Modules/Commands.lua
-Modules/FastLooting.lua
+Modules/AutoTransmog.lua
+Modules/AutoWarbandBank.lua
+Modules/EnhanceAuctionPost.lua
+Modules/EnhanceButtonHighlight.lua
+Modules/EnhanceFastLoot.lua
+Modules/EnhanceTabTargeting.lua
+Modules/FramesArena.lua
+Modules/FramesNameplate.lua
+Modules/FramesRaid.lua
+Modules/FramesUnit.lua
+Modules/HideAlertBanner.lua
 Modules/HideButtonArrow.lua
 Modules/HideTrackingBars.lua
 Modules/HideVehicleSeat.lua
-Modules/MuteAlertBanner.lua
-Modules/Nameplates.lua
-Modules/PostItem.lua
-Modules/RaidFrames.lua
-Modules/TabBinding.lua
-Modules/Unitframes.lua
+Modules/UtilityCommands.lua
