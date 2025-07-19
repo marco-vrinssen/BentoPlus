@@ -7,7 +7,7 @@ Modules/ArenaFrames.lua
 Modules/AutoMerchant.lua
 Modules/AutoMog.lua
 Modules/AutoRelease.lua
-Modules/Bank.lua
+Modules/AutoWarBank.lua
 Modules/ButtonHighlight.lua
 Modules/Commands.lua
 Modules/FastLooting.lua
