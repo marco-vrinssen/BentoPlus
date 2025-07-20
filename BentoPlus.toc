@@ -2,22 +2,18 @@
 ## Title: Bento Plus
 ## Notes: Simple, resource-efficient interface modifications and features that enhance the user experience.
 ## Author: MIYANKO
+## SavedVariables: BentoDB
 
-Modules/AutoAuctionHouse.lua
-Modules/AutoMerchant.lua
-Modules/AutoRelease.lua
-Modules/AutoTransmog.lua
-Modules/AutoWarbandBank.lua
-Modules/EnhanceAuctionPost.lua
-Modules/EnhanceButtonHighlight.lua
-Modules/EnhanceFastLoot.lua
-Modules/EnhanceTabTargeting.lua
-Modules/FramesArena.lua
-Modules/FramesNameplate.lua
-Modules/FramesRaid.lua
-Modules/FramesUnit.lua
-Modules/HideAlertBanner.lua
-Modules/HideButtonArrow.lua
-Modules/HideTrackingBars.lua
-Modules/HideVehicleSeat.lua
-Modules/UtilityCommands.lua
+Modules/ActionButtons.lua
+Modules/Alerts.lua
+Modules/ArenaFrames.lua
+Modules/AuctionHouse.lua
+Modules/Bank.lua
+Modules/Commands.lua
+Modules/Items.lua
+Modules/Miscellaneous.lua
+Modules/Nameplates.lua
+Modules/PvP.lua
+Modules/RaidFrames.lua
+Modules/Transmog.lua
+Modules/XpBar.lua
