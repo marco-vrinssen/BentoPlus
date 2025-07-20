@@ -1,9 +1,12 @@
-local function hideStatusBars()
-    local playerLevel = UnitLevel("player")
-    local maxLevel = GetMaxPlayerLevel()
+
+-- Hide main status tracking bars if player is at max level
+
+local function hideMainStatusTrackingBarsIfMaxLevel()
+    local currentPlayerLevel = UnitLevel("player")
+    local maximumPlayerLevel = GetMaxPlayerLevel()
 
     if MainStatusTrackingBarContainer then
-        if playerLevel < maxLevel then
+        if currentPlayerLevel < maximumPlayerLevel then
             MainStatusTrackingBarContainer:Show()
             MainStatusTrackingBarContainer:SetScript("OnShow", nil)
         else
@@ -13,11 +16,12 @@ local function hideStatusBars()
     end
 end
 
--- Initialize tracking bar visibility
 
-local statusHandler = CreateFrame("Frame")
-statusHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
-statusHandler:RegisterEvent("PLAYER_LEVEL_UP")
-statusHandler:SetScript("OnEvent", function(self, event)
-    C_Timer.After(0, hideStatusBars)
+-- Register events to initialize tracking bar visibility
+
+local trackingBarVisibilityEventFrame = CreateFrame("Frame")
+trackingBarVisibilityEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+trackingBarVisibilityEventFrame:RegisterEvent("PLAYER_LEVEL_UP")
+trackingBarVisibilityEventFrame:SetScript("OnEvent", function(self, eventTypeString)
+    C_Timer.After(0, hideMainStatusTrackingBarsIfMaxLevel)
 end)

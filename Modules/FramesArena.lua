@@ -1,42 +1,52 @@
-local function hideFrameElements(targetFrame)
-    if not targetFrame then return end
 
-    local elementList = {
-        targetFrame.CastingBarFrame,
-        targetFrame.CcRemoverFrame,
-        targetFrame.name,
-        targetFrame.DebuffFrame
+-- Hide specific arena frame elements for a cleaner UI
+
+local function hideArenaFrameElements(arenaMemberFrame)
+    if not arenaMemberFrame then return end
+
+    local arenaElementFrameList = {
+        arenaMemberFrame.CastingBarFrame,
+        arenaMemberFrame.CcRemoverFrame,
+        arenaMemberFrame.name,
+        arenaMemberFrame.DebuffFrame
     }
-    
-    for _, element in ipairs(elementList) do
-        if element then
-            element:SetScript("OnShow", function(self)
+
+    for _, arenaElementFrame in ipairs(arenaElementFrameList) do
+        if arenaElementFrame then
+            arenaElementFrame:SetScript("OnShow", function(self)
                 self:Hide()
             end)
-            element:Hide()
+            arenaElementFrame:Hide()
         end
     end
 end
 
-local function moveStealthIcon(targetFrame)
-    if not targetFrame or not targetFrame.StealthIcon then return end
 
-    targetFrame.StealthIcon:SetScript("OnShow", function(self)
+-- Move the stealth icon to a new position on the arena frame
+
+local function repositionArenaStealthIcon(arenaMemberFrame)
+    if not arenaMemberFrame or not arenaMemberFrame.StealthIcon then return end
+
+    arenaMemberFrame.StealthIcon:SetScript("OnShow", function(self)
         self:ClearAllPoints()
-        self:SetPoint("TOPLEFT", targetFrame, "TOPRIGHT")
+        self:SetPoint("TOPLEFT", arenaMemberFrame, "TOPRIGHT")
     end)
 end
 
-local function setupArenaFrames()
-    for i = 1, 5 do
-        local memberFrame = _G["CompactArenaFrameMember"..i]
-        hideFrameElements(memberFrame)
-        moveStealthIcon(memberFrame)
+
+-- Set up all arena frames by hiding elements and repositioning icons
+
+local function setupAllArenaFrames()
+    for arenaMemberIndex = 1, 5 do
+        local arenaMemberFrame = _G["CompactArenaFrameMember"..arenaMemberIndex]
+        hideArenaFrameElements(arenaMemberFrame)
+        repositionArenaStealthIcon(arenaMemberFrame)
     end
 end
 
--- Configure arena frame behavior
 
-local frameHandler = CreateFrame("Frame")
-frameHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
-frameHandler:SetScript("OnEvent", setupArenaFrames)
+-- Register event to configure arena frame behavior
+
+local arenaFrameEventFrame = CreateFrame("Frame")
+arenaFrameEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+arenaFrameEventFrame:SetScript("OnEvent", setupAllArenaFrames)

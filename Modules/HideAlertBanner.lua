@@ -1,10 +1,14 @@
-local function muteAlerts()
+
+-- Mute alert sounds and unregister alert events
+
+local function muteAlertSoundsAndUnregisterEvents()
     MuteSoundFile(569143)
     AlertFrame:UnregisterAllEvents()
 end
 
--- Initialize alert muting
 
-local alertHandler = CreateFrame("Frame")
-alertHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
-alertHandler:SetScript("OnEvent", muteAlerts)
+-- Register event to initialize alert muting
+
+local alertBannerMuteEventFrame = CreateFrame("Frame")
+alertBannerMuteEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+alertBannerMuteEventFrame:SetScript("OnEvent", muteAlertSoundsAndUnregisterEvents)

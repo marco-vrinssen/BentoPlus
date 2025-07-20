@@ -1,27 +1,30 @@
-local function updateTabBinding()
-    local currentInstance, instanceContentType = IsInInstance()
-    local zonePvpInfo = C_PvP.GetZonePVPInfo()
-    
-    local tabKeyBinding = "TAB"
-    local activeBindingSet = GetCurrentBindingSet()
 
-    if InCombatLockdown() or (activeBindingSet ~= 1 and activeBindingSet ~= 2) then
+-- Update the TAB key binding based on instance and PvP context
+
+local function updateTabKeyBindingForContext()
+    local isPlayerInInstance, instanceTypeString = IsInInstance()
+    local zonePvpTypeString = C_PvP.GetZonePVPInfo()
+
+    local tabKeyBindingString = "TAB"
+    local currentBindingSetIndex = GetCurrentBindingSet()
+
+    if InCombatLockdown() or (currentBindingSetIndex ~= 1 and currentBindingSetIndex ~= 2) then
         return
     end
 
-    local existingTargetAction = GetBindingAction(tabKeyBinding)
-    local desiredTargetAction
+    local currentTabTargetActionString = GetBindingAction(tabKeyBindingString)
+    local desiredTabTargetActionString
 
-    if instanceContentType == "arena" or instanceContentType == "pvp" or zonePvpInfo == "combat" then
-        desiredTargetAction = "TARGETNEARESTENEMYPLAYER"
+    if instanceTypeString == "arena" or instanceTypeString == "pvp" or zonePvpTypeString == "combat" then
+        desiredTabTargetActionString = "TARGETNEARESTENEMYPLAYER"
     else
-        desiredTargetAction = "TARGETNEARESTENEMY"
+        desiredTabTargetActionString = "TARGETNEARESTENEMY"
     end
 
-    if existingTargetAction ~= desiredTargetAction then
-        SetBinding(tabKeyBinding, desiredTargetAction)
-        SaveBindings(activeBindingSet)
-        if desiredTargetAction == "TARGETNEARESTENEMYPLAYER" then
+    if currentTabTargetActionString ~= desiredTabTargetActionString then
+        SetBinding(tabKeyBindingString, desiredTabTargetActionString)
+        SaveBindings(currentBindingSetIndex)
+        if desiredTabTargetActionString == "TARGETNEARESTENEMYPLAYER" then
             print("PvP Tab")
         else
             print("PvE Tab")
@@ -29,9 +32,9 @@ local function updateTabBinding()
     end
 end
 
--- Configure tab key dynamic binding system
+-- Register events to update TAB key binding dynamically
 
-local tabBindingFrame = CreateFrame("Frame")
-tabBindingFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-tabBindingFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-tabBindingFrame:SetScript("OnEvent", updateTabBinding)
+local tabKeyBindingEventFrame = CreateFrame("Frame")
+tabKeyBindingEventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+tabKeyBindingEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+tabKeyBindingEventFrame:SetScript("OnEvent", updateTabKeyBindingForContext)

@@ -1,4 +1,7 @@
-local function hideBadges()
+
+-- Hide prestige badges and portraits on player and target frames
+
+local function hidePrestigeBadgesAndPortraits()
     PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PrestigeBadge:Hide()
     PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.PrestigePortrait:Hide()
 
@@ -6,9 +9,10 @@ local function hideBadges()
     TargetFrame.TargetFrameContent.TargetFrameContentContextual.PrestigePortrait:Hide()
 end
 
--- Initialize unit frame modifications
 
-local unitFrameHandler = CreateFrame("Frame")
-unitFrameHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
-unitFrameHandler:RegisterEvent("PLAYER_TARGET_CHANGED")
-unitFrameHandler:SetScript("OnEvent", hideBadges)
+-- Register events to initialize unit frame modifications
+
+local unitFrameBadgeHiderEventFrame = CreateFrame("Frame")
+unitFrameBadgeHiderEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+unitFrameBadgeHiderEventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+unitFrameBadgeHiderEventFrame:SetScript("OnEvent", hidePrestigeBadgesAndPortraits)

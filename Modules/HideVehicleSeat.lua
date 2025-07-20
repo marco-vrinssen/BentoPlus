@@ -1,5 +1,6 @@
--- Initialize vehicle seat hiding
 
-local vehicleIndicator = _G["VehicleSeatIndicator"]
-vehicleIndicator:Hide()
-vehicleIndicator:SetScript("OnShow", vehicleIndicator.Hide)
+-- Hide the vehicle seat indicator frame and prevent it from showing
+
+local vehicleSeatIndicatorFrame = _G["VehicleSeatIndicator"]
+vehicleSeatIndicatorFrame:Hide()
+vehicleSeatIndicatorFrame:SetScript("OnShow", vehicleSeatIndicatorFrame.Hide)

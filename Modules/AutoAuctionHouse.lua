@@ -1,68 +1,90 @@
-local currentAddonName = "BentoPlus"
 
--- Create eventHandlerFrame to manage auction house events
+
+-- Define addonNameString for consistent addon identification
+
+local addonNameString = "BentoPlus"
+
+
+
+-- Create auctionHouseEventFrame to manage auction house related events
 
 local auctionHouseEventFrame = CreateFrame("Frame")
 
--- Initialize hookTrackingRegistry to prevent duplicate hook registration
 
-local hookTrackingRegistry = {}
 
--- Define helper functions for hook state management
+-- Initialize hookRegistrationStatusTable to prevent duplicate hook registration
 
-local function checkHookAlreadyRegistered(hookIdentifierKey)
-    return hookTrackingRegistry[hookIdentifierKey]
+local hookRegistrationStatusTable = {}
+
+
+
+-- Check if a specific hook has already been registered to avoid duplicate hooks
+
+local function isHookAlreadyRegistered(hookIdentifierString)
+    return hookRegistrationStatusTable[hookIdentifierString]
 end
 
-local function recordHookAsRegistered(hookIdentifierKey)
-    hookTrackingRegistry[hookIdentifierKey] = true
+
+-- Record that a specific hook has been registered for future reference
+
+local function markHookAsRegistered(hookIdentifierString)
+    hookRegistrationStatusTable[hookIdentifierString] = true
 end
 
--- Apply currentExpansionOnlyFilter to auction house search interface
 
-local function enforceCurrentExpansionOnlyFilter()
-    local auctionSearchBarInterface = AuctionHouseFrame.SearchBar
-    if not auctionSearchBarInterface or not auctionSearchBarInterface.FilterButton then return end
-    
-    auctionSearchBarInterface.FilterButton.filters[Enum.AuctionHouseFilter.CurrentExpansionOnly] = true
-    
-    auctionSearchBarInterface:UpdateClearFiltersButton()
+
+-- Enforce current expansion only filter on the auction house search bar
+
+local function applyCurrentExpansionOnlyFilterToSearchBar()
+    local auctionHouseSearchBarFrame = AuctionHouseFrame.SearchBar
+    if not auctionHouseSearchBarFrame or not auctionHouseSearchBarFrame.FilterButton then return end
+
+    auctionHouseSearchBarFrame.FilterButton.filters[Enum.AuctionHouseFilter.CurrentExpansionOnly] = true
+
+    auctionHouseSearchBarFrame:UpdateClearFiltersButton()
 end
 
--- Handle addon and auction house events for filter automation
 
-local function processAuctionHouseEvents(self, eventType, ...)
-    if eventType == "ADDON_LOADED" then
-        local loadedAddonName = ...
 
-        if loadedAddonName ~= currentAddonName then return end
-        
-    elseif eventType == "AUCTION_HOUSE_SHOW" then
-        
-        if not checkHookAlreadyRegistered("AuctionHouseSearchBar") then
-            local auctionSearchBarInterface = AuctionHouseFrame.SearchBar
-            if auctionSearchBarInterface then
-                local function applyFilterOnShow()
-                    enforceCurrentExpansionOnlyFilter()
+-- Process auction house events to automate filter application and hook registration
+
+local function handleAuctionHouseEventFrameEvents(self, eventTypeString, ...)
+    if eventTypeString == "ADDON_LOADED" then
+        local loadedAddonNameString = ...
+
+        if loadedAddonNameString ~= addonNameString then return end
+
+    elseif eventTypeString == "AUCTION_HOUSE_SHOW" then
+
+        if not isHookAlreadyRegistered("AuctionHouseSearchBarOnShow") then
+            local auctionHouseSearchBarFrame = AuctionHouseFrame.SearchBar
+            if auctionHouseSearchBarFrame then
+
+                local function triggerExpansionFilterOnShow()
+                    applyCurrentExpansionOnlyFilterToSearchBar()
                 end
-                
-                auctionSearchBarInterface:HookScript("OnShow", function(searchBarInstance)
-                    C_Timer.After(0, applyFilterOnShow)
+
+                auctionHouseSearchBarFrame:HookScript("OnShow", function(searchBarInstance)
+                    C_Timer.After(0, triggerExpansionFilterOnShow)
                 end)
-                
-                recordHookAsRegistered("AuctionHouseSearchBar")
-                
-                C_Timer.After(0, applyFilterOnShow)
+
+                markHookAsRegistered("AuctionHouseSearchBarOnShow")
+
+                C_Timer.After(0, triggerExpansionFilterOnShow)
             end
         end
     end
 end
+
+
 
 -- Register required events for auction house automation
 
 auctionHouseEventFrame:RegisterEvent("ADDON_LOADED")
 auctionHouseEventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
 
--- Bind event processor to frame event system
 
-auctionHouseEventFrame:SetScript("OnEvent", processAuctionHouseEvents)
+
+-- Bind event handler to auction house event frame
+
+auctionHouseEventFrame:SetScript("OnEvent", handleAuctionHouseEventFrameEvents)

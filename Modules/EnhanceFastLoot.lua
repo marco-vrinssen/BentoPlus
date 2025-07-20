@@ -1,37 +1,44 @@
-local function configureLootRate()
+
+-- Set the loot rate to instant for faster looting
+
+local function setInstantLootRateCVar()
     SetCVar("autoLootRate", 0)
 end
 
-local function lootAllSlots()
+-- Loot all available slots automatically if auto-loot is enabled
+
+local function lootAllAvailableSlotsAutomatically()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-        local lootItemCount = GetNumLootItems()
-        if lootItemCount > 0 then
+        local totalLootItemCount = GetNumLootItems()
+        if totalLootItemCount > 0 then
             LootFrame:Hide()
-            for slotIndex = lootItemCount, 1, -1 do
-                LootSlot(slotIndex)
+            for lootSlotIndex = totalLootItemCount, 1, -1 do
+                LootSlot(lootSlotIndex)
             end
         end
     end
 end
 
-local function closeEmptyWindow()
+-- Close the loot window if there are no items left
+
+local function closeLootWindowIfEmpty()
     if GetNumLootItems() == 0 then
         CloseLoot()
     end
 end
 
--- Initialize fast looting
+-- Register loot-related events for fast looting automation
 
-local lootEventHandler = CreateFrame("Frame")
-lootEventHandler:RegisterEvent("PLAYER_ENTERING_WORLD")
-lootEventHandler:RegisterEvent("LOOT_READY")
-lootEventHandler:RegisterEvent("LOOT_OPENED")
-lootEventHandler:SetScript("OnEvent", function(_, event)
-    if event == "PLAYER_ENTERING_WORLD" then
-        configureLootRate()
-    elseif event == "LOOT_READY" then
-        lootAllSlots()
-    elseif event == "LOOT_OPENED" then
-        closeEmptyWindow()
+local fastLootEventFrame = CreateFrame("Frame")
+fastLootEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+fastLootEventFrame:RegisterEvent("LOOT_READY")
+fastLootEventFrame:RegisterEvent("LOOT_OPENED")
+fastLootEventFrame:SetScript("OnEvent", function(_, eventTypeString)
+    if eventTypeString == "PLAYER_ENTERING_WORLD" then
+        setInstantLootRateCVar()
+    elseif eventTypeString == "LOOT_READY" then
+        lootAllAvailableSlotsAutomatically()
+    elseif eventTypeString == "LOOT_OPENED" then
+        closeLootWindowIfEmpty()
     end
 end)

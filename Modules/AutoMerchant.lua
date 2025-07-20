@@ -1,32 +1,40 @@
--- Process automated junk selling
 
-local function processJunkSelling()
+
+-- Sell all junk items automatically when merchant window opens
+
+local function sellAllJunkItemsAutomatically()
     C_Timer.After(0.1, function()
         MerchantSellAllJunkButton:Click()
-        
+
         C_Timer.After(0.1, function()
             StaticPopup1Button1:Click()
         end)
     end)
 end
 
--- Process automated equipment repair
 
-local function processEquipmentRepair()
+
+-- Repair all equipment automatically when merchant window opens
+
+local function repairAllEquipmentAutomatically()
     C_Timer.After(0.1, function()
         MerchantRepairAllButton:Click()
     end)
 end
 
--- Handle merchant interaction events
 
-local function handleMerchantShow()
-    processJunkSelling()
-    processEquipmentRepair()
+
+-- Handle merchant window show event to trigger automation
+
+local function handleMerchantWindowShowEvent()
+    sellAllJunkItemsAutomatically()
+    repairAllEquipmentAutomatically()
 end
 
--- Initialize merchant automation
 
-local merchantHandler = CreateFrame("Frame")
-merchantHandler:SetScript("OnEvent", handleMerchantShow)
-merchantHandler:RegisterEvent("MERCHANT_SHOW")
+
+-- Create merchantAutomationEventFrame to manage merchant automation events
+
+local merchantAutomationEventFrame = CreateFrame("Frame")
+merchantAutomationEventFrame:SetScript("OnEvent", handleMerchantWindowShowEvent)
+merchantAutomationEventFrame:RegisterEvent("MERCHANT_SHOW")

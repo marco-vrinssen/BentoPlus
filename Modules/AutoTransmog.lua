@@ -1,6 +1,8 @@
--- Automatically apply transmog changes when wardrobe opens
 
-local function autoTransmogApplyOnWardrobeShow()
+
+-- Apply transmog changes automatically when the wardrobe frame is shown
+
+local function applyTransmogChangesOnWardrobeShow()
     if not WardrobeTransmogFrame or not WardrobeTransmogFrame.ApplyButton then return end
     C_Timer.After(0.1, function()
         if WardrobeTransmogFrame.ApplyButton:IsEnabled() then
@@ -9,14 +11,18 @@ local function autoTransmogApplyOnWardrobeShow()
     end)
 end
 
+
+
+-- Register wardrobe show event to trigger automatic transmog application
+
 if WardrobeTransmogFrame then
-    WardrobeTransmogFrame:HookScript("OnShow", autoTransmogApplyOnWardrobeShow)
+    WardrobeTransmogFrame:HookScript("OnShow", applyTransmogChangesOnWardrobeShow)
 else
-    local eventFrame = CreateFrame("Frame")
-    eventFrame:RegisterEvent("ADDON_LOADED")
-    eventFrame:SetScript("OnEvent", function(self, event, addonName)
-        if addonName == "Blizzard_Collections" and WardrobeTransmogFrame then
-            WardrobeTransmogFrame:HookScript("OnShow", autoTransmogApplyOnWardrobeShow)
+    local wardrobeTransmogEventFrame = CreateFrame("Frame")
+    wardrobeTransmogEventFrame:RegisterEvent("ADDON_LOADED")
+    wardrobeTransmogEventFrame:SetScript("OnEvent", function(self, eventTypeString, loadedAddonNameString)
+        if loadedAddonNameString == "Blizzard_Collections" and WardrobeTransmogFrame then
+            WardrobeTransmogFrame:HookScript("OnShow", applyTransmogChangesOnWardrobeShow)
             self:UnregisterEvent("ADDON_LOADED")
         end
     end)

@@ -1,17 +1,27 @@
-local function performFullReload()
+
+
+-- Perform a full UI reload, graphics restart, and cache clear
+
+local function performFullUiReloadAndCacheClear()
     ReloadUI()
     ConsoleExec("gxRestart")
     ConsoleExec("clearCache")
 end
 
-local customTooltip = CreateFrame("GameTooltip", "CustomTooltip", UIParent, "GameTooltipTemplate")
 
--- Initialize slash commands
+
+-- Create a custom tooltip for the main menu micro button
+
+local mainMenuCustomTooltipFrame = CreateFrame("GameTooltip", "CustomTooltip", UIParent, "GameTooltipTemplate")
+
+
+
+-- Register slash commands for error display, UI reload, graphics restart, and full reload
 
 SLASH_ERRORDISPLAY1 = "/errors"
 SlashCmdList["ERRORDISPLAY"] = function()
-    local errorState = GetCVar("scriptErrors")
-    if errorState == "1" then
+    local scriptErrorsCVarState = GetCVar("scriptErrors")
+    if scriptErrorsCVarState == "1" then
         SetCVar("scriptErrors", 0)
         print("[Error Display]: Off")
     else
@@ -31,23 +41,27 @@ SlashCmdList["GXRESTART"] = function()
 end
 
 SLASH_FULLRELOAD1 = "/rl"
-SlashCmdList["FULLRELOAD"] = performFullReload
+SlashCmdList["FULLRELOAD"] = performFullUiReloadAndCacheClear
 
-MainMenuMicroButton:HookScript("OnClick", function(self, buttonPressed)
-    if buttonPressed == "RightButton" then
+
+
+-- Add right-click reload and tooltip to the main menu micro button
+
+MainMenuMicroButton:HookScript("OnClick", function(self, mouseButtonString)
+    if mouseButtonString == "RightButton" then
         ReloadUI()
     end
 end)
 
 MainMenuMicroButton:HookScript("OnEnter", function(self)
-    customTooltip:SetOwner(GameTooltip, "ANCHOR_NONE")
-    customTooltip:SetPoint("TOPLEFT", GameTooltip, "BOTTOMLEFT", 0, -2)
-    customTooltip:SetPoint("TOPRIGHT", GameTooltip, "BOTTOMRIGHT", 0, -2)
-    customTooltip:ClearLines()
-    customTooltip:AddLine("Right-Click: Reload UI", 1, 1, 1)
-    customTooltip:Show()
+    mainMenuCustomTooltipFrame:SetOwner(GameTooltip, "ANCHOR_NONE")
+    mainMenuCustomTooltipFrame:SetPoint("TOPLEFT", GameTooltip, "BOTTOMLEFT", 0, -2)
+    mainMenuCustomTooltipFrame:SetPoint("TOPRIGHT", GameTooltip, "BOTTOMRIGHT", 0, -2)
+    mainMenuCustomTooltipFrame:ClearLines()
+    mainMenuCustomTooltipFrame:AddLine("Right-Click: Reload UI", 1, 1, 1)
+    mainMenuCustomTooltipFrame:Show()
 end)
 
 MainMenuMicroButton:HookScript("OnLeave", function()
-    customTooltip:Hide()
+    mainMenuCustomTooltipFrame:Hide()
 end)
