@@ -1,137 +1,83 @@
+-- Initialize auction house automation
+local ADDON_NAME = "BentoPlus"
+local eventFrame = CreateFrame("Frame")
+local hooks = {}
 
-
--- Define addonNameString for consistent addon identification
-
-local addonNameString = "BentoPlus"
-
-
-
--- Create auctionHouseEventFrame to manage auction house related events
-
-local auctionHouseEventFrame = CreateFrame("Frame")
-
-
-
--- Initialize hookRegistrationStatusTable to prevent duplicate hook registration
-
-local hookRegistrationStatusTable = {}
-
-
-
--- Check if a specific hook has already been registered to avoid duplicate hooks
-
-local function isHookAlreadyRegistered(hookIdentifierString)
-    return hookRegistrationStatusTable[hookIdentifierString]
+-- Track hook registration
+local function isHookRegistered(hookName)
+    return hooks[hookName]
 end
 
-
--- Record that a specific hook has been registered for future reference
-
-local function markHookAsRegistered(hookIdentifierString)
-    hookRegistrationStatusTable[hookIdentifierString] = true
+-- Mark hook as registered
+local function markHookRegistered(hookName)
+    hooks[hookName] = true
 end
 
-
-
--- Enforce current expansion only filter on the auction house search bar
-
-local function applyCurrentExpansionOnlyFilterToSearchBar()
-    local auctionHouseSearchBarFrame = AuctionHouseFrame.SearchBar
-    if not auctionHouseSearchBarFrame or not auctionHouseSearchBarFrame.FilterButton then return end
-
-    auctionHouseSearchBarFrame.FilterButton.filters[Enum.AuctionHouseFilter.CurrentExpansionOnly] = true
-
-    auctionHouseSearchBarFrame:UpdateClearFiltersButton()
+-- Apply expansion filter to search
+local function applyExpansionFilter()
+    local searchBar = AuctionHouseFrame.SearchBar
+    if not searchBar or not searchBar.FilterButton then return end
+    
+    searchBar.FilterButton.filters[Enum.AuctionHouseFilter.CurrentExpansionOnly] = true
+    searchBar:UpdateClearFiltersButton()
 end
 
-
-
--- Process auction house events to automate filter application and hook registration
-
-local function handleAuctionHouseEventFrameEvents(self, eventTypeString, ...)
-    if eventTypeString == "ADDON_LOADED" then
-        local loadedAddonNameString = ...
-
-        if loadedAddonNameString ~= addonNameString then return end
-
-    elseif eventTypeString == "AUCTION_HOUSE_SHOW" then
-
-        if not isHookAlreadyRegistered("AuctionHouseSearchBarOnShow") then
-            local auctionHouseSearchBarFrame = AuctionHouseFrame.SearchBar
-            if auctionHouseSearchBarFrame then
-
-                local function triggerExpansionFilterOnShow()
-                    applyCurrentExpansionOnlyFilterToSearchBar()
+-- Handle auction house events
+local function handleEvents(self, event, ...)
+    if event == "ADDON_LOADED" then
+        local loadedAddon = ...
+        if loadedAddon ~= ADDON_NAME then return end
+        
+    elseif event == "AUCTION_HOUSE_SHOW" then
+        if not isHookRegistered("searchBarShow") then
+            local searchBar = AuctionHouseFrame.SearchBar
+            if searchBar then
+                local function triggerFilter()
+                    applyExpansionFilter()
                 end
-
-                auctionHouseSearchBarFrame:HookScript("OnShow", function(searchBarInstance)
-                    C_Timer.After(0, triggerExpansionFilterOnShow)
+                
+                searchBar:HookScript("OnShow", function()
+                    C_Timer.After(0, triggerFilter)
                 end)
-
-                markHookAsRegistered("AuctionHouseSearchBarOnShow")
-
-                C_Timer.After(0, triggerExpansionFilterOnShow)
+                
+                markHookRegistered("searchBarShow")
+                C_Timer.After(0, triggerFilter)
             end
         end
     end
 end
 
+-- Register events and handler
+eventFrame:RegisterEvent("ADDON_LOADED")
+eventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+eventFrame:SetScript("OnEvent", handleEvents)
 
+-- Enable spacebar posting
+local keyboardFrame = CreateFrame("Frame")
+local keyboardEnabled = false
+local SPACEBAR_KEY = "SPACE"
 
--- Register required events for auction house automation
-
-auctionHouseEventFrame:RegisterEvent("ADDON_LOADED")
-auctionHouseEventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-
-
-
--- Bind event handler to auction house event frame
-
-auctionHouseEventFrame:SetScript("OnEvent", handleAuctionHouseEventFrameEvents)
-
-
-
-
-
-
-
-
-
-
--- Create auctionHouseKeyboardEventFrame to manage keyboard posting events
-
-local auctionHouseKeyboardEventFrame = CreateFrame("Frame")
-local isAuctionHouseKeyboardEnabled = false
-
-local SPACEBAR_KEY_STRING = "SPACE"
-
--- Post the currently listed auction house item if the spacebar is pressed
-
-local function postAuctionItemOnSpacebar()
-    if not isAuctionHouseKeyboardEnabled then
-        return
-    end
-
-    if not AuctionHouseFrame or not AuctionHouseFrame:IsShown() then
-        return
-    end
-
-    local commoditiesSellFrame = AuctionHouseFrame.CommoditiesSellFrame
-    if commoditiesSellFrame and commoditiesSellFrame:IsShown() then
-        if commoditiesSellFrame.PostButton and commoditiesSellFrame.PostButton:IsEnabled() then
-            commoditiesSellFrame.PostButton:Click()
+-- Post auction item on spacebar
+local function postAuctionItem()
+    if not keyboardEnabled then return end
+    if not AuctionHouseFrame or not AuctionHouseFrame:IsShown() then return end
+    
+    local commoditiesFrame = AuctionHouseFrame.CommoditiesSellFrame
+    if commoditiesFrame and commoditiesFrame:IsShown() then
+        if commoditiesFrame.PostButton and commoditiesFrame.PostButton:IsEnabled() then
+            commoditiesFrame.PostButton:Click()
             return
         end
     end
-
-    local itemSellFrame = AuctionHouseFrame.ItemSellFrame
-    if itemSellFrame and itemSellFrame:IsShown() then
-        if itemSellFrame.PostButton and itemSellFrame.PostButton:IsEnabled() then
-            itemSellFrame.PostButton:Click()
+    
+    local itemFrame = AuctionHouseFrame.ItemSellFrame
+    if itemFrame and itemFrame:IsShown() then
+        if itemFrame.PostButton and itemFrame.PostButton:IsEnabled() then
+            itemFrame.PostButton:Click()
             return
         end
     end
-
+    
     local sellFrame = AuctionHouseFrame.SellFrame
     if sellFrame and sellFrame:IsShown() then
         if sellFrame.PostButton and sellFrame.PostButton:IsEnabled() then
@@ -141,43 +87,38 @@ local function postAuctionItemOnSpacebar()
     end
 end
 
--- Handle keyboard input for auction posting
-
-local function handleAuctionHouseKeyInput(self, keyString)
-    if keyString == SPACEBAR_KEY_STRING and isAuctionHouseKeyboardEnabled then
-        postAuctionItemOnSpacebar()
+-- Handle keyboard input
+local function handleKeyInput(self, key)
+    if key == SPACEBAR_KEY and keyboardEnabled then
+        postAuctionItem()
     else
         self:SetPropagateKeyboardInput(true)
     end
 end
 
--- Enable keyboard event handling for auction house
-
-local function enableAuctionHouseKeyboardEvents()
-    isAuctionHouseKeyboardEnabled = true
-    auctionHouseKeyboardEventFrame:SetScript("OnKeyDown", handleAuctionHouseKeyInput)
-    auctionHouseKeyboardEventFrame:SetPropagateKeyboardInput(true)
-    auctionHouseKeyboardEventFrame:EnableKeyboard(true)
-    auctionHouseKeyboardEventFrame:SetFrameStrata("HIGH")
+-- Enable keyboard events
+local function enableKeyboard()
+    keyboardEnabled = true
+    keyboardFrame:SetScript("OnKeyDown", handleKeyInput)
+    keyboardFrame:SetPropagateKeyboardInput(true)
+    keyboardFrame:EnableKeyboard(true)
+    keyboardFrame:SetFrameStrata("HIGH")
 end
 
--- Disable keyboard event handling for auction house
-
-local function disableAuctionHouseKeyboardEvents()
-    isAuctionHouseKeyboardEnabled = false
-    auctionHouseKeyboardEventFrame:SetScript("OnKeyDown", nil)
-    auctionHouseKeyboardEventFrame:EnableKeyboard(false)
+-- Disable keyboard events
+local function disableKeyboard()
+    keyboardEnabled = false
+    keyboardFrame:SetScript("OnKeyDown", nil)
+    keyboardFrame:EnableKeyboard(false)
 end
 
--- Register auction house show/close events to manage keyboard posting
-
-auctionHouseKeyboardEventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-auctionHouseKeyboardEventFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
-
-auctionHouseKeyboardEventFrame:SetScript("OnEvent", function(self, eventTypeString, ...)
-    if eventTypeString == "AUCTION_HOUSE_SHOW" then
-        enableAuctionHouseKeyboardEvents()
-    elseif eventTypeString == "AUCTION_HOUSE_CLOSED" then
-        disableAuctionHouseKeyboardEvents()
+-- Handle keyboard frame events
+keyboardFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+keyboardFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
+keyboardFrame:SetScript("OnEvent", function(self, event, ...)
+    if event == "AUCTION_HOUSE_SHOW" then
+        enableKeyboard()
+    elseif event == "AUCTION_HOUSE_CLOSED" then
+        disableKeyboard()
     end
 end)

@@ -1,92 +1,71 @@
 
 
--- Sell all junk items automatically when merchant window opens
-
-local function sellAllJunkItemsAutomatically()
+-- Sell junk items at merchants
+local function sellJunkItems()
     C_Timer.After(0.1, function()
         MerchantSellAllJunkButton:Click()
-
+        
         C_Timer.After(0.1, function()
             StaticPopup1Button1:Click()
         end)
     end)
 end
 
-
-
--- Repair all equipment automatically when merchant window opens
-
-local function repairAllEquipmentAutomatically()
+-- Repair equipment at merchants
+local function repairEquipment()
     C_Timer.After(0.1, function()
         MerchantRepairAllButton:Click()
     end)
 end
 
-
-
--- Handle merchant window show event to trigger automation
-
-local function handleMerchantWindowShowEvent()
-    sellAllJunkItemsAutomatically()
-    repairAllEquipmentAutomatically()
+-- Handle merchant window events
+local function onMerchantShow()
+    sellJunkItems()
+    repairEquipment()
 end
 
+-- Register merchant events
+local merchantFrame = CreateFrame("Frame")
+merchantFrame:SetScript("OnEvent", onMerchantShow)
+merchantFrame:RegisterEvent("MERCHANT_SHOW")
 
 
--- Create merchantAutomationEventFrame to manage merchant automation events
-
-local merchantAutomationEventFrame = CreateFrame("Frame")
-merchantAutomationEventFrame:SetScript("OnEvent", handleMerchantWindowShowEvent)
-merchantAutomationEventFrame:RegisterEvent("MERCHANT_SHOW")
-
-
-
-
-
-
-
-
-
--- Set the loot rate to instant for faster looting
-
-local function setInstantLootRateCVar()
+-- Set instant loot rate
+local function setInstantLoot()
     SetCVar("autoLootRate", 0)
 end
 
--- Loot all available slots automatically if auto-loot is enabled
-
-local function lootAllAvailableSlotsAutomatically()
+-- Loot all items when auto loot enabled
+local function lootAllItems()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then
-        local totalLootItemCount = GetNumLootItems()
-        if totalLootItemCount > 0 then
+        local lootCount = GetNumLootItems()
+        if lootCount > 0 then
             LootFrame:Hide()
-            for lootSlotIndex = totalLootItemCount, 1, -1 do
-                LootSlot(lootSlotIndex)
+            for slot = lootCount, 1, -1 do
+                LootSlot(slot)
             end
         end
     end
 end
 
--- Close the loot window if there are no items left
-
-local function closeLootWindowIfEmpty()
+-- Close empty loot windows
+local function closeLootIfEmpty()
     if GetNumLootItems() == 0 then
         CloseLoot()
     end
 end
 
--- Register loot-related events for fast looting automation
-
-local fastLootEventFrame = CreateFrame("Frame")
-fastLootEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-fastLootEventFrame:RegisterEvent("LOOT_READY")
-fastLootEventFrame:RegisterEvent("LOOT_OPENED")
-fastLootEventFrame:SetScript("OnEvent", function(_, eventTypeString)
-    if eventTypeString == "PLAYER_ENTERING_WORLD" then
-        setInstantLootRateCVar()
-    elseif eventTypeString == "LOOT_READY" then
-        lootAllAvailableSlotsAutomatically()
-    elseif eventTypeString == "LOOT_OPENED" then
-        closeLootWindowIfEmpty()
+-- Register loot events
+local lootFrame = CreateFrame("Frame")
+lootFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+lootFrame:RegisterEvent("LOOT_READY")
+lootFrame:RegisterEvent("LOOT_OPENED")
+lootFrame:SetScript("OnEvent", function(_, eventType)
+    if eventType == "PLAYER_ENTERING_WORLD" then
+        setInstantLoot()
+    elseif eventType == "LOOT_READY" then
+        lootAllItems()
+    elseif eventType == "LOOT_OPENED" then
+        closeLootIfEmpty()
     end
 end)

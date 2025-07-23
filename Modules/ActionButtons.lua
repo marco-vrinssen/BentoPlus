@@ -1,47 +1,44 @@
-
--- Scale action button combat highlights by twenty percent.
-
-local function findAndScaleFlipbook(target_button)
-  if not target_button then
+-- Find and scale button flipbook by twenty percent
+local function findScaleFlipbook(button)
+  if not button then
     return
   end
 
-  local combat_flipbook = nil
+  local flipbook = nil
 
-  if target_button.AssistedCombatHighlightFrame then
-    if target_button.AssistedCombatHighlightFrame.Flipbook then
-      combat_flipbook = target_button.AssistedCombatHighlightFrame.Flipbook
-    elseif target_button.AssistedCombatHighlightFrame.flipbook then
-      combat_flipbook = target_button.AssistedCombatHighlightFrame.flipbook
+  if button.AssistedCombatHighlightFrame then
+    if button.AssistedCombatHighlightFrame.Flipbook then
+      flipbook = button.AssistedCombatHighlightFrame.Flipbook
+    elseif button.AssistedCombatHighlightFrame.flipbook then
+      flipbook = button.AssistedCombatHighlightFrame.flipbook
     end
   end
 
-  if not combat_flipbook and target_button.AssistedCombatHighlightFrame then
-    local frame_regions = {target_button.AssistedCombatHighlightFrame:GetRegions()}
-    for _, current_region in ipairs(frame_regions) do
-      if current_region and current_region:GetObjectType() == "Texture" and
-          (current_region:GetName() and
-           string.find(current_region:GetName():lower(), "flipbook")) then
-        combat_flipbook = current_region
+  if not flipbook and button.AssistedCombatHighlightFrame then
+    local regions = {button.AssistedCombatHighlightFrame:GetRegions()}
+    for _, region in ipairs(regions) do
+      if region and region:GetObjectType() == "Texture" and
+          (region:GetName() and
+           string.find(region:GetName():lower(), "flipbook")) then
+        flipbook = region
         break
       end
     end
   end
 
-  if combat_flipbook and not combat_flipbook._bento_scaled then
-    local original_width, original_height = combat_flipbook:GetSize()
+  if flipbook and not flipbook._bento_scaled then
+    local width, height = flipbook:GetSize()
 
-    if original_width <= 0 or original_height <= 0 then
-      local button_width, button_height = target_button:GetSize()
-      original_width, original_height = button_width, button_height
+    if width <= 0 or height <= 0 then
+      local buttonWidth, buttonHeight = button:GetSize()
+      width, height = buttonWidth, buttonHeight
     end
 
-    if original_width > 0 and original_height > 0 then
-      combat_flipbook:ClearAllPoints()
-      combat_flipbook:SetPoint("CENTER", target_button, "CENTER", 0, 0)
-
-      combat_flipbook:SetSize(original_width * 1.2, original_height * 1.2)
-      combat_flipbook._bento_scaled = true
+    if width > 0 and height > 0 then
+      flipbook:ClearAllPoints()
+      flipbook:SetPoint("CENTER", button, "CENTER", 0, 0)
+      flipbook:SetSize(width * 1.2, height * 1.2)
+      flipbook._bento_scaled = true
       return true
     end
   end
@@ -49,15 +46,17 @@ local function findAndScaleFlipbook(target_button)
   return false
 end
 
-local function processSingleButton(target_button)
-  if not target_button then
+-- Process single button flipbook
+local function processButton(button)
+  if not button then
     return
   end
-  findAndScaleFlipbook(target_button)
+  findScaleFlipbook(button)
 end
 
-local function getAllButtonNames()
-  local button_patterns = {
+-- Collect all button names
+local function getAllButtons()
+  local patterns = {
     "ActionButton",
     "MultiBarBottomLeftButton",
     "MultiBarBottomRightButton",
@@ -72,86 +71,84 @@ local function getAllButtonNames()
     "VehicleMenuBarActionButton"
   }
 
-  local button_collection = {}
-  for _, pattern_name in ipairs(button_patterns) do
-    local max_button_count = 12
-    if pattern_name == "PetActionButton" or pattern_name == "StanceButton" then
-      max_button_count = 10
-    elseif pattern_name == "OverrideActionBarButton" or
-           pattern_name == "VehicleMenuBarActionButton" then
-      max_button_count = 6
+  local buttons = {}
+  for _, pattern in ipairs(patterns) do
+    local maxCount = 12
+    if pattern == "PetActionButton" or pattern == "StanceButton" then
+      maxCount = 10
+    elseif pattern == "OverrideActionBarButton" or
+           pattern == "VehicleMenuBarActionButton" then
+      maxCount = 6
     end
 
-    for current_index = 1, max_button_count do
-      local found_button = _G[pattern_name .. current_index]
-      if found_button then
-        table.insert(button_collection, found_button)
+    for index = 1, maxCount do
+      local button = _G[pattern .. index]
+      if button then
+        table.insert(buttons, button)
       end
     end
   end
 
-  return button_collection
+  return buttons
 end
 
--- Process all discovered action buttons.
+-- Process all discovered buttons
 local function processAllButtons()
-  local button_collection = getAllButtonNames()
+  local buttons = getAllButtons()
 
-  for _, current_button in ipairs(button_collection) do
-    findAndScaleFlipbook(current_button)
+  for _, button in ipairs(buttons) do
+    findScaleFlipbook(button)
   end
 end
 
--- Schedule delayed button processing.
-local function scheduleDelayedProcess()
+-- Schedule delayed processing
+local function scheduleDelayed()
   C_Timer.After(2, function()
     processAllButtons()
     C_Timer.After(3, processAllButtons)
   end)
 end
 
--- Initialize event handling system.
+-- Initialize event system
+local eventFrame = CreateFrame("Frame")
+local eventsRegistered = false
 
-local event_frame = CreateFrame("Frame")
-local events_registered = false
-
--- Register all required game events.
-local function registerGameEvents()
-  if events_registered then
+-- Register required game events
+local function registerEvents()
+  if eventsRegistered then
     return
   end
 
-  event_frame:RegisterEvent("ADDON_LOADED")
-  event_frame:RegisterEvent("PLAYER_LOGIN")
-  event_frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-  event_frame:RegisterEvent("ACTIONBAR_SHOWGRID")
-  event_frame:RegisterEvent("ACTIONBAR_HIDEGRID")
-  event_frame:RegisterEvent("UPDATE_BINDINGS")
-  event_frame:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
+  eventFrame:RegisterEvent("ADDON_LOADED")
+  eventFrame:RegisterEvent("PLAYER_LOGIN")
+  eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+  eventFrame:RegisterEvent("ACTIONBAR_SHOWGRID")
+  eventFrame:RegisterEvent("ACTIONBAR_HIDEGRID")
+  eventFrame:RegisterEvent("UPDATE_BINDINGS")
+  eventFrame:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
 
-  events_registered = true
+  eventsRegistered = true
 end
 
-event_frame:SetScript("OnEvent", function(self, event_name, addon_name)
-  if event_name == "ADDON_LOADED" and addon_name == "BentoPlus" then
-    scheduleDelayedProcess()
-  elseif event_name == "PLAYER_LOGIN" or event_name == "PLAYER_ENTERING_WORLD" then
-    scheduleDelayedProcess()
+eventFrame:SetScript("OnEvent", function(self, eventName, addonName)
+  if eventName == "ADDON_LOADED" and addonName == "BentoPlus" then
+    scheduleDelayed()
+  elseif eventName == "PLAYER_LOGIN" or eventName == "PLAYER_ENTERING_WORLD" then
+    scheduleDelayed()
   else
     C_Timer.After(0.1, processAllButtons)
   end
 end)
 
-registerGameEvents()
+registerEvents()
 
--- Hook button creation for dynamic processing.
-
-local original_action_button_on_load = ActionButton_OnLoad
-if original_action_button_on_load then
+-- Hook button creation for dynamic processing
+local originalOnLoad = ActionButton_OnLoad
+if originalOnLoad then
   ActionButton_OnLoad = function(self, ...)
-    original_action_button_on_load(self, ...)
+    originalOnLoad(self, ...)
     C_Timer.After(0.5, function()
-      processSingleButton(self)
+      processButton(self)
     end)
   end
 end

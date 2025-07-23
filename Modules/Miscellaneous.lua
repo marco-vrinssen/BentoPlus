@@ -1,4 +1,3 @@
-
 -- Hide the vehicle seat indicator frame and prevent it from showing
 
 local vehicleSeatIndicatorFrame = _G["VehicleSeatIndicator"]

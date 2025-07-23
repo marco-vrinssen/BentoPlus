@@ -1,30 +1,28 @@
-
--- Update the TAB key binding based on instance and PvP context
-
-local function updateTabKeyBindingForContext()
-    local isPlayerInInstance, instanceTypeString = IsInInstance()
-    local zonePvpTypeString = C_PvP.GetZonePVPInfo()
-
-    local tabKeyBindingString = "TAB"
-    local currentBindingSetIndex = GetCurrentBindingSet()
-
-    if InCombatLockdown() or (currentBindingSetIndex ~= 1 and currentBindingSetIndex ~= 2) then
+-- Update tab targeting for pvp context
+local function updateTabTargeting()
+    local inInstance, instanceType = IsInInstance()
+    local zonePvpType = C_PvP.GetZonePVPInfo()
+    
+    local TAB_KEY = "TAB"
+    local bindingSet = GetCurrentBindingSet()
+    
+    if InCombatLockdown() or (bindingSet ~= 1 and bindingSet ~= 2) then
         return
     end
-
-    local currentTabTargetActionString = GetBindingAction(tabKeyBindingString)
-    local desiredTabTargetActionString
-
-    if instanceTypeString == "arena" or instanceTypeString == "pvp" or zonePvpTypeString == "combat" then
-        desiredTabTargetActionString = "TARGETNEARESTENEMYPLAYER"
+    
+    local currentAction = GetBindingAction(TAB_KEY)
+    local targetAction
+    
+    if instanceType == "arena" or instanceType == "pvp" or zonePvpType == "combat" then
+        targetAction = "TARGETNEARESTENEMYPLAYER"
     else
-        desiredTabTargetActionString = "TARGETNEARESTENEMY"
+        targetAction = "TARGETNEARESTENEMY"
     end
-
-    if currentTabTargetActionString ~= desiredTabTargetActionString then
-        SetBinding(tabKeyBindingString, desiredTabTargetActionString)
-        SaveBindings(currentBindingSetIndex)
-        if desiredTabTargetActionString == "TARGETNEARESTENEMYPLAYER" then
+    
+    if currentAction ~= targetAction then
+        SetBinding(TAB_KEY, targetAction)
+        SaveBindings(bindingSet)
+        if targetAction == "TARGETNEARESTENEMYPLAYER" then
             print("PvP Tab")
         else
             print("PvE Tab")
@@ -32,44 +30,32 @@ local function updateTabKeyBindingForContext()
     end
 end
 
--- Register events to update TAB key binding dynamically
+-- Register tab targeting events
+local tabFrame = CreateFrame("Frame")
+tabFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+tabFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+tabFrame:SetScript("OnEvent", updateTabTargeting)
 
-local tabKeyBindingEventFrame = CreateFrame("Frame")
-tabKeyBindingEventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-tabKeyBindingEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-tabKeyBindingEventFrame:SetScript("OnEvent", updateTabKeyBindingForContext)
-
-
-
-
-
-
-
-
--- Release ghost automatically in PvP or combat zones if no self-resurrect options are available
-
-local function autoReleaseGhostIfEligible()
+-- Release ghost in pvp zones when no resurrect options exist
+local function autoReleaseGhost()
     if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then
         return
     end
-
-    local isPlayerInInstance, instanceTypeString = IsInInstance()
-    local zonePvpTypeString = C_PvP.GetZonePVPInfo()
-
-    if (instanceTypeString == "pvp" or zonePvpTypeString == "combat") then
+    
+    local inInstance, instanceType = IsInInstance()
+    local zonePvpType = C_PvP.GetZonePVPInfo()
+    
+    if instanceType == "pvp" or zonePvpType == "combat" then
         C_Timer.After(0.5, function()
-            local deathPopupDialogFrame = StaticPopup_FindVisible("DEATH")
-            if deathPopupDialogFrame and deathPopupDialogFrame.button1 and deathPopupDialogFrame.button1:IsEnabled() then
-                deathPopupDialogFrame.button1:Click()
+            local deathDialog = StaticPopup_FindVisible("DEATH")
+            if deathDialog and deathDialog.button1 and deathDialog.button1:IsEnabled() then
+                deathDialog.button1:Click()
             end
         end)
     end
 end
 
-
-
--- Create ghostReleaseEventFrame to manage automatic ghost release events
-
-local ghostReleaseEventFrame = CreateFrame("Frame")
-ghostReleaseEventFrame:RegisterEvent("PLAYER_DEAD")
-ghostReleaseEventFrame:SetScript("OnEvent", autoReleaseGhostIfEligible)
+-- Register ghost release events
+local ghostFrame = CreateFrame("Frame")
+ghostFrame:RegisterEvent("PLAYER_DEAD")
+ghostFrame:SetScript("OnEvent", autoReleaseGhost)
