@@ -1,44 +1,54 @@
--- Find and scale button flipbook by twenty percent
-local function findScaleFlipbook(button)
-  if not button then
-    return
+-- Constants for flipbook scaling
+local FLIPBOOK_SCALE_FACTOR = 1.2
+local BENTO_SCALED_FLAG = "_bentoplus_combat_highlight_scaled"
+
+-- Find and scale combat highlight flipbook animation by twenty percent
+local function ActionButton_ScaleCombatHighlightFlipbook(actionButton)
+  if not actionButton then
+    return false
   end
 
-  local flipbook = nil
+  local combatHighlightFlipbook = nil
+  local combatHighlightFrame = actionButton.AssistedCombatHighlightFrame
 
-  if button.AssistedCombatHighlightFrame then
-    if button.AssistedCombatHighlightFrame.Flipbook then
-      flipbook = button.AssistedCombatHighlightFrame.Flipbook
-    elseif button.AssistedCombatHighlightFrame.flipbook then
-      flipbook = button.AssistedCombatHighlightFrame.flipbook
+  -- First, try to find flipbook through direct property access
+  if combatHighlightFrame then
+    if combatHighlightFrame.Flipbook then
+      combatHighlightFlipbook = combatHighlightFrame.Flipbook
+    elseif combatHighlightFrame.flipbook then
+      combatHighlightFlipbook = combatHighlightFrame.flipbook
     end
   end
 
-  if not flipbook and button.AssistedCombatHighlightFrame then
-    local regions = {button.AssistedCombatHighlightFrame:GetRegions()}
-    for _, region in ipairs(regions) do
-      if region and region:GetObjectType() == "Texture" and
-          (region:GetName() and
-           string.find(region:GetName():lower(), "flipbook")) then
-        flipbook = region
+  -- If not found, search through all regions for flipbook texture
+  if not combatHighlightFlipbook and combatHighlightFrame then
+    local frameRegions = {combatHighlightFrame:GetRegions()}
+    for _, frameRegion in ipairs(frameRegions) do
+      if frameRegion and frameRegion:GetObjectType() == "Texture" and
+          (frameRegion:GetName() and
+           string.find(frameRegion:GetName():lower(), "flipbook")) then
+        combatHighlightFlipbook = frameRegion
         break
       end
     end
   end
 
-  if flipbook and not flipbook._bento_scaled then
-    local width, height = flipbook:GetSize()
+  -- Scale the flipbook if found and not already scaled
+  if combatHighlightFlipbook and not combatHighlightFlipbook[BENTO_SCALED_FLAG] then
+    local flipbookWidth, flipbookHeight = combatHighlightFlipbook:GetSize()
 
-    if width <= 0 or height <= 0 then
-      local buttonWidth, buttonHeight = button:GetSize()
-      width, height = buttonWidth, buttonHeight
+    -- Fallback to button size if flipbook size is invalid
+    if flipbookWidth <= 0 or flipbookHeight <= 0 then
+      local buttonWidth, buttonHeight = actionButton:GetSize()
+      flipbookWidth, flipbookHeight = buttonWidth, buttonHeight
     end
 
-    if width > 0 and height > 0 then
-      flipbook:ClearAllPoints()
-      flipbook:SetPoint("CENTER", button, "CENTER", 0, 0)
-      flipbook:SetSize(width * 1.2, height * 1.2)
-      flipbook._bento_scaled = true
+    -- Apply scaling transformation
+    if flipbookWidth > 0 and flipbookHeight > 0 then
+      combatHighlightFlipbook:ClearAllPoints()
+      combatHighlightFlipbook:SetPoint("CENTER", actionButton, "CENTER", 0, 0)
+      combatHighlightFlipbook:SetSize(flipbookWidth * FLIPBOOK_SCALE_FACTOR, flipbookHeight * FLIPBOOK_SCALE_FACTOR)
+      combatHighlightFlipbook[BENTO_SCALED_FLAG] = true
       return true
     end
   end
@@ -46,109 +56,116 @@ local function findScaleFlipbook(button)
   return false
 end
 
--- Process single button flipbook
-local function processButton(button)
-  if not button then
+-- Process combat highlight scaling for a single action button
+local function ActionButton_ProcessCombatHighlight(actionButton)
+  if not actionButton then
     return
   end
-  findScaleFlipbook(button)
+  ActionButton_ScaleCombatHighlightFlipbook(actionButton)
 end
 
--- Collect all button names
-local function getAllButtons()
-  local patterns = {
-    "ActionButton",
-    "MultiBarBottomLeftButton",
-    "MultiBarBottomRightButton",
-    "MultiBarRightButton",
-    "MultiBarLeftButton",
-    "MultiBar5Button",
-    "MultiBar6Button",
-    "MultiBar7Button",
-    "PetActionButton",
-    "StanceButton",
-    "OverrideActionBarButton",
-    "VehicleMenuBarActionButton"
-  }
+-- Action button frame name patterns and their maximum counts
+local ACTION_BUTTON_PATTERNS = {
+  {pattern = "ActionButton", maxCount = 12},           -- Main action bar
+  {pattern = "MultiBarBottomLeftButton", maxCount = 12},   -- Bottom left bar
+  {pattern = "MultiBarBottomRightButton", maxCount = 12},  -- Bottom right bar  
+  {pattern = "MultiBarRightButton", maxCount = 12},        -- Right bar
+  {pattern = "MultiBarLeftButton", maxCount = 12},         -- Left bar
+  {pattern = "MultiBar5Button", maxCount = 12},            -- Additional bar 5
+  {pattern = "MultiBar6Button", maxCount = 12},            -- Additional bar 6
+  {pattern = "MultiBar7Button", maxCount = 12},            -- Additional bar 7
+  {pattern = "PetActionButton", maxCount = 10},            -- Pet action bar
+  {pattern = "StanceButton", maxCount = 10},               -- Stance/form bar
+  {pattern = "OverrideActionBarButton", maxCount = 6},     -- Override bar (vehicles, etc)
+  {pattern = "VehicleMenuBarActionButton", maxCount = 6}   -- Vehicle menu bar
+}
 
-  local buttons = {}
-  for _, pattern in ipairs(patterns) do
-    local maxCount = 12
-    if pattern == "PetActionButton" or pattern == "StanceButton" then
-      maxCount = 10
-    elseif pattern == "OverrideActionBarButton" or
-           pattern == "VehicleMenuBarActionButton" then
-      maxCount = 6
-    end
+-- Collect all available action button frames from the global namespace
+local function ActionButton_GetAllActionButtons()
+  local discoveredActionButtons = {}
+  
+  for _, buttonInfo in ipairs(ACTION_BUTTON_PATTERNS) do
+    local buttonPattern = buttonInfo.pattern
+    local maxButtonCount = buttonInfo.maxCount
 
-    for index = 1, maxCount do
-      local button = _G[pattern .. index]
-      if button then
-        table.insert(buttons, button)
+    for buttonIndex = 1, maxButtonCount do
+      local globalButtonName = buttonPattern .. buttonIndex
+      local actionButtonFrame = _G[globalButtonName]
+      
+      if actionButtonFrame then
+        table.insert(discoveredActionButtons, actionButtonFrame)
       end
     end
   end
 
-  return buttons
+  return discoveredActionButtons
 end
 
--- Process all discovered buttons
-local function processAllButtons()
-  local buttons = getAllButtons()
+-- Process combat highlight scaling for all discovered action buttons
+local function ActionButton_ProcessAllCombatHighlights()
+  local allActionButtons = ActionButton_GetAllActionButtons()
 
-  for _, button in ipairs(buttons) do
-    findScaleFlipbook(button)
+  for _, actionButton in ipairs(allActionButtons) do
+    ActionButton_ScaleCombatHighlightFlipbook(actionButton)
   end
 end
 
--- Schedule delayed processing
-local function scheduleDelayed()
-  C_Timer.After(2, function()
-    processAllButtons()
-    C_Timer.After(3, processAllButtons)
+-- Timer delays for processing combat highlights
+local INITIAL_PROCESSING_DELAY = 2
+local SECONDARY_PROCESSING_DELAY = 3
+local QUICK_PROCESSING_DELAY = 0.1
+local BUTTON_CREATION_DELAY = 0.5
+
+-- Schedule delayed processing of combat highlights after addon initialization
+local function ActionButton_ScheduleDelayedProcessing()
+  C_Timer.After(INITIAL_PROCESSING_DELAY, function()
+    ActionButton_ProcessAllCombatHighlights()
+    C_Timer.After(SECONDARY_PROCESSING_DELAY, ActionButton_ProcessAllCombatHighlights)
   end)
 end
 
--- Initialize event system
-local eventFrame = CreateFrame("Frame")
-local eventsRegistered = false
+-- Event handling system for action button modifications
+local bentoActionButtonEventFrame = CreateFrame("Frame", "BentoPlus_ActionButtonEventFrame")
+local areActionButtonEventsRegistered = false
 
--- Register required game events
-local function registerEvents()
-  if eventsRegistered then
+-- Register game events that affect action button states
+local function ActionButton_RegisterGameEvents()
+  if areActionButtonEventsRegistered then
     return
   end
 
-  eventFrame:RegisterEvent("ADDON_LOADED")
-  eventFrame:RegisterEvent("PLAYER_LOGIN")
-  eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-  eventFrame:RegisterEvent("ACTIONBAR_SHOWGRID")
-  eventFrame:RegisterEvent("ACTIONBAR_HIDEGRID")
-  eventFrame:RegisterEvent("UPDATE_BINDINGS")
-  eventFrame:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
+  bentoActionButtonEventFrame:RegisterEvent("ADDON_LOADED")
+  bentoActionButtonEventFrame:RegisterEvent("PLAYER_LOGIN")
+  bentoActionButtonEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+  bentoActionButtonEventFrame:RegisterEvent("ACTIONBAR_SHOWGRID")
+  bentoActionButtonEventFrame:RegisterEvent("ACTIONBAR_HIDEGRID")
+  bentoActionButtonEventFrame:RegisterEvent("UPDATE_BINDINGS")
+  bentoActionButtonEventFrame:RegisterEvent("ACTIONBAR_UPDATE_COOLDOWN")
 
-  eventsRegistered = true
+  areActionButtonEventsRegistered = true
 end
 
-eventFrame:SetScript("OnEvent", function(self, eventName, addonName)
+-- Event handler for action button related game events
+bentoActionButtonEventFrame:SetScript("OnEvent", function(self, eventName, addonName)
   if eventName == "ADDON_LOADED" and addonName == "BentoPlus" then
-    scheduleDelayed()
+    ActionButton_ScheduleDelayedProcessing()
   elseif eventName == "PLAYER_LOGIN" or eventName == "PLAYER_ENTERING_WORLD" then
-    scheduleDelayed()
+    ActionButton_ScheduleDelayedProcessing()
   else
-    C_Timer.After(0.1, processAllButtons)
+    -- Handle other action bar events with quick processing
+    C_Timer.After(QUICK_PROCESSING_DELAY, ActionButton_ProcessAllCombatHighlights)
   end
 end)
 
-registerEvents()
+ActionButton_RegisterGameEvents()
 
--- Hook button creation for dynamic processing
-local originalOnLoad = ActionButton_OnLoad
-if originalOnLoad then
-  ActionButton_OnLoad = function(self, ...)
-    originalOnLoad(self, ...)
-    C_Timer.After(0.5, function()
-      processButton(self)
+-- Hook into action button creation for dynamic combat highlight processing
+local originalActionButtonOnLoad = ActionButton_OnLoad
+if originalActionButtonOnLoad then
+  ActionButton_OnLoad = function(actionButtonSelf, ...)
+    originalActionButtonOnLoad(actionButtonSelf, ...)
+    C_Timer.After(BUTTON_CREATION_DELAY, function()
+      ActionButton_ProcessCombatHighlight(actionButtonSelf)
     end)
   end
 end
