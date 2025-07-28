@@ -3,7 +3,7 @@
 local warbandBankFrame = CreateFrame("Frame")
 warbandBankFrame:RegisterEvent("BANKFRAME_OPENED")
 warbandBankFrame:SetScript("OnEvent", function()
-  C_Timer.After(0.1, function()
+  C_Timer.After(0, function()
     BankFrameTab3:Click()
   end)
 end)

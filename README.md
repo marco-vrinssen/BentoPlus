@@ -57,6 +57,11 @@
 - **Toggle raid frame auras**: `/raidframeauras`
   - Toggles visibility of auras on raid frames
 
+- **Toggle arena frame elements**: `/arenaframeelements`
+  - Toggles visibility of casting bars, names, and debuff frames on arena frames
+  - Elements are hidden by default for a cleaner arena experience
+  - Uses persistent storage to remember your preference
+
 ### Quick Actions
 
 - **Right-click Main Menu**: Right-click the main menu micro button for instant UI reload

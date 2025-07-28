@@ -1,14 +1,14 @@
--- Define constants for menu text, dialog titles, and valid context types.
+-- Define menu constants and valid context configurations
 
-local menuText = "Copy Full Name"
-local dialogTitle = "Copy Full Name"
+local copyMenuText = "Copy Full Name"
+local copyDialogTitle = "Copy Full Name"
 
-local validContextTags = {
+local allowedContextTags = {
   MENU_LFG_FRAME_SEARCH_ENTRY = 1,
   MENU_LFG_FRAME_MEMBER_APPLY = 1
 }
 
-local validContextTypes = {
+local allowedContextTypes = {
   PLAYER = true,
   PARTY = true,
   RAID_PLAYER = true,
@@ -19,12 +19,14 @@ local validContextTypes = {
   BN_FRIEND = true,
   SELF = true,
   ENEMY_PLAYER = true,
-  OTHER_PLAYER = true
+  OTHER_PLAYER = true,
+  ARENA_ENEMY = true,
+  BATTLEGROUND_ENEMY = true
 }
 
--- Extract the name and realm from a full name string.
+-- Parse player name and realm from combined string
 
-local function extractNameAndRealm(fullName)
+local function parsePlayerName(fullName)
   if not fullName then
     return nil, nil
   end
@@ -37,14 +39,14 @@ local function extractNameAndRealm(fullName)
   return fullName, GetRealmName()
 end
 
--- Get player information from the LFG context.
+-- Extract player data from group finder context
 
-local function getLFGPlayerInfo(owner)
+local function getGroupFinderPlayer(owner)
   local resultID = owner.resultID
   if resultID then
     local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID)
     if searchResultInfo and searchResultInfo.leaderName then
-      return extractNameAndRealm(searchResultInfo.leaderName)
+      return parsePlayerName(searchResultInfo.leaderName)
     end
   end
 
@@ -65,15 +67,15 @@ local function getLFGPlayerInfo(owner)
 
   local fullName = C_LFGList.GetApplicantMemberInfo(applicantID, memberIdx)
   if fullName then
-    return extractNameAndRealm(fullName)
+    return parsePlayerName(fullName)
   end
 
   return nil, nil
 end
 
--- Get player information from a Battle.net account.
+-- Extract player data from battlenet account
 
-local function getBNetPlayerInfo(accountInfo)
+local function getBattlenetPlayer(accountInfo)
   if not accountInfo or not accountInfo.gameAccountInfo then
     return nil, nil
   end
@@ -82,13 +84,13 @@ local function getBNetPlayerInfo(accountInfo)
   return gameInfo.characterName, gameInfo.realmName
 end
 
--- Get player information from the menu context data.
+-- Resolve player data from menu context
 
-local function getPlayerInfoFromContext(owner, rootDescription, contextData)
+local function resolveContextPlayer(owner, rootDescription, contextData)
   if not contextData then
-    local tagType = validContextTags[rootDescription.tag]
+    local tagType = allowedContextTags[rootDescription.tag]
     if tagType == 1 then
-      return getLFGPlayerInfo(owner)
+      return getGroupFinderPlayer(owner)
     end
     return nil, nil
   end
@@ -99,7 +101,7 @@ local function getPlayerInfoFromContext(owner, rootDescription, contextData)
 
   local unit = contextData.unit
   if unit and UnitExists(unit) then
-    local name, realm = extractNameAndRealm(UnitName(unit))
+    local name, realm = parsePlayerName(UnitName(unit))
     if contextData.server then
       realm = contextData.server
     end
@@ -107,38 +109,38 @@ local function getPlayerInfoFromContext(owner, rootDescription, contextData)
   end
 
   if contextData.accountInfo then
-    local name, realm = getBNetPlayerInfo(contextData.accountInfo)
+    local name, realm = getBattlenetPlayer(contextData.accountInfo)
     if name and realm then
       return name, realm
     end
   end
 
   if contextData.name then
-    return extractNameAndRealm(contextData.name)
+    return parsePlayerName(contextData.name)
   end
 
   if contextData.friendsList then
     local friendInfo = C_FriendList.GetFriendInfoByIndex(contextData.friendsList)
     if friendInfo and friendInfo.name then
-      return extractNameAndRealm(friendInfo.name)
+      return parsePlayerName(friendInfo.name)
     end
   end
 
   return nil, nil
 end
 
--- Validate the menu context for addon functionality.
+-- Validate menu context for addon usage
 
-local function isValidMenuContext(rootDescription, contextData)
+local function validateMenuContext(rootDescription, contextData)
   if not contextData then
-    return validContextTags[rootDescription.tag] == 1
+    return allowedContextTags[rootDescription.tag] == 1
   end
 
   local which = contextData.which
-  return which and validContextTypes[which]
+  return which and allowedContextTypes[which]
 end
 
--- Create a copy dialog with auto-close functionality.
+-- Create modal dialog for text copying
 
 local function createCopyDialog(text)
   if not text then
@@ -158,7 +160,7 @@ local function createCopyDialog(text)
 
   frame.title = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   frame.title:SetPoint("TOP", frame.TitleBg, "TOP", 0, -5)
-  frame.title:SetText(dialogTitle)
+  frame.title:SetText(copyDialogTitle)
 
   local editBox = CreateFrame("EditBox", nil, frame, "InputBoxTemplate")
   editBox:SetSize(460, 30)
@@ -200,25 +202,25 @@ local function createCopyDialog(text)
   frame:Show()
 end
 
--- Add a menu option for copying a player's name.
+-- Add copy name option to context menu
 
 local function addCopyNameOption(owner, rootDescription, contextData)
-  if not isValidMenuContext(rootDescription, contextData) then
+  if not validateMenuContext(rootDescription, contextData) then
     return
   end
 
-  local name, realm = getPlayerInfoFromContext(owner, rootDescription, contextData)
+  local name, realm = resolveContextPlayer(owner, rootDescription, contextData)
 
   if name and realm then
     rootDescription:CreateDivider()
-    rootDescription:CreateButton(menuText, function()
+    rootDescription:CreateButton(copyMenuText, function()
       local copyText = string.format("%s-%s", name, realm)
       createCopyDialog(copyText)
     end)
   end
 end
 
--- Register menu hooks for right-click context menus.
+-- Register context menu hooks for all player types
 
 local function registerMenuHooks()
   if not (Menu and Menu.ModifyMenu) then
@@ -241,6 +243,8 @@ local function registerMenuHooks()
     modifyMenu("MENU_UNIT_SELF", addCopyNameOption)
     modifyMenu("MENU_UNIT_ENEMY_PLAYER", addCopyNameOption)
     modifyMenu("MENU_UNIT_OTHER_PLAYER", addCopyNameOption)
+    modifyMenu("MENU_UNIT_ARENA_ENEMY", addCopyNameOption)
+    modifyMenu("MENU_UNIT_BATTLEGROUND_ENEMY", addCopyNameOption)
   end)
 
   if not success then
@@ -248,13 +252,13 @@ local function registerMenuHooks()
   end
 end
 
--- Initialize the addon when it loads.
+-- Initialize addon functionality
 
 local function initializeAddon()
   registerMenuHooks()
 end
 
--- Register the addon loading event.
+-- Handle addon loading events
 
 local contextMenuEventFrame = CreateFrame("Frame")
 contextMenuEventFrame:RegisterEvent("ADDON_LOADED")

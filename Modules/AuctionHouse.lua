@@ -135,7 +135,7 @@ favoritesEventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
 favoritesEventFrame:RegisterEvent("AUCTION_HOUSE_BROWSE_RESULTS_UPDATED")
 favoritesEventFrame:RegisterEvent("AUCTION_HOUSE_BROWSE_RESULTS_ADDED")
 favoritesEventFrame:RegisterEvent("COMMODITY_SEARCH_RESULTS_UPDATED")
-favoritesEventFrame:RegisterEvent("COMMODdITY_SEARCH_RESULTS_ADDED")
+favoritesEventFrame:RegisterEvent("COMMODITY_SEARCH_RESULTS_ADDED")
 favoritesEventFrame:RegisterEvent("ITEM_SEARCH_RESULTS_UPDATED")
 favoritesEventFrame:RegisterEvent("ITEM_SEARCH_RESULTS_ADDED")
 

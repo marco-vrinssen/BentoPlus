@@ -1,5 +1,5 @@
 -- Mute alert sounds and unregister related events.
--- TEST
+
 local function configureAlertBanners()
   MuteSoundFile(569143)
   AlertFrame:UnregisterAllEvents()
