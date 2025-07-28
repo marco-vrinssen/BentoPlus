@@ -5,15 +5,17 @@
 ## SavedVariables: BentoDB
 
 Modules/ActionButtons.lua
-Modules/Alerts.lua
+Modules/AlertBanners.lua
 Modules/ArenaFrames.lua
 Modules/AuctionHouse.lua
 Modules/Bank.lua
 Modules/Commands.lua
+Modules/ContextMenu.lua
 Modules/Items.lua
-Modules/Miscellaneous.lua
+Modules/Mounts.lua
 Modules/Nameplates.lua
+Modules/PlayerFrame.lua
 Modules/PvP.lua
 Modules/RaidFrames.lua
+Modules/StatusBars.lua
 Modules/Transmog.lua
-Modules/XpBar.lua
