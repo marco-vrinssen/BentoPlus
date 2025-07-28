@@ -11,7 +11,8 @@ Modules/AuctionHouse.lua
 Modules/Bank.lua
 Modules/Commands.lua
 Modules/ContextMenu.lua
-Modules/Items.lua
+Modules/Loot.lua
+Modules/Merchant.lua
 Modules/Mounts.lua
 Modules/Nameplates.lua
 Modules/PlayerFrame.lua
