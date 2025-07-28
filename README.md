@@ -2,48 +2,69 @@
 
 ## Addon for World of Warcraft Retail offering lightweight, efficient interface enhancements and features designed to improve your gameplay experience.
 
-### Features
+### Interface Enhancements
 
-- **Open Warband Bank automatically**: Opens the Warband Bank tab when visiting the bank.
-- **Hide nameplate buffs**: Hides buffs on nameplates for a cleaner look.
-- **Hide arena frame elements**: Hides various elements on arena frames for a cleaner appearance.
-- **Mute alert banners and sounds**: Mutes guild achievement and loot alert banners and their sounds.
-- **Hide target and focus frame prestige badges**: Hides prestige badges on target and focus frames.
-- **Hide status tracking bars**: Hides status tracking bars (XP bar only hidden at max level).
-- **Hide vehicle seat indicator**: Hides the vehicle seat indicator frame.
-- **Toggle raid frame auras**: Allows toggling the visibility of auras on raid frames.
-- **Auto sell grey items and repair gear**: Sells junk and repairs gear automatically at merchants.
-- **Faster auto looting**: Speeds up looting by instantly looting all items.
-- **Auto release ghost in PvP zones**: Releases your ghost automatically in PvP zones.
-- **Auto rebind Tab key for PvP/PvE**: Dynamically rebinds Tab to target enemy players in PvP and all enemies in PvE.
-- **Scale action button highlights**: Increases the size of action button combat highlights for better visibility.
-- **Auto-apply transmog**: Automatically applies transmog changes when opening the wardrobe.
-- **Right-click reload on main menu**: Right-clicking the main menu button reloads the UI.
-- **Copy player name**: Adds a "Copy Full Name" option to the right-click context menu for players.
-- **Auction House enhancements**: Enables current expansion filter by default and allows using the spacebar to post auctions.
+- **Auto-open Warband Bank**: Automatically opens the Warband Bank tab when visiting the bank
+- **Hide nameplate buffs**: Removes buff displays on nameplates for a cleaner appearance
+- **Clean arena frames**: Hides casting bars, CC remover frames, names, and debuff frames on arena frames; repositions stealth icons
+- **Mute alert banners**: Silences guild achievement and loot alert banner sounds and notifications
+- **Hide prestige badges**: Removes prestige badges from target and focus frames
+- **Smart status bars**: Hides XP tracking bar automatically when reaching maximum level
+- **Hide vehicle seat indicator**: Removes the vehicle seat indicator frame
+- **Scale action button highlights**: Increases combat highlight size on action buttons for better visibility
+- **Enhanced tooltips**: Adds helpful tooltip information to the main menu button
 
-### Ingame Commands
+### Automation Features
 
-- **Toggle Lua errors command**: Command to toggle Lua errors on or off.
-  - **Command**: `/errors`
-  - **Description**: Toggles the display of Lua errors for debugging or hiding error messages during gameplay.
+- **Auto-sell and repair**: Automatically sells junk items and repairs equipment at merchants
+- **Instant auto-looting**: Sets loot rate to instant and automatically loots all items
+- **Smart PvP ghost release**: Auto-releases ghost in PvP zones when no self-resurrect options are available
+- **Dynamic Tab targeting**: Auto-rebinds Tab key to target enemy players in PvP zones and all enemies in PvE zones
+- **Auto-apply transmog**: Automatically applies transmog changes when opening the wardrobe collection
 
-- **Reload UI command**: Command to reload the user interface.
-  - **Command**: `/ui`
-  - **Description**: Reloads the user interface to apply changes without restarting the game.
+### Customizable Features
 
-- **Restart graphics command**: Command to restart the graphics engine.
-  - **Command**: `/gx`
-  - **Description**: Restarts the graphics engine, useful for applying graphics settings changes.
+- **Toggle raid frame auras**: Control visibility of auras on raid frames (hidden by default)
+  - Uses persistent storage to remember your preference
+  - Can be toggled via slash command
 
-- **Reload UI and restart graphics command**: Command to reload the UI and restart the graphics engine, and clear cache.
-  - **Command**: `/rl`
-  - **Description**: Reloads the UI, restarts the graphics engine, and clears the cache.
+### Context Menu Enhancements
 
-- **Toggle raid frame auras**: Command to toggle the visibility of auras on raid frames.
-  - **Command**: `/raidframeauras`
-  - **Description**: Toggles raid frame auras on or off.
+- **Copy player names**: Adds "Copy Full Name" option to player right-click menus
+  - Works across various contexts: party, raid, guild, communities, LFG, etc.
+  - Creates auto-closing dialog box for easy copying
 
-### Other
+### Auction House Improvements
 
-- **Right-click Main Menu**: Right-clicking the main menu micro button will reload the UI.
+- **Current expansion filter**: Automatically enables current expansion filter by default
+- **Spacebar posting**: Use spacebar to quickly post auction items
+- **Persistent favorites**: Automatically manages and stores auction house favorites
+
+### Slash Commands
+
+- **Toggle Lua errors**: `/errors`
+  - Toggles the display of Lua errors for debugging purposes
+
+- **Reload UI**: `/ui`
+  - Performs a clean UI reload
+
+- **Restart graphics**: `/gx`
+  - Restarts the graphics engine for applying graphics settings
+
+- **Full reload**: `/rl`
+  - Reloads UI, restarts graphics engine, and clears cache
+
+- **Toggle raid frame auras**: `/raidframeauras`
+  - Toggles visibility of auras on raid frames
+
+### Quick Actions
+
+- **Right-click Main Menu**: Right-click the main menu micro button for instant UI reload
+- **Spacebar Auction Posting**: Use spacebar to quickly post items in the Auction House
+
+### Technical Notes
+
+- Uses persistent storage (`BentoDB`) for user preferences
+- Automatically handles event registration and cleanup
+- Optimized for performance with minimal resource usage
+- Compatible with current World of Warcraft retail version
