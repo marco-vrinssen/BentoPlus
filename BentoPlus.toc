@@ -1,22 +1,23 @@
-## Interface: 110500
-## Title: Bento Plus
+## Interface: 110700
+## Title: BentoPlus
 ## Notes: Simple, resource-efficient interface modifications and features that enhance the user experience.
 ## Author: MIYANKO
+## Version: 1.0.0
 ## SavedVariables: BentoDB
 
-Modules/ActionButtons.lua
 Modules/AlertBanners.lua
 Modules/ArenaFrames.lua
 Modules/AuctionHouse.lua
-Modules/Bank.lua
+Modules/AutoTransmog.lua
+Modules/AutoWarbandBank.lua
 Modules/Commands.lua
 Modules/ContextMenu.lua
-Modules/Loot.lua
-Modules/Merchant.lua
+Modules/HudeButtonGlow.lua
+Modules/Items.lua
 Modules/Mounts.lua
-Modules/Nameplates.lua
+Modules/NamePlates.lua
 Modules/PlayerFrame.lua
 Modules/PvP.lua
 Modules/RaidFrames.lua
 Modules/StatusBars.lua
-Modules/Transmog.lua
+Modules/TargetFrame.lua
