@@ -12,7 +12,8 @@ Modules/AutoTransmog.lua
 Modules/AutoWarbandBank.lua
 Modules/Commands.lua
 Modules/ContextMenu.lua
-Modules/HudeButtonGlow.lua
+Modules/HideButtonGlow.lua
+Modules/IntroMessage.lua
 Modules/Items.lua
 Modules/Mounts.lua
 Modules/NamePlates.lua
