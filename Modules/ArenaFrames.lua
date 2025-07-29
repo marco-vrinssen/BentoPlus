@@ -63,18 +63,6 @@ local function repositionStealthIcon(arenaFrame)
   end)
 end
 
--- Toggle visibility of arena frame elements and refresh all frames
-
-local function toggleElementsVisibility()
-  BentoDB[arenaElementsVisibilityState] = not BentoDB[arenaElementsVisibilityState]
-  if BentoDB[arenaElementsVisibilityState] then
-    print("|cff00ff00BentoPlus: Arena frame elements are now |cffffff00VISIBLE|r.")
-  else
-    print("|cff00ff00BentoPlus: Arena frame elements are now |cffff0000HIDDEN|r.")
-  end
-  configureAllArenaFrames()
-end
-
 -- Configure all arena frames with current settings
 
 local function configureAllArenaFrames()
@@ -88,6 +76,18 @@ local function configureAllArenaFrames()
   end
 end
 
+-- Toggle visibility of arena frame elements and refresh all frames
+
+local function toggleElementsVisibility()
+  BentoDB[arenaElementsVisibilityState] = not BentoDB[arenaElementsVisibilityState]
+  if BentoDB[arenaElementsVisibilityState] then
+    print("|cffffffffBentoPlus: Arena frame elements are now |cff0080ffshown|r.")
+  else
+    print("|cffffffffBentoPlus: Arena frame elements are now |cff0080ffhidden|r.")
+  end
+  configureAllArenaFrames()
+end
+
 -- Register slash command for toggling arena frame elements
 
 SLASH_BENTOPLUS_ARENAFRAMEELEMENTS1 = "/arenaframeelements"
@@ -99,7 +99,7 @@ local arenaFrameLoginFrame = CreateFrame("Frame")
 arenaFrameLoginFrame:RegisterEvent("PLAYER_LOGIN")
 arenaFrameLoginFrame:SetScript("OnEvent", function()
   if not BentoDB[arenaElementsVisibilityState] then
-    print("|cff00ff00BentoPlus: Arena frame elements are |cffff0000HIDDEN|r by default. Use /arenaframeelements to toggle.")
+    print("|cffffffffBentoPlus: Arena frame elements are |cff0080ffhidden|r by default. Use /arenaframeelements to toggle.")
   end
 end)
 
