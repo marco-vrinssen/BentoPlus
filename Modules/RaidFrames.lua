@@ -31,9 +31,9 @@ hooksecurefunc("CompactUnitFrame_UpdateAuras", hideRaidFrameAuras)
 local function toggleAuraVisibility()
   BentoDB[auraVisibilityState] = not BentoDB[auraVisibilityState]
   if BentoDB[auraVisibilityState] then
-    print("|cff00ff00BentoPlus: Raid frame auras are now |cffffff00VISIBLE|r.")
+    print("|cffffffffBentoPlus: Raid frame auras are now |cff0080ffshown|r.")
   else
-    print("|cff00ff00BentoPlus: Raid frame auras are now |cffff0000HIDDEN|r.")
+    print("|cffffffffBentoPlus: Raid frame auras are now |cff0080ffhidden|r.")
   end
   if CompactRaidFrameContainer and CompactRaidFrameContainer.memberUnitFrames then
     for frame in pairs(CompactRaidFrameContainer.memberUnitFrames) do
@@ -55,6 +55,6 @@ local raidFrameLoginFrame = CreateFrame("Frame")
 raidFrameLoginFrame:RegisterEvent("PLAYER_LOGIN")
 raidFrameLoginFrame:SetScript("OnEvent", function()
   if not BentoDB[auraVisibilityState] then
-    print("|cff00ff00BentoPlus: Raid frame auras are |cffff0000HIDDEN|r by default. Use /raidframeauras to toggle.")
+    print("|cffffffffBentoPlus: Raid frame auras are |cff0080ffhidden|r by default. Use /raidframeauras to toggle.")
   end
 end)
