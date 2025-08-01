@@ -17,5 +17,4 @@ end
 local playerFrameEvents = CreateFrame("Frame")
 playerFrameEvents:RegisterEvent("PLAYER_ENTERING_WORLD")
 playerFrameEvents:RegisterEvent("UNIT_PORTRAIT_UPDATE")
-playerFrameEvents:RegisterEvent("PLAYER_LEVEL_UP")
 playerFrameEvents:SetScript("OnEvent", hidePlayerPrestigeElements)

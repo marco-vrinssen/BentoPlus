@@ -16,7 +16,7 @@ Modules/HideButtonGlow.lua
 Modules/IntroMessage.lua
 Modules/Items.lua
 Modules/Mounts.lua
-Modules/NamePlates.lua
+Modules/Nameplates.lua
 Modules/PlayerFrame.lua
 Modules/PvP.lua
 Modules/RaidFrames.lua

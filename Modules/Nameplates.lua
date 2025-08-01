@@ -8,7 +8,10 @@ local function hideNameplateBuffs(unitId)
     return
   end
 
-  unitFrame.BuffFrame:SetAlpha(0)
+  unitFrame.BuffFrame:SetScript("OnShow", function(self)
+    self:Hide()
+  end)
+  unitFrame.BuffFrame:Hide()
 end
 
 -- Handle the event when a nameplate unit is added.

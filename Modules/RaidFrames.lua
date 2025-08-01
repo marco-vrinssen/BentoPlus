@@ -1,60 +1,81 @@
--- Initialize the database for storing aura visibility state.
+-- Raid frame aura management constants and database initialization
 
-local auraVisibilityState = "RaidFrameAuras"
+local RAID_FRAME_AURAS_VISIBILITY_KEY = "RaidFrameAuras"
+
+-- Initialize database for raid frame aura visibility state
 
 if not BentoDB then
   BentoDB = {}
 end
-if BentoDB[auraVisibilityState] == nil then
-  BentoDB[auraVisibilityState] = false
+if BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] == nil then
+  BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] = false
 end
 
--- Hide raid frame auras if they are disabled in the settings.
+-- Core raid frame aura hiding functionality
 
 local function hideRaidFrameAuras(frame)
-  if not frame or not frame:IsForbidden() then
-    if not BentoDB[auraVisibilityState] then
-      if CompactUnitFrame_HideAllBuffs then
-        CompactUnitFrame_HideAllBuffs(frame)
-      end
-      if CompactUnitFrame_HideAllDebuffs then
-        CompactUnitFrame_HideAllDebuffs(frame)
-      end
-    end
+  if not frame or frame:IsForbidden() then
+    return
+  end
+  
+  if BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] then
+    return
+  end
+  
+  if CompactUnitFrame_HideAllBuffs then
+    CompactUnitFrame_HideAllBuffs(frame)
+  end
+  
+  if CompactUnitFrame_HideAllDebuffs then
+    CompactUnitFrame_HideAllDebuffs(frame)
   end
 end
+
+-- Hook into aura update system
 
 hooksecurefunc("CompactUnitFrame_UpdateAuras", hideRaidFrameAuras)
 
--- Toggle the visibility of raid frame auras and refresh the frames.
+-- Raid frame aura visibility toggle functionality
 
-local function toggleAuraVisibility()
-  BentoDB[auraVisibilityState] = not BentoDB[auraVisibilityState]
-  if BentoDB[auraVisibilityState] then
-    print("|cffffffffBentoPlus: Raid frame auras are now |cff0080ffshown|r.")
-  else
-    print("|cffffffffBentoPlus: Raid frame auras are now |cff0080ffhidden|r.")
+local function refreshAllRaidFrameAuras()
+  if not CompactRaidFrameContainer or not CompactRaidFrameContainer.memberUnitFrames then
+    return
   end
-  if CompactRaidFrameContainer and CompactRaidFrameContainer.memberUnitFrames then
-    for frame in pairs(CompactRaidFrameContainer.memberUnitFrames) do
-      if frame.UpdateAuras then
-        frame:UpdateAuras()
-      end
+  
+  for frame in pairs(CompactRaidFrameContainer.memberUnitFrames) do
+    if frame.UpdateAuras then
+      frame:UpdateAuras()
     end
   end
 end
 
--- Register the slash command for toggling raid frame auras.
-
-SLASH_BENTOPLUS_RAIDFRAMEAURAS1 = "/raidframeauras"
-SlashCmdList["BENTOPLUS_RAIDFRAMEAURAS"] = toggleAuraVisibility
-
--- Show a notification on login if raid frame auras are hidden.
-
-local raidFrameLoginFrame = CreateFrame("Frame")
-raidFrameLoginFrame:RegisterEvent("PLAYER_LOGIN")
-raidFrameLoginFrame:SetScript("OnEvent", function()
-  if not BentoDB[auraVisibilityState] then
-    print("|cffffffffBentoPlus: Raid frame auras are |cff0080ffhidden|r by default. Use /raidframeauras to toggle.")
+local function printAuraToggleStatusMessage()
+  if BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] then
+    print("|cffffffffBentoPlus: Raid frame auras are now |cffadc9ffvisible|r on all frames.")
+  else
+    print("|cffffffffBentoPlus: Raid frame auras are now |cffadc9ffhidden|r for better performance.")
   end
-end)
+end
+
+local function toggleRaidFrameAuraVisibility()
+  BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] = not BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY]
+  printAuraToggleStatusMessage()
+  refreshAllRaidFrameAuras()
+end
+
+-- Slash command registration for raid frame aura toggle
+
+SLASH_BENTOPLUS_RAIDFRAMEAURAS1 = "/bentoraidframe"
+SlashCmdList["BENTOPLUS_RAIDFRAMEAURAS"] = toggleRaidFrameAuraVisibility
+
+-- Event handlers for login notifications
+
+local function handlePlayerLogin()
+  if not BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] then
+    print("|cffffffffBentoPlus: Raid frame auras are |cffadc9ffhidden|r by default. Use |cffadc9ff/bentoraidframe|r to toggle.")
+  end
+end
+
+local raidFrameLoginNotification = CreateFrame("Frame")
+raidFrameLoginNotification:RegisterEvent("PLAYER_LOGIN")
+raidFrameLoginNotification:SetScript("OnEvent", handlePlayerLogin)

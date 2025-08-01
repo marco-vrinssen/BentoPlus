@@ -1,15 +1,3 @@
--- Reload the UI with a graphics restart and cache clear.
-
-local function performFullReload()
-  ReloadUI()
-  ConsoleExec("gxRestart")
-  ConsoleExec("clearCache")
-end
-
--- Create a custom tooltip for the main menu.
-
-local customTooltipFrame = CreateFrame("GameTooltip", "CustomTooltip", UIParent, "GameTooltipTemplate")
-
 -- Register slash commands for UI and error management.
 
 SLASH_ERRORDISPLAY1 = "/errors"
@@ -36,6 +24,18 @@ end
 
 SLASH_FULLRELOAD1 = "/rl"
 SlashCmdList["FULLRELOAD"] = performFullReload
+
+-- Reload the UI with a graphics restart and cache clear.
+
+local function performFullReload()
+  ReloadUI()
+  ConsoleExec("gxRestart")
+  ConsoleExec("clearCache")
+end
+
+-- Create a custom tooltip for the main menu.
+
+local customTooltipFrame = CreateFrame("GameTooltip", "CustomTooltip", UIParent, "GameTooltipTemplate")
 
 -- Add a right-click reload option to the main menu button.
 

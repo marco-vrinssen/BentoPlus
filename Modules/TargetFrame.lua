@@ -12,7 +12,6 @@ local function hideTargetPrestigeElements()
   end
 end
 
-
 -- Register frame events to hide target prestige elements.
 
 local targetFrameEvents = CreateFrame("Frame")

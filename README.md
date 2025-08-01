@@ -54,13 +54,16 @@
 - **Full reload**: `/rl`
   - Reloads UI, restarts graphics engine, and clears cache
 
-- **Toggle raid frame auras**: `/raidframeauras`
+- **Toggle raid frame auras**: `/bentoraidframe`
   - Toggles visibility of auras on raid frames
 
-- **Toggle arena frame elements**: `/arenaframeelements`
+- **Toggle arena frame elements**: `/bentoarenaframe`
   - Toggles visibility of casting bars, names, and debuff frames on arena frames
-  - Elements are hidden by default for a cleaner arena experience
+  - Elements are modified by default for a cleaner arena experience
   - Uses persistent storage to remember your preference
+
+- **Toggle button glow**: `/bentobuttonglow`
+  - Toggles visibility of button glow effects on action buttons
 
 ### Quick Actions
 

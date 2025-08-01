@@ -4,7 +4,7 @@ local function applyTransmogChanges()
   if not WardrobeTransmogFrame or not WardrobeTransmogFrame.ApplyButton then
     return
   end
-  C_Timer.After(0.1, function()
+  C_Timer.After(0, function()
     if WardrobeTransmogFrame.ApplyButton:IsEnabled() then
       WardrobeTransmogFrame.ApplyButton:Click()
     end
