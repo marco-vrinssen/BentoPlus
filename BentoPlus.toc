@@ -20,5 +20,5 @@ Modules/Nameplates.lua
 Modules/PlayerFrame.lua
 Modules/PvP.lua
 Modules/RaidFrames.lua
-Modules/StatusBars.lua
+Modules/StatusBar.lua
 Modules/TargetFrame.lua
