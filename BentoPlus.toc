@@ -11,7 +11,7 @@ Modules/AuctionHouse.lua
 Modules/AutoTransmog.lua
 Modules/AutoWarbandBank.lua
 Modules/Commands.lua
-Modules/ContextMenu.lua
+Modules/CopyName.lua
 Modules/HideButtonGlow.lua
 Modules/IntroMessage.lua
 Modules/Items.lua
