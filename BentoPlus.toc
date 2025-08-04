@@ -7,14 +7,13 @@
 
 Modules/Arena.lua
 Modules/Auction.lua
-Modules/Bank.lua
-Modules/ButtonGlow.lua
-Modules/CopyName.lua
-Modules/HideElements.lua
+Modules/Auto.lua
+Modules/Buttons.lua
+Modules/Copy.lua
+Modules/Hide.lua
 Modules/Info.lua
 Modules/Items.lua
 Modules/Nameplates.lua
 Modules/PvP.lua
-Modules/RaidFrames.lua
+Modules/Raid.lua
 Modules/Shortcuts.lua
-Modules/Transmog.lua
