@@ -47,7 +47,10 @@ local function createTextInputArea(parentFrame)
     editBox:SetAutoFocus(false)
     editBox:SetFontObject("ChatFontNormal")
     editBox:SetWidth(textScrollFrame:GetWidth())
-    editBox:SetScript("OnEscapePressed", function() editBox:ClearFocus() end)
+    editBox:SetScript("OnEscapePressed", function() 
+        editBox:ClearFocus()
+        recruitFrame:Hide()
+    end)
     
     textScrollFrame:SetScrollChild(editBox)
     
@@ -67,6 +70,10 @@ local function createTextInputArea(parentFrame)
         if editBox:GetText() == "" then
             placeholderText:Show()
         end
+    end)
+    
+    editBox:SetScript("OnEnterPressed", function(self)
+        ChatFrame_OpenChat("")
     end)
     
     editBox:SetScript("OnTextChanged", function(self)
