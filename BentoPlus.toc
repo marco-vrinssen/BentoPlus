@@ -23,5 +23,5 @@ Modules/PlayerBadge.lua
 Modules/RaidAuras.lua
 Modules/Shortcuts.lua
 Modules/SpacePost.lua
-Modules/SyncAuctionFav.lua
+Modules/SyncFavorites.lua
 Modules/TargetBadge.lua
