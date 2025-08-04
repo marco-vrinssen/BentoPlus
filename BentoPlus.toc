@@ -5,20 +5,16 @@
 ## Version: 1.0.0
 ## SavedVariables: BentoDB
 
-Modules/AlertBanners.lua
-Modules/ArenaFrames.lua
-Modules/AuctionHouse.lua
-Modules/AutoTransmog.lua
-Modules/AutoWarbandBank.lua
-Modules/Commands.lua
+Modules/Arena.lua
+Modules/Auction.lua
+Modules/Bank.lua
+Modules/ButtonGlow.lua
 Modules/CopyName.lua
-Modules/HideButtonGlow.lua
-Modules/IntroMessage.lua
+Modules/HideElements.lua
+Modules/Info.lua
 Modules/Items.lua
-Modules/Mounts.lua
 Modules/Nameplates.lua
-Modules/PlayerFrame.lua
 Modules/PvP.lua
 Modules/RaidFrames.lua
-Modules/StatusBar.lua
-Modules/TargetFrame.lua
+Modules/Shortcuts.lua
+Modules/Transmog.lua
