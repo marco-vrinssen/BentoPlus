@@ -65,14 +65,14 @@ end
 
 -- Slash command registration for raid frame aura toggle
 
-SLASH_BENTOPLUS_RAIDFRAMEAURAS1 = "/bentoraidframe"
+SLASH_BENTOPLUS_RAIDFRAMEAURAS1 = "/bentoraid"
 SlashCmdList["BENTOPLUS_RAIDFRAMEAURAS"] = toggleRaidFrameAuraVisibility
 
 -- Event handlers for login notifications
 
 local function handlePlayerLogin()
   if not BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] then
-    print("|cffffffffBentoPlus: Raid frame auras are |cffadc9ffhidden|r by default. Use |cffadc9ff/bentoraidframe|r to toggle.")
+    print("|cffffffffBentoPlus: Raid frame auras are |cffadc9ffhidden|r by default. Use |cffadc9ff/bentoraid|r to toggle.")
   end
 end
 
