@@ -34,6 +34,13 @@
   - Works across various contexts: party, raid, guild, communities, LFG, etc.
   - Creates auto-closing dialog box for easy copying
 
+### Recruitment Tools
+
+- **Multi-friend recruitment**: Streamlined interface for adding multiple friends and sending whisper messages
+  - Add multiple players to friends list simultaneously
+  - Send messages to all players in your recruitment list
+  - Persistent player list management across sessions
+
 ### Auction House Improvements
 
 - **Current expansion filter**: Automatically enables current expansion filter by default
@@ -64,6 +71,12 @@
 
 - **Toggle button glow**: `/bentobuttonglow`
   - Toggles visibility of button glow effects on action buttons
+
+- **Open recruitment window**: `/recruit`
+  - Opens the recruitment interface for adding multiple friends and managing whisper lists
+
+- **Send multi-whisper**: `/w+ MESSAGE`
+  - Sends MESSAGE to all players in your current recruitment list
 
 ### Quick Actions
 

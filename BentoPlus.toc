@@ -18,6 +18,7 @@ Modules/FasterLooting.lua
 Modules/HideButtonGlow.lua
 Modules/HideStuff.lua
 Modules/InfoMessage.lua
+Modules/MultiAddWhisper.lua
 Modules/NamePlates.lua
 Modules/PartyMarkers.lua
 Modules/PlayerBadge.lua

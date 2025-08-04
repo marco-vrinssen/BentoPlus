@@ -10,9 +10,6 @@ local ALLOWED_PLAYER_CONTEXT_TYPES = {
     PARTY = true,
     RAID_PLAYER = true,
     FRIEND = true,
-    GUILD = true,
-    COMMUNITIES_GUILD_MEMBER = true,
-    COMMUNITIES_WOW_MEMBER = true,
     BN_FRIEND = true,
     SELF = true,
     OTHER_PLAYER = true
@@ -108,7 +105,12 @@ local function validatePlayerMenuContext(menuRootDescription, menuContextData)
     if not menuContextData then
         return ALLOWED_CONTEXT_MENU_TAGS[menuRootDescription.tag] ~= nil
     end
-    return menuContextData.which and ALLOWED_PLAYER_CONTEXT_TYPES[menuContextData.which]
+    
+    if menuContextData.which and ALLOWED_PLAYER_CONTEXT_TYPES[menuContextData.which] then
+        return true
+    end
+    
+    return false
 end
 
 -- Create modal dialog for text copying
@@ -161,16 +163,28 @@ end
 -- Add copy name option to context menu
 
 local function addPlayerNameCopyOption(frameOwner, menuRootDescription, menuContextData)
+    if InCombatLockdown() then
+        return
+    end
+
     if not validatePlayerMenuContext(menuRootDescription, menuContextData) then
         return
     end
 
     local playerName, realmName = resolvePlayerFromMenuContext(frameOwner, menuRootDescription, menuContextData)
     if playerName and realmName then
-        menuRootDescription:CreateDivider()
-        menuRootDescription:CreateButton("Copy Full Name", function()
-            createPlayerNameCopyDialog(string.format("%s-%s", playerName, realmName))
+        local success = pcall(function()
+            menuRootDescription:CreateDivider()
+            menuRootDescription:CreateButton("Copy Full Name", function()
+                if not InCombatLockdown() then
+                    createPlayerNameCopyDialog(string.format("%s-%s", playerName, realmName))
+                end
+            end)
         end)
+        
+        if not success then
+            return
+        end
     end
 end
 
@@ -188,9 +202,6 @@ local function registerPlayerMenuHooks()
         Menu.ModifyMenu("MENU_UNIT_PARTY", addPlayerNameCopyOption)
         Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", addPlayerNameCopyOption)
         Menu.ModifyMenu("MENU_UNIT_FRIEND", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_GUILD", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_COMMUNITIES_GUILD_MEMBER", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_COMMUNITIES_WOW_MEMBER", addPlayerNameCopyOption)
         Menu.ModifyMenu("MENU_UNIT_BN_FRIEND", addPlayerNameCopyOption)
         Menu.ModifyMenu("MENU_UNIT_SELF", addPlayerNameCopyOption)
         Menu.ModifyMenu("MENU_UNIT_OTHER_PLAYER", addPlayerNameCopyOption)

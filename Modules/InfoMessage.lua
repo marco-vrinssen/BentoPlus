@@ -9,6 +9,8 @@ local function displayAvailableCommands()
   print("|cffadc9ff/bentoraidframe|r: Toggle raid frame aura visibility")
   print("|cffadc9ff/bentoarenaframe|r: Toggle arena frame element visibility")
   print("|cffadc9ff/bentobuttonglow|r: Toggle button glow effect visibility")
+  print("|cffadc9ff/recruit|r: Open recruitment window for adding multiple friends")
+  print("|cffadc9ff/w+ MESSAGE|r: Send MESSAGE to all players in recruitment list")
   print("|cffffffffRight-click Main Menu button to reload UI|r")
 end
 
