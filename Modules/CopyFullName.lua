@@ -12,7 +12,10 @@ local ALLOWED_PLAYER_CONTEXT_TYPES = {
     FRIEND = true,
     BN_FRIEND = true,
     SELF = true,
-    OTHER_PLAYER = true
+    OTHER_PLAYER = true,
+    ENEMY_PLAYER = true,
+    TARGET = true,
+    FOCUS = true
 }
 
 -- Parse player name and realm from combined string
@@ -74,8 +77,11 @@ local function resolvePlayerFromMenuContext(frameOwner, menuRootDescription, men
     end
 
     if menuContextData.unit and UnitExists(menuContextData.unit) then
-        local playerName, realmName = parsePlayerNameAndRealm(UnitName(menuContextData.unit))
-        return playerName, menuContextData.server or realmName
+        local unitFullName = UnitName(menuContextData.unit)
+        if unitFullName then
+            local playerName, realmName = parsePlayerNameAndRealm(unitFullName)
+            return playerName, menuContextData.server or realmName
+        end
     end
 
     if menuContextData.accountInfo then
@@ -93,6 +99,17 @@ local function resolvePlayerFromMenuContext(frameOwner, menuRootDescription, men
         local friendInfo = C_FriendList.GetFriendInfoByIndex(menuContextData.friendsList)
         if friendInfo and friendInfo.name then
             return parsePlayerNameAndRealm(friendInfo.name)
+        end
+    end
+
+    if menuContextData.chatTarget then
+        return parsePlayerNameAndRealm(menuContextData.chatTarget)
+    end
+
+    if menuContextData.lineID and menuContextData.chatFrame then
+        local messageInfo = menuContextData.chatFrame:GetMessageInfo(menuContextData.lineID)
+        if messageInfo and messageInfo.sender then
+            return parsePlayerNameAndRealm(messageInfo.sender)
         end
     end
 
@@ -205,6 +222,11 @@ local function registerPlayerMenuHooks()
         Menu.ModifyMenu("MENU_UNIT_BN_FRIEND", addPlayerNameCopyOption)
         Menu.ModifyMenu("MENU_UNIT_SELF", addPlayerNameCopyOption)
         Menu.ModifyMenu("MENU_UNIT_OTHER_PLAYER", addPlayerNameCopyOption)
+        Menu.ModifyMenu("MENU_UNIT_ENEMY_PLAYER", addPlayerNameCopyOption)
+        Menu.ModifyMenu("MENU_UNIT_TARGET", addPlayerNameCopyOption)
+        Menu.ModifyMenu("MENU_UNIT_FOCUS", addPlayerNameCopyOption)
+        Menu.ModifyMenu("MENU_CHAT_LOG_LINK", addPlayerNameCopyOption)
+        Menu.ModifyMenu("MENU_CHAT_LOG_FRAME", addPlayerNameCopyOption)
     end)
 end
 
