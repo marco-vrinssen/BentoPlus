@@ -1,55 +1,55 @@
--- Recruit addon for adding multiple friends at once
-local addonName = "RecruitAddon"
-local recruitFrame = nil
+-- Multi Whisper addon for sending messages to multiple players
+local addonName = "MultiWhisperAddon"
+local whisperFrame = nil
 local textScrollFrame = nil
 local editBox = nil
 local storedPlayerNames = nil
 
--- Create main recruit window frame
-local function createRecruitFrame()
-    if recruitFrame then
-        return recruitFrame
+-- Create main whisper window frame
+local function createWhisperFrame()
+    if whisperFrame then
+        return whisperFrame
     end
     
-    recruitFrame = CreateFrame("Frame", "RecruitAddonFrame", UIParent, "BasicFrameTemplateWithInset")
-    recruitFrame:SetSize(500, 600)
-    recruitFrame:SetPoint("CENTER")
-    recruitFrame:SetMovable(true)
-    recruitFrame:EnableMouse(true)
-    recruitFrame:RegisterForDrag("LeftButton")
-    recruitFrame:SetScript("OnDragStart", recruitFrame.StartMoving)
-    recruitFrame:SetScript("OnDragStop", recruitFrame.StopMovingOrSizing)
-    recruitFrame:Hide()
+    whisperFrame = CreateFrame("Frame", "MultiWhisperAddonFrame", UIParent, "BasicFrameTemplateWithInset")
+    whisperFrame:SetSize(500, 600)
+    whisperFrame:SetPoint("CENTER")
+    whisperFrame:SetMovable(true)
+    whisperFrame:EnableMouse(true)
+    whisperFrame:RegisterForDrag("LeftButton")
+    whisperFrame:SetScript("OnDragStart", whisperFrame.StartMoving)
+    whisperFrame:SetScript("OnDragStop", whisperFrame.StopMovingOrSizing)
+    whisperFrame:Hide()
     
-    recruitFrame.title = recruitFrame:CreateFontString(nil, "OVERLAY")
-    recruitFrame.title:SetFontObject("GameFontHighlight")
-    recruitFrame.title:SetPoint("LEFT", recruitFrame.TitleBg, "LEFT", 5, 0)
-    recruitFrame.title:SetText("Bento Recruit")
+    whisperFrame.title = whisperFrame:CreateFontString(nil, "OVERLAY")
+    whisperFrame.title:SetFontObject("GameFontHighlight")
+    whisperFrame.title:SetPoint("LEFT", whisperFrame.TitleBg, "LEFT", 5, 0)
+    whisperFrame.title:SetText("Multi Whisper")
     
     -- Helper text instruction
-    recruitFrame.helperText = recruitFrame:CreateFontString(nil, "OVERLAY")
-    recruitFrame.helperText:SetFontObject("GameFontNormal")
-    recruitFrame.helperText:SetPoint("TOPLEFT", recruitFrame, "TOPLEFT", 15, -35)
-    recruitFrame.helperText:SetText('Use "/w+ MESSAGE" to send the MESSAGE to all players in this list')
-    recruitFrame.helperText:SetTextColor(0.7, 0.7, 0.7)
+    whisperFrame.helperText = whisperFrame:CreateFontString(nil, "OVERLAY")
+    whisperFrame.helperText:SetFontObject("GameFontNormal")
+    whisperFrame.helperText:SetPoint("TOPLEFT", whisperFrame, "TOPLEFT", 15, -35)
+    whisperFrame.helperText:SetText('Use "/w+ MESSAGE" to send the MESSAGE to all players in this list')
+    whisperFrame.helperText:SetTextColor(0.7, 0.7, 0.7)
     
-    return recruitFrame
+    return whisperFrame
 end
 
 -- Create scrollable text input area
 local function createTextInputArea(parentFrame)
-    textScrollFrame = CreateFrame("ScrollFrame", "RecruitAddonScrollFrame", parentFrame, "UIPanelScrollFrameTemplate")
+    textScrollFrame = CreateFrame("ScrollFrame", "MultiWhisperAddonScrollFrame", parentFrame, "UIPanelScrollFrameTemplate")
     textScrollFrame:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", 15, -60)
     textScrollFrame:SetPoint("BOTTOMRIGHT", parentFrame, "BOTTOMRIGHT", -35, 50)
     
-    editBox = CreateFrame("EditBox", "RecruitAddonEditBox", textScrollFrame)
+    editBox = CreateFrame("EditBox", "MultiWhisperAddonEditBox", textScrollFrame)
     editBox:SetMultiLine(true)
     editBox:SetAutoFocus(false)
     editBox:SetFontObject("ChatFontNormal")
     editBox:SetWidth(textScrollFrame:GetWidth())
     editBox:SetScript("OnEscapePressed", function() 
         editBox:ClearFocus()
-        recruitFrame:Hide()
+        whisperFrame:Hide()
     end)
     
     textScrollFrame:SetScrollChild(editBox)
@@ -72,10 +72,6 @@ local function createTextInputArea(parentFrame)
         end
     end)
     
-    editBox:SetScript("OnEnterPressed", function(self)
-        ChatFrame_OpenChat("")
-    end)
-    
     editBox:SetScript("OnTextChanged", function(self)
         local text = self:GetText()
         if text == "" then
@@ -83,7 +79,6 @@ local function createTextInputArea(parentFrame)
             storedPlayerNames = nil
         else
             placeholderText:Hide()
-            -- Update stored player names when text changes
             storedPlayerNames = parsePlayerNameList(text)
         end
         local lineCount = select(2, text:gsub('\n', '\n')) + 1
@@ -95,13 +90,13 @@ end
 
 -- Create cancel button
 local function createCancelButton(parentFrame)
-    local cancelButton = CreateFrame("Button", "RecruitAddonCancelButton", parentFrame, "UIPanelButtonTemplate")
+    local cancelButton = CreateFrame("Button", "MultiWhisperAddonCancelButton", parentFrame, "UIPanelButtonTemplate")
     cancelButton:SetSize(80, 22)
     cancelButton:SetPoint("BOTTOMLEFT", parentFrame, "BOTTOMLEFT", 15, 15)
     cancelButton:SetText("Close")
     
     cancelButton:SetScript("OnClick", function()
-        recruitFrame:Hide()
+        whisperFrame:Hide()
         editBox:SetText("")
         editBox:ClearFocus()
     end)
@@ -109,24 +104,24 @@ local function createCancelButton(parentFrame)
     return cancelButton
 end
 
--- Create add friends button
-local function createAddFriendsButton(parentFrame)
-    local addButton = CreateFrame("Button", "RecruitAddonAddButton", parentFrame, "UIPanelButtonTemplate")
-    addButton:SetSize(100, 22)
-    addButton:SetPoint("BOTTOMRIGHT", parentFrame, "BOTTOMRIGHT", -15, 15)
-    addButton:SetText("Add All Friends")
+-- Create multi whisper button
+local function createMultiWhisperButton(parentFrame)
+    local whisperButton = CreateFrame("Button", "MultiWhisperAddonWhisperButton", parentFrame, "UIPanelButtonTemplate")
+    whisperButton:SetSize(100, 22)
+    whisperButton:SetPoint("BOTTOMRIGHT", parentFrame, "BOTTOMRIGHT", -15, 15)
+    whisperButton:SetText("Multi Whisper")
     
-    addButton:SetScript("OnClick", function()
+    whisperButton:SetScript("OnClick", function()
+        -- Update stored player names from current text
         local text = editBox:GetText()
         if text and text ~= "" then
-            processNameList(text)
+            storedPlayerNames = parsePlayerNameList(text)
         end
-        recruitFrame:Hide()
-        editBox:SetText("")
-        editBox:ClearFocus()
+        -- Open chat with /w+ prefilled
+        ChatFrame_OpenChat("/w+ ")
     end)
     
-    return addButton
+    return whisperButton
 end
 
 -- Parse player names from text
@@ -162,35 +157,16 @@ local function handleWhisperCommand(messageText)
     end
 end
 
--- Remove all message window related functions since we no longer need them
-
--- Process list of names and send friend requests
-function processNameList(nameText)
-    local names = parsePlayerNameList(nameText)
-    local processedCount = 0
-    
-    if #names == 0 then
-        return
+-- Show whisper window and update player list
+local function showWhisperWindow()
+    if not whisperFrame then
+        createWhisperFrame()
+        createTextInputArea(whisperFrame)
+        createCancelButton(whisperFrame)
+        createMultiWhisperButton(whisperFrame)
     end
     
-    for _, name in ipairs(names) do
-        if name and name ~= "" then
-            C_FriendList.AddFriend(name)
-            processedCount = processedCount + 1
-        end
-    end
-end
-
--- Show recruit window and update player list
-local function showRecruitWindow()
-    if not recruitFrame then
-        createRecruitFrame()
-        createTextInputArea(recruitFrame)
-        createCancelButton(recruitFrame)
-        createAddFriendsButton(recruitFrame)
-    end
-    
-    recruitFrame:Show()
+    whisperFrame:Show()
     editBox:SetFocus()
     
     -- Update stored player names when window is shown
@@ -200,10 +176,10 @@ local function showRecruitWindow()
     end
 end
 
--- Slash command handler for /recruit
-SLASH_RECRUIT1 = "/recruit"
-SlashCmdList["RECRUIT"] = function(msg)
-    showRecruitWindow()
+-- Slash command handler for /multiwhisper
+SLASH_MULTIWHISPER1 = "/multiwhisper"
+SlashCmdList["MULTIWHISPER"] = function(msg)
+    showWhisperWindow()
 end
 
 -- Slash command handler for /w+ 
@@ -211,7 +187,7 @@ SLASH_WHISPERPLUS1 = "/w+"
 SlashCmdList["WHISPERPLUS"] = function(msg)
     if msg and msg ~= "" then
         -- Update player list from current window if open
-        if recruitFrame and recruitFrame:IsShown() then
+        if whisperFrame and whisperFrame:IsShown() then
             local text = editBox:GetText()
             if text and text ~= "" then
                 storedPlayerNames = parsePlayerNameList(text)

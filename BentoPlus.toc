@@ -18,11 +18,12 @@ Modules/FasterLooting.lua
 Modules/HideButtonGlow.lua
 Modules/HideStuff.lua
 Modules/InfoMessage.lua
-Modules/MultiAddWhisper.lua
+Modules/MultiWhisper.lua
 Modules/NamePlates.lua
 Modules/PartyMarkers.lua
 Modules/PlayerBadge.lua
 Modules/RaidAuras.lua
+Modules/RecruitMessage.lua
 Modules/Shortcuts.lua
 Modules/SpacePost.lua
 Modules/SyncFavorites.lua
