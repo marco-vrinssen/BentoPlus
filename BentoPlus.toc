@@ -6,7 +6,6 @@
 ## SavedVariables: BentoDB
 
 Modules/ArenaElements.lua
-Modules/ArenaFrameSort.lua
 Modules/AutoBank.lua
 Modules/AutoRelease.lua
 Modules/AutoSellRepair.lua
