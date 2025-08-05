@@ -34,6 +34,13 @@
   - Works across various contexts: party, raid, guild, communities, LFG, etc.
   - Creates auto-closing dialog box for easy copying
 
+### Party Management
+
+- **Auto party markers**: Automatically assigns raid markers to all party members
+  - Uses predefined marker sequence: Skull, Square, Star, Triangle, Diamond
+  - Automatically requests party leadership if not leader
+  - Smart leadership request with instruction message to current leader
+
 ### Recruitment Tools
 
 - **Multi-whisper messaging**: Streamlined interface for sending messages to multiple players
@@ -96,6 +103,10 @@
   - `message` - Show current recruitment message
   - `toggle` - Toggle auto-send functionality on/off
   - `test PlayerName-Server` - Test whisper to specific player
+
+- **Party markers**: `/pm`
+  - Assigns raid markers to all party members including yourself
+  - Requests party leadership if not currently leader
 
 ### Quick Actions
 

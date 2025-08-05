@@ -13,6 +13,7 @@ local function displayAvailableCommands()
   print("|cffffff80/w+ MESSAGE|r|cffffffff: Send MESSAGE to all players in whisper list|r")
   print("|cffffff80/recruitmessage|r|cffffffff: Set customizable guild invitation message|r")
   print("|cffffff80/autorecruit|r|cffffffff: Manage auto-recruitment settings and messages|r")
+  print("|cffffff80/pm|r|cffffffff: Mark all party members with raid markers|r")
   print("|cffffffffRight-click Main Menu button to reload UI|r")
 end
 
