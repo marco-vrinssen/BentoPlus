@@ -36,10 +36,18 @@
 
 ### Recruitment Tools
 
-- **Multi-friend recruitment**: Streamlined interface for adding multiple friends and sending whisper messages
-  - Add multiple players to friends list simultaneously
-  - Send messages to all players in your recruitment list
+- **Multi-whisper messaging**: Streamlined interface for sending messages to multiple players
+  - Enter player names in a scrollable text area, one per line
+  - Send messages to all players in your list with a single command
   - Persistent player list management across sessions
+  - Easy-to-use interface with helpful instructions
+
+- **Auto-recruit messaging**: Automated welcome messages for guild invitations
+  - Automatically sends customizable whisper messages to invited players
+  - Configurable message content with easy-to-use interface
+  - Option to enable/disable auto-send functionality
+  - Checkbox integration with guild invitation dialogs
+  - Smart detection of successful invitations
 
 ### Auction House Improvements
 
@@ -75,8 +83,19 @@
 - **Open recruitment window**: `/recruit`
   - Opens the recruitment interface for adding multiple friends and managing whisper lists
 
+- **Open multi-whisper window**: `/multiwhisper`
+  - Opens the multi-whisper interface for managing player lists and sending messages
+
 - **Send multi-whisper**: `/w+ MESSAGE`
-  - Sends MESSAGE to all players in your current recruitment list
+  - Sends MESSAGE to all players in your current multi-whisper list
+
+- **Set recruit message**: `/recruitmessage`
+  - Opens interface to set customizable welcome message for guild invitations
+
+- **Auto-recruit commands**: `/autorecruit`
+  - `message` - Show current recruitment message
+  - `toggle` - Toggle auto-send functionality on/off
+  - `test PlayerName-Server` - Test whisper to specific player
 
 ### Quick Actions
 

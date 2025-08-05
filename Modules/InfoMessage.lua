@@ -9,8 +9,10 @@ local function displayAvailableCommands()
   print("|cffffff80/bentoraidframe|r|cffffffff: Toggle raid frame aura visibility|r")
   print("|cffffff80/bentoarenaframe|r|cffffffff: Toggle arena frame element visibility|r")
   print("|cffffff80/bentobuttonglow|r|cffffffff: Toggle button glow effect visibility|r")
-  print("|cffffff80/recruit|r|cffffffff: Open recruitment window for adding multiple friends|r")
-  print("|cffffff80/w+ MESSAGE|r|cffffffff: Send MESSAGE to all players in recruitment list|r")
+  print("|cffffff80/multiwhisper|r|cffffffff: Open multi-whisper interface for player lists|r")
+  print("|cffffff80/w+ MESSAGE|r|cffffffff: Send MESSAGE to all players in whisper list|r")
+  print("|cffffff80/recruitmessage|r|cffffffff: Set customizable guild invitation message|r")
+  print("|cffffff80/autorecruit|r|cffffffff: Manage auto-recruitment settings and messages|r")
   print("|cffffffffRight-click Main Menu button to reload UI|r")
 end
 
