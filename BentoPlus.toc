@@ -1,29 +1,30 @@
 ## Interface: 110700
-## Title: BentoPlus
-## Notes: Simple, resource-efficient interface modifications and features that enhance the user experience.
+## Title: Bento Plus
+## Notes: Resource-efficient suite of quality-of-life enhancements designed to optimize and streamline the modern World of Warcraft experience.
 ## Author: MIYANKO
 ## Version: 1.0.0
 ## SavedVariables: BentoDB
 
-Modules/ArenaElements.lua
+Modules/ArenaFrames.lua
+Modules/AuctionExp.lua
+Modules/AuctionFav.lua
+Modules/AuctionPost.lua
 Modules/AutoBank.lua
+Modules/AutoMog.lua
 Modules/AutoRelease.lua
 Modules/AutoSellRepair.lua
-Modules/AutoTabKeybind.lua
-Modules/AutoTransmog.lua
-Modules/CopyFullName.lua
-Modules/CurrentExpansion.lua
-Modules/FasterLooting.lua
-Modules/HideButtonGlow.lua
-Modules/HideStuff.lua
-Modules/InfoMessage.lua
-Modules/MultiWhisper.lua
+Modules/AutoTab.lua
+Modules/ClubInvMsg.lua
+Modules/Cmd.lua
+Modules/CopyName.lua
+Modules/FastLoot.lua
+Modules/HideBanner.lua
+Modules/HideBars.lua
+Modules/HideGlow.lua
+Modules/HideVehicle.lua
+Modules/InfoMsg.lua
+Modules/MultiMsg.lua
 Modules/NamePlates.lua
-Modules/PartyMarkers.lua
-Modules/PlayerBadge.lua
-Modules/RaidAuras.lua
-Modules/RecruitMessage.lua
-Modules/Shortcuts.lua
-Modules/SpacePost.lua
-Modules/SyncFavorites.lua
-Modules/TargetBadge.lua
+Modules/PlayerFrame.lua
+Modules/RaidFrames.lua
+Modules/TargetFrame.lua
