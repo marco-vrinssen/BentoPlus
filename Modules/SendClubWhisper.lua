@@ -129,6 +129,10 @@ local function CreateClubInvitationChildPopup()
     saveButton:SetScript("OnClick", function()
         BentoDB.clubInvitationMessage = messageEditBox:GetText()
         BentoDB.autoSendEnabled = enableCheckbox:GetChecked()
+        -- Update original values to match saved values
+        originalMessage = BentoDB.clubInvitationMessage
+        originalEnabled = BentoDB.autoSendEnabled
+        print("|cff00ff00ClubInvMessage:|r Settings saved successfully!")
         childFrame:Hide()
     end)
     
@@ -143,81 +147,76 @@ end
 -- Initialize the club invitation child popup
 local clubInvitationChildPopup = CreateClubInvitationChildPopup()
 
--- Function to show popup anchored to static popup
-local function ShowClubInvitationPopup(parentPopup)
-    if not parentPopup then return end
+-- Function to show popup anchored to community frame
+local function ShowClubInvitationPopup()
+    if not CommunitiesFrame or not CommunitiesFrame:IsShown() then
+        return
+    end
     
     -- Initialize controls with current values
     clubInvitationChildPopup.InitializeControls()
     
-    -- Anchor child popup top-left to parent popup top-right
+    -- Anchor settings panel bottom-left to community frame bottom-right
     clubInvitationChildPopup:ClearAllPoints()
-    clubInvitationChildPopup:SetPoint("TOPLEFT", parentPopup, "TOPRIGHT", 10, 0)
+    clubInvitationChildPopup:SetPoint("BOTTOMLEFT", CommunitiesFrame, "BOTTOMRIGHT", 10, 0)
     clubInvitationChildPopup:Show()
-    
-    -- Auto-focus the text input when popup opens
-    if clubInvitationChildPopup.messageEditBox then
-        clubInvitationChildPopup.messageEditBox:SetFocus()
-    end
 end
 
--- Function to add settings button to static popup
-local function AddClubInvitationButtonToStaticPopup(popup)
-    -- Only add button if CommunitiesFrame is shown and we're waiting for a popup from invite
-    if not (CommunitiesFrame and CommunitiesFrame:IsShown() and waitingForStaticPopup) then
+-- Function to create invite settings button
+local function CreateInviteSettingsButton()
+    if not CommunitiesFrame or not CommunitiesFrame.CommunitiesControlFrame then
         return
     end
     
-    if popup.clubInvitationButtonAdded then
+    -- Check if button already exists
+    if CommunitiesFrame.InviteSettingsButton then
         return
     end
     
-    -- Hide the separator element for this popup
-    if popup.Separator then
-        popup.Separator:Hide()
-    end
+    -- Create invite settings button
+    local inviteButton = CreateFrame("Button", nil, CommunitiesFrame.CommunitiesControlFrame, "GameMenuButtonTemplate")
+    inviteButton:SetSize(100, 20)
+    inviteButton:SetText("Invite Settings")
     
-    -- Create settings button for popup
-    local settingsButton = CreateFrame("Button", nil, popup, "GameMenuButtonTemplate")
+    -- Set default WoW button yellow text color for consistency
+    inviteButton:GetFontString():SetTextColor(1, 0.82, 0)
     
-    -- Set text first to calculate proper width
-    settingsButton:SetText("Settings")
-    
-    -- Set default WoW popup button yellow text color
-    settingsButton:GetFontString():SetTextColor(1, 0.82, 0)
-    
-    -- Calculate proper button width to fit text
-    local fontString = settingsButton:GetFontString()
-    if fontString then
-        local textWidth = fontString:GetStringWidth()
-        local buttonWidth = math.max(textWidth + 50, 120)
-        settingsButton:SetSize(buttonWidth, 20)
+    -- Position button to the left of CommunitiesSettingsButton
+    if CommunitiesFrame.CommunitiesControlFrame.CommunitiesSettingsButton then
+        inviteButton:SetPoint("RIGHT", CommunitiesFrame.CommunitiesControlFrame.CommunitiesSettingsButton, "LEFT", -8, 0)
     else
-        settingsButton:SetSize(120, 20)
+        inviteButton:SetPoint("TOPRIGHT", CommunitiesFrame.CommunitiesControlFrame, "TOPRIGHT", -10, -10)
     end
     
-    -- Position button above the extra button with proper margin
-    if popup.extraButton then
-        settingsButton:SetPoint("BOTTOM", popup.extraButton, "TOP", 0, 4)
-    else
-        settingsButton:SetPoint("BOTTOM", popup, "BOTTOM", 0, 45)
-    end
-    
-    -- Show popup when button clicked
-    settingsButton:SetScript("OnClick", function()
-        ShowClubInvitationPopup(popup)
+    -- Toggle popup when button clicked
+    inviteButton:SetScript("OnClick", function()
+        if clubInvitationChildPopup:IsShown() then
+            clubInvitationChildPopup:Hide()
+        else
+            ShowClubInvitationPopup()
+        end
     end)
     
-    popup.clubInvitationButton = settingsButton
-    popup.clubInvitationButtonAdded = true
+    -- Store reference
+    CommunitiesFrame.InviteSettingsButton = inviteButton
+end
+
+-- Function to monitor community frame visibility
+local function MonitorCommunitiesFrame()
+    if CommunitiesFrame then
+        if CommunitiesFrame:IsShown() then
+            -- Create invite settings button when CommunitiesFrame is visible
+            CreateInviteSettingsButton()
+        else
+            -- Hide settings panel when CommunitiesFrame is hidden
+            clubInvitationChildPopup:Hide()
+        end
+    end
 end
 
 -- Function to check for static popup
 local function CheckForStaticPopup()
     if StaticPopup1 and StaticPopup1:IsShown() then
-        -- Add settings button to the popup
-        AddClubInvitationButtonToStaticPopup(StaticPopup1)
-        
         waitingForStaticPopup = false
         -- Hook the button click
         if StaticPopup1Button1 then
@@ -278,6 +277,9 @@ end
 ClubInvMessage:SetScript("OnUpdate", function(self, elapsed)
     -- Monitor for Communities frame and hook invite button
     MonitorInviteButton()
+    
+    -- Monitor CommunitiesFrame visibility to show/hide settings panel
+    MonitorCommunitiesFrame()
     
     -- Check for static popup if waiting
     if waitingForStaticPopup then
