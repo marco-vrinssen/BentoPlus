@@ -9,12 +9,11 @@ Modules/AutoExpacFilter.lua
 Modules/AutoGhostRelease.lua
 Modules/AutoInstantLoot.lua
 Modules/AutoSellRepair.lua
-Modules/AutoTransmog.lua
 Modules/CopyFullName.lua
 Modules/HideExpBar.lua
 Modules/HideNameplateAuras.lua
-Modules/HideUnitBadges.lua
 Modules/HideVehicle.lua
+Modules/MultiWhisper copy.lua
 Modules/MultiWhisper.lua
 Modules/MuteAlerts.lua
 Modules/SendClubWhisper.lua
