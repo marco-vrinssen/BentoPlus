@@ -6,7 +6,7 @@
 ## SavedVariables: BentoDB
 
 Modules/ArenaFrames.lua
-Modules/AuctionExp.lua
+Modules/AuctionExpac.lua
 Modules/AuctionFav.lua
 Modules/AuctionPost.lua
 Modules/AutoBank.lua
@@ -14,10 +14,11 @@ Modules/AutoMog.lua
 Modules/AutoRelease.lua
 Modules/AutoSellRepair.lua
 Modules/AutoTab.lua
-Modules/ClubInvMsg.lua
 Modules/Cmd.lua
+Modules/CommInvMsg.lua
 Modules/CopyName.lua
 Modules/FastLoot.lua
+Modules/HideBadges.lua
 Modules/HideBanner.lua
 Modules/HideBars.lua
 Modules/HideGlow.lua
@@ -25,6 +26,4 @@ Modules/HideVehicle.lua
 Modules/InfoMsg.lua
 Modules/MultiMsg.lua
 Modules/NamePlates.lua
-Modules/PlayerFrame.lua
 Modules/RaidFrames.lua
-Modules/TargetFrame.lua

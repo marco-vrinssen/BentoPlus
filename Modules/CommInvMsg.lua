@@ -163,12 +163,12 @@ end
 
 -- Function to add settings button to static popup
 local function AddClubInvitationButtonToStaticPopup(popup)
-    if popup.clubInvitationButtonAdded then
+    -- Only add button if CommunitiesFrame is shown and we're waiting for a popup from invite
+    if not (CommunitiesFrame and CommunitiesFrame:IsShown() and waitingForStaticPopup) then
         return
     end
     
-    -- Only add button if CommunitiesFrame is shown
-    if not (CommunitiesFrame and CommunitiesFrame:IsShown()) then
+    if popup.clubInvitationButtonAdded then
         return
     end
     

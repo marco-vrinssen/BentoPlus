@@ -9,7 +9,7 @@ end
 
 -- Core frame hiding functions
 
-local function hideArenaCastingBar(arenaFrame)
+local function hideCastBar(arenaFrame)
   if not arenaFrame.CastingBarFrame then
     return
   end
@@ -20,7 +20,7 @@ local function hideArenaCastingBar(arenaFrame)
   arenaFrame.CastingBarFrame:Hide()
 end
 
-local function hideArenaNameText(arenaFrame)
+local function hideNameText(arenaFrame)
   if not arenaFrame.name then
     return
   end
@@ -31,7 +31,7 @@ local function hideArenaNameText(arenaFrame)
   arenaFrame.name:Hide()
 end
 
-local function hideArenaCcRemover(arenaFrame)
+local function hideCcRemover(arenaFrame)
   if not arenaFrame.CcRemoverFrame then
     return
   end
@@ -53,7 +53,7 @@ local function repositionStealthIcon(arenaFrame)
   end)
 end
 
-local function hideArenaDebuffFrame(arenaFrame)
+local function hideDebuffFrame(arenaFrame)
   if not arenaFrame.DebuffFrame then
     return
   end
@@ -66,30 +66,30 @@ end
 
 -- Main configuration functions
 
-local function configureArenaFrame(arenaFrame)
+local function configFrame(arenaFrame)
   if not arenaFrame then
     return
   end
 
-  hideArenaCastingBar(arenaFrame)
-  hideArenaNameText(arenaFrame)
-  hideArenaCcRemover(arenaFrame)
+  hideCastBar(arenaFrame)
+  hideNameText(arenaFrame)
+  hideCcRemover(arenaFrame)
   repositionStealthIcon(arenaFrame)
-  hideArenaDebuffFrame(arenaFrame)
+  hideDebuffFrame(arenaFrame)
 end
 
-local function configureAllArenaFrames()
+local function configAllFrames()
   for arenaIndex = 1, 5 do
     local arenaFrame = _G["CompactArenaFrameMember" .. arenaIndex]
     if arenaFrame then
-      configureArenaFrame(arenaFrame)
+      configFrame(arenaFrame)
     end
   end
 end
 
 -- Toggle functionality
 
-local function printArenaToggleStatus()
+local function printToggleStatus()
   if BentoDB.ArenaFrameElements then
     print("|cffffffffBentoPlus: Arena frame elements are now |cffadc9ffrestored|r to default appearance.")
   else
@@ -97,29 +97,29 @@ local function printArenaToggleStatus()
   end
 end
 
-local function toggleArenaElements()
+local function toggleElements()
   BentoDB.ArenaFrameElements = not BentoDB.ArenaFrameElements
-  printArenaToggleStatus()
-  configureAllArenaFrames()
+  printToggleStatus()
+  configAllFrames()
 end
 
 -- Slash command registration
 
 SLASH_BENTOPLUS_ARENAFRAMEELEMENTS1 = "/bentoarena"
-SlashCmdList["BENTOPLUS_ARENAFRAMEELEMENTS"] = toggleArenaElements
+SlashCmdList["BENTOPLUS_ARENAFRAMEELEMENTS"] = toggleElements
 
 -- Event handlers
 
-local function handleArenaPlayerLogin()
+local function handleLogin()
   if not BentoDB.ArenaFrameElements then
     print("|cffffffffBentoPlus: Arena frame elements are |cffadc9ffmodified|r by default. Use |cffadc9ff/bentoarena|r to toggle.")
   end
 end
 
-local arenaLoginFrame = CreateFrame("Frame")
-arenaLoginFrame:RegisterEvent("PLAYER_LOGIN")
-arenaLoginFrame:SetScript("OnEvent", handleArenaPlayerLogin)
+local loginFrame = CreateFrame("Frame")
+loginFrame:RegisterEvent("PLAYER_LOGIN")
+loginFrame:SetScript("OnEvent", handleLogin)
 
-local arenaInitFrame = CreateFrame("Frame")
-arenaInitFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-arenaInitFrame:SetScript("OnEvent", configureAllArenaFrames)
+local initFrame = CreateFrame("Frame")
+initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+initFrame:SetScript("OnEvent", configAllFrames)
