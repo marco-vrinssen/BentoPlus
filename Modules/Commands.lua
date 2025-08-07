@@ -1,5 +1,13 @@
 -- Register slash commands for UI and error management.
 
+-- Reload the UI with a graphics restart and cache clear.
+
+local function performFullReload()
+  ReloadUI()
+  ConsoleExec("gxRestart")
+  ConsoleExec("clearCache")
+end
+
 SLASH_ERRORDISPLAY1 = "/errors"
 SlashCmdList["ERRORDISPLAY"] = function()
   local errorState = GetCVar("scriptErrors")
@@ -24,14 +32,6 @@ end
 
 SLASH_FULLRELOAD1 = "/rl"
 SlashCmdList["FULLRELOAD"] = performFullReload
-
--- Reload the UI with a graphics restart and cache clear.
-
-local function performFullReload()
-  ReloadUI()
-  ConsoleExec("gxRestart")
-  ConsoleExec("clearCache")
-end
 
 -- Create a custom tooltip for the main menu.
 

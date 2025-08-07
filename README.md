@@ -34,14 +34,7 @@
   - Works across various contexts: party, raid, guild, communities, LFG, etc.
   - Creates auto-closing dialog box for easy copying
 
-### Party Management
-
-- **Auto party markers**: Automatically assigns raid markers to all party members
-  - Uses predefined marker sequence: Skull, Square, Star, Triangle, Diamond
-  - Automatically requests party leadership if not leader
-  - Smart leadership request with instruction message to current leader
-
-### Recruitment Tools
+### Messaging Tools
 
 - **Multi-whisper messaging**: Streamlined interface for sending messages to multiple players
   - Enter player names in a scrollable text area, one per line
@@ -49,11 +42,10 @@
   - Persistent player list management across sessions
   - Easy-to-use interface with helpful instructions
 
-- **Auto-recruit messaging**: Automated welcome messages for guild invitations
+- **Auto-invite messaging**: Automated welcome messages for guild/community invitations
   - Automatically sends customizable whisper messages to invited players
   - Configurable message content with easy-to-use interface
   - Option to enable/disable auto-send functionality
-  - Checkbox integration with guild invitation dialogs
   - Smart detection of successful invitations
 
 ### Auction House Improvements
@@ -76,37 +68,22 @@
 - **Full reload**: `/rl`
   - Reloads UI, restarts graphics engine, and clears cache
 
-- **Toggle raid frame auras**: `/bentoraidframe`
+- **Toggle raid frame auras**: `/bentoraid`
   - Toggles visibility of auras on raid frames
 
-- **Toggle arena frame elements**: `/bentoarenaframe`
+- **Toggle arena frame elements**: `/bentoarena`
   - Toggles visibility of casting bars, names, and debuff frames on arena frames
   - Elements are modified by default for a cleaner arena experience
   - Uses persistent storage to remember your preference
 
-- **Toggle button glow**: `/bentobuttonglow`
+- **Toggle button glow**: `/bentoglow`
   - Toggles visibility of button glow effects on action buttons
-
-- **Open recruitment window**: `/recruit`
-  - Opens the recruitment interface for adding multiple friends and managing whisper lists
 
 - **Open multi-whisper window**: `/multiwhisper`
   - Opens the multi-whisper interface for managing player lists and sending messages
 
 - **Send multi-whisper**: `/w+ MESSAGE`
   - Sends MESSAGE to all players in your current multi-whisper list
-
-- **Set recruit message**: `/recruitmessage`
-  - Opens interface to set customizable welcome message for guild invitations
-
-- **Auto-recruit commands**: `/autorecruit`
-  - `message` - Show current recruitment message
-  - `toggle` - Toggle auto-send functionality on/off
-  - `test PlayerName-Server` - Test whisper to specific player
-
-- **Party markers**: `/pm`
-  - Assigns raid markers to all party members including yourself
-  - Requests party leadership if not currently leader
 
 ### Quick Actions
 
