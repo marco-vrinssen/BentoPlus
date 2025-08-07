@@ -1,32 +1,29 @@
--- Sell all junk items at a merchant.
-
-local function sellAllJunk()
-  C_Timer.After(0, function()
-    MerchantSellAllJunkButton:Click()
-
+-- Automatically sell all junk items to merchant
+local function sellJunk()
     C_Timer.After(0, function()
-      StaticPopup1Button1:Click()
+        MerchantSellAllJunkButton:Click()
+        
+        -- Confirm the sale popup
+        C_Timer.After(0, function()
+            StaticPopup1Button1:Click()
+        end)
     end)
-  end)
 end
 
--- Repair all equipment at a merchant.
-
-local function repairAllItems()
-  C_Timer.After(0, function()
-    MerchantRepairAllButton:Click()
-  end)
+-- Automatically repair all items using merchant services
+local function repairItems()
+    C_Timer.After(0, function()
+        MerchantRepairAllButton:Click()
+    end)
 end
 
--- Handle events when the merchant window is shown.
-
-local function handleMerchantShow()
-  sellAllJunk()
-  repairAllItems()
+-- Handle merchant interaction by selling junk and repairing items
+local function handleMerchant()
+    sellJunk()
+    repairItems()
 end
 
--- Register merchant events.
-
-local merchantEventsFrame = CreateFrame("Frame")
-merchantEventsFrame:SetScript("OnEvent", handleMerchantShow)
-merchantEventsFrame:RegisterEvent("MERCHANT_SHOW")
+-- Create and configure merchant event handler
+local merchantFrame = CreateFrame("Frame")
+merchantFrame:SetScript("OnEvent", handleMerchant)
+merchantFrame:RegisterEvent("MERCHANT_SHOW")
