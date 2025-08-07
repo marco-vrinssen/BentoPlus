@@ -181,12 +181,8 @@ local function CreateInviteSettingsButton()
     -- Set default WoW button yellow text color for consistency
     inviteButton:GetFontString():SetTextColor(1, 0.82, 0)
     
-    -- Position button to the left of CommunitiesSettingsButton
-    if CommunitiesFrame.CommunitiesControlFrame.CommunitiesSettingsButton then
-        inviteButton:SetPoint("RIGHT", CommunitiesFrame.CommunitiesControlFrame.CommunitiesSettingsButton, "LEFT", -8, 0)
-    else
-        inviteButton:SetPoint("TOPRIGHT", CommunitiesFrame.CommunitiesControlFrame, "TOPRIGHT", -10, -10)
-    end
+    -- Position button in bottom-left of communities frame with 8px left margin
+    inviteButton:SetPoint("BOTTOMLEFT", CommunitiesFrame, "BOTTOMLEFT", 8, 4)
     
     -- Toggle popup when button clicked
     inviteButton:SetScript("OnClick", function()
