@@ -32,6 +32,7 @@ end
 local function handleKeyDown(self, key)
   if key == postKey and isSpacePostEnabled then
     postAuctionItem()
+    self:SetPropagateKeyboardInput(false)
   else
     self:SetPropagateKeyboardInput(true)
   end
