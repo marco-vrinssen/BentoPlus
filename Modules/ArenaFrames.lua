@@ -1,125 +1,92 @@
--- Arena frame database initialization
+-- Update savedVars to initialize arena frame config
 
-if not BentoDB then
-  BentoDB = {}
-end
+if not BentoDB then BentoDB = {} end
 if BentoDB.ArenaFrameElements == nil then
   BentoDB.ArenaFrameElements = false
 end
 
--- Core frame hiding functions
+-- Update printHelper to standardize addon messages
 
-local function hideCastBar(arenaFrame)
-  if not arenaFrame.CastingBarFrame then
-    return
+local function arenaPrintHelper(msg)
+  if msg then
+    print("BentoPlus: " .. msg)
   end
-  
-  arenaFrame.CastingBarFrame:SetScript("OnShow", function(self)
-    self:Hide()
-  end)
-  arenaFrame.CastingBarFrame:Hide()
 end
 
-local function hideNameText(arenaFrame)
-  if not arenaFrame.name then
-    return
-  end
-  
-  arenaFrame.name:SetScript("OnShow", function(self)
-    self:Hide()
-  end)
-  arenaFrame.name:Hide()
+-- Update persistHideFrame to prevent frame reappearing
+
+local function persistHideFrame(frame)
+  if not frame then return end
+  frame:SetScript("OnShow", frame.Hide)
+  frame:Hide()
 end
 
-local function hideCcRemover(arenaFrame)
-  if not arenaFrame.CcRemoverFrame then
-    return
-  end
+-- Update positionStealthIcon to adjust icon placement
 
-  arenaFrame.CcRemoverFrame:SetScript("OnShow", function(self)
-    self:Hide()
-  end)
-  arenaFrame.CcRemoverFrame:Hide()
-end
-
-local function repositionStealthIcon(arenaFrame)
-  if not arenaFrame.StealthIcon then
-    return
-  end
-
-  arenaFrame.StealthIcon:SetScript("OnShow", function(self)
+local function positionStealthIcon(frame)
+  local icon = frame and frame.StealthIcon
+  if not icon then return end
+  icon:SetScript("OnShow", function(self)
     self:ClearAllPoints()
-    self:SetPoint("TOPLEFT", arenaFrame, "TOPLEFT", 2, -2)
+    self:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2)
   end)
 end
 
-local function hideDebuffFrame(arenaFrame)
-  if not arenaFrame.DebuffFrame then
-    return
-  end
+-- Update styleArenaFrame to hide unwanted subframes
 
-  arenaFrame.DebuffFrame:SetScript("OnShow", function(self)
-    self:Hide()
-  end)
-  arenaFrame.DebuffFrame:Hide()
+local function styleArenaFrame(frame)
+  if not frame then return end
+  persistHideFrame(frame.name)
+  persistHideFrame(frame.CcRemoverFrame)
+  persistHideFrame(frame.DebuffFrame)
+  positionStealthIcon(frame)
 end
 
--- Main configuration functions
+local maxArenaEnemies = _G.MAX_ARENA_ENEMIES or 5
 
-local function configFrame(arenaFrame)
-  if not arenaFrame then
-    return
-  end
+-- Update styleAllArenaFrames to iterate and style members
 
-  hideCastBar(arenaFrame)
-  hideNameText(arenaFrame)
-  hideCcRemover(arenaFrame)
-  repositionStealthIcon(arenaFrame)
-  hideDebuffFrame(arenaFrame)
-end
-
-local function configAllFrames()
-  for arenaIndex = 1, 5 do
-    local arenaFrame = _G["CompactArenaFrameMember" .. arenaIndex]
-    if arenaFrame then
-      configFrame(arenaFrame)
+local function styleAllArenaFrames()
+  for i = 1, maxArenaEnemies do
+    local arenaMemberFrame = _G["CompactArenaFrameMember" .. i]
+    if arenaMemberFrame then
+      styleArenaFrame(arenaMemberFrame)
     end
   end
 end
 
--- Toggle functionality
+-- Update applyCastbarVisibility to sync CVar with setting
 
-local function printToggleStatus()
-  if BentoDB.ArenaFrameElements then
-    print("|cffffffffBentoPlus: Arena frame elements are now |cffadc9ffrestored|r to default appearance.")
-  else
-    print("|cffffffffBentoPlus: Arena frame elements are now |cffadc9ffmodified|r for better visibility.")
-  end
+local function applyCastbarVisibility()
+  SetCVar("showArenaEnemyCastbar", BentoDB.ArenaFrameElements and 1 or 0)
 end
 
-local function toggleElements()
+-- Update toggleArenaElements to invert setting and restyle
+
+local function toggleArenaElements()
   BentoDB.ArenaFrameElements = not BentoDB.ArenaFrameElements
-  printToggleStatus()
-  configAllFrames()
+  arenaPrintHelper(BentoDB.ArenaFrameElements and "Arena frame elements restored (castbar shown)." or "Arena frame elements modified (castbar hidden).")
+  applyCastbarVisibility()
+  styleAllArenaFrames()
 end
 
--- Slash command registration
+-- Update slashCommand to register arena toggle
 
 SLASH_BENTOPLUS_ARENAFRAMEELEMENTS1 = "/bentoarena"
-SlashCmdList["BENTOPLUS_ARENAFRAMEELEMENTS"] = toggleElements
+SlashCmdList.BENTOPLUS_ARENAFRAMEELEMENTS = toggleArenaElements
 
--- Event handlers
+-- Update arenaEventFrame to manage login and world entry
 
-local function handleLogin()
-  if not BentoDB.ArenaFrameElements then
-    print("|cffffffffBentoPlus: Arena frame elements are |cffadc9ffmodified|r by default. Use |cffadc9ff/bentoarena|r to toggle.")
+local arenaEventFrame = CreateFrame("Frame")
+arenaEventFrame:RegisterEvent("PLAYER_LOGIN")
+arenaEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+arenaEventFrame:SetScript("OnEvent", function(_, event)
+  if event == "PLAYER_LOGIN" then
+    applyCastbarVisibility()
+    if not BentoDB.ArenaFrameElements then
+      arenaPrintHelper("Arena frame elements modified by default (castbar hidden). Use /bentoarena to toggle.")
+    end
+  elseif event == "PLAYER_ENTERING_WORLD" then
+    styleAllArenaFrames()
   end
-end
-
-local loginFrame = CreateFrame("Frame")
-loginFrame:RegisterEvent("PLAYER_LOGIN")
-loginFrame:SetScript("OnEvent", handleLogin)
-
-local initFrame = CreateFrame("Frame")
-initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-initFrame:SetScript("OnEvent", configAllFrames)
+end)
