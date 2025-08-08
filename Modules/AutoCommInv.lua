@@ -1,22 +1,22 @@
--- ClubInvMessage Addon
+-- ClubInvMessage Addon core logic
 local ClubInvMessage = CreateFrame("Frame")
 local addonName = "ClubInvMessage"
 
--- Initialize saved variables
+-- Initialize saved variables for invitation message and auto send state
 BentoDB = BentoDB or {}
 BentoDB.clubInvitationMessage = BentoDB.clubInvitationMessage or BentoDB.recruitMessage or "Welcome to our community! Feel free to ask if you have any questions."
 BentoDB.autoSendEnabled = BentoDB.autoSendEnabled ~= false
 
--- Variables for tracking invitation process
+-- Track invitation state through popup and chat confirmation flow
 local inviteButtonClicked = false
 local waitingForStaticPopup = false
 local waitingForChatMessage = false
 local checkStartTime = 0
 
--- Chat message pattern to match invitation confirmations
+-- Pattern to match system chat invitation confirmation messages
 local INVITE_PATTERN = "You have invited (.+) to join"
 
--- Function to send whisper message
+-- Send configured invitation whisper to invited player
 local function SendClubInvitationWhisper(playerName)
     if BentoDB.autoSendEnabled and playerName and BentoDB.clubInvitationMessage and BentoDB.clubInvitationMessage ~= "" then
         SendChatMessage(BentoDB.clubInvitationMessage, "WHISPER", nil, playerName)
@@ -26,13 +26,13 @@ local function SendClubInvitationWhisper(playerName)
     end
 end
 
--- Function to extract player name from chat message
+-- Extract player name from system message using pattern
 local function ExtractPlayerName(message)
     local playerName = string.match(message, INVITE_PATTERN)
     return playerName
 end
 
--- Create child recruitment popup frame
+-- Build settings popup frame for invitation message configuration
 local function CreateClubInvitationChildPopup()
     local childFrame = CreateFrame("Frame", "ClubInvMessageChildPopup", UIParent, "BasicFrameTemplateWithInset")
     childFrame:SetSize(480, 240)
@@ -144,10 +144,10 @@ local function CreateClubInvitationChildPopup()
     return childFrame
 end
 
--- Initialize the club invitation child popup
+-- Instantiate settings popup singleton
 local clubInvitationChildPopup = CreateClubInvitationChildPopup()
 
--- Function to show popup anchored to community frame
+-- Show settings popup anchored to Communities frame
 local function ShowClubInvitationPopup()
     if not CommunitiesFrame or not CommunitiesFrame:IsShown() then
         return
@@ -162,7 +162,7 @@ local function ShowClubInvitationPopup()
     clubInvitationChildPopup:Show()
 end
 
--- Function to create invite settings button
+-- Create button to open invitation settings
 local function CreateInviteSettingsButton()
     if not CommunitiesFrame or not CommunitiesFrame.CommunitiesControlFrame then
         return
@@ -197,7 +197,7 @@ local function CreateInviteSettingsButton()
     CommunitiesFrame.InviteSettingsButton = inviteButton
 end
 
--- Function to monitor community frame visibility
+-- Monitor CommunitiesFrame visibility to show/hide settings
 local function MonitorCommunitiesFrame()
     if CommunitiesFrame then
         if CommunitiesFrame:IsShown() then
@@ -210,7 +210,7 @@ local function MonitorCommunitiesFrame()
     end
 end
 
--- Function to check for static popup
+-- Poll for static popup presence to hook accept button
 local function CheckForStaticPopup()
     if StaticPopup1 and StaticPopup1:IsShown() then
         waitingForStaticPopup = false
@@ -227,7 +227,7 @@ local function CheckForStaticPopup()
     end
 end
 
--- Event handling
+-- Register events for addon load and system chat
 ClubInvMessage:RegisterEvent("ADDON_LOADED")
 ClubInvMessage:RegisterEvent("CHAT_MSG_SYSTEM")
 
@@ -255,7 +255,7 @@ ClubInvMessage:SetScript("OnEvent", function(self, event, ...)
     end
 end)
 
--- Monitor for invite button clicks
+-- Hook invite button to start tracking flow
 local function MonitorInviteButton()
     if CommunitiesFrame and CommunitiesFrame:IsShown() and CommunitiesFrame.InviteButton then
         if not CommunitiesFrame.InviteButton.hookedForClubInvMessage then
@@ -269,7 +269,7 @@ local function MonitorInviteButton()
     end
 end
 
--- OnUpdate handler for monitoring
+-- Per-frame update handler to poll invite flow state
 ClubInvMessage:SetScript("OnUpdate", function(self, elapsed)
     -- Monitor for Communities frame and hook invite button
     MonitorInviteButton()

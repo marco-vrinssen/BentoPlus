@@ -1,6 +1,6 @@
--- Register slash commands for UI and error management.
+-- Register slash commands for UI and error management
 
--- Reload the UI with a graphics restart and cache clear.
+-- Full reload helper with graphics restart and cache clear
 
 local function performFullReload()
   ReloadUI()
@@ -33,11 +33,11 @@ end
 SLASH_FULLRELOAD1 = "/rl"
 SlashCmdList["FULLRELOAD"] = performFullReload
 
--- Create a custom tooltip for the main menu.
+-- Create custom tooltip frame for main menu button
 
 local customTooltipFrame = CreateFrame("GameTooltip", "CustomTooltip", UIParent, "GameTooltipTemplate")
 
--- Add a right-click reload option to the main menu button.
+-- Add right-click reload option and tooltip for main menu button
 
 MainMenuMicroButton:HookScript("OnClick", function(self, mouseButton)
   if mouseButton == "RightButton" then

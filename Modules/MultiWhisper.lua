@@ -1,4 +1,4 @@
--- Multi Whisper addon for sending messages to multiple players
+-- MultiWhisper addon for batch whispering multiple players
 local addonName = "MultiWhisperAddon"
 local whisperFrame = nil
 local textScrollFrame = nil
@@ -6,11 +6,11 @@ local editBox = nil
 local storedPlayerNames = nil
 local messageConfigPopup = nil
 
--- Initialize saved variables
+-- Initialize saved variables for predefined whisper message
 BentoDB = BentoDB or {}
 BentoDB.multiWhisperMessage = BentoDB.multiWhisperMessage or ""
 
--- Create main whisper window frame
+-- Create main UI frame for multi whisper list
 local function createWhisperFrame()
     if whisperFrame then
         return whisperFrame
@@ -41,7 +41,7 @@ local function createWhisperFrame()
     return whisperFrame
 end
 
--- Parse player names from text
+-- Parse newline separated player names list
 local function parsePlayerNameList(nameText)
     local names = {}
     
@@ -55,7 +55,7 @@ local function parsePlayerNameList(nameText)
     return names
 end
 
--- Create scrollable text input area
+-- Create scrollable multiline edit box for player names
 local function createTextInputArea(parentFrame)
     textScrollFrame = CreateFrame("ScrollFrame", "MultiWhisperAddonScrollFrame", parentFrame, "UIPanelScrollFrameTemplate")
     textScrollFrame:SetPoint("TOPLEFT", parentFrame, "TOPLEFT", 15, -60)
@@ -107,7 +107,7 @@ local function createTextInputArea(parentFrame)
     end)
 end
 
--- Send whisper messages to players
+-- Send whisper message to each player in list
 local function sendWhisperMessages(messageText, playerNames)
     local sentCount = 0
     
@@ -119,7 +119,7 @@ local function sendWhisperMessages(messageText, playerNames)
     end
 end
 
--- Create message configuration popup frame
+-- Build popup frame to configure predefined whisper message
 local function createMessageConfigPopup()
     local childFrame = CreateFrame("Frame", "MultiWhisperMessageConfigPopup", UIParent, "BasicFrameTemplateWithInset")
     childFrame:SetSize(480, 240)
@@ -214,7 +214,7 @@ local function createMessageConfigPopup()
     return childFrame
 end
 
--- Show message configuration popup
+-- Display predefined message configuration popup
 local function showMessageConfigPopup()
     if not messageConfigPopup then
         messageConfigPopup = createMessageConfigPopup()
@@ -229,7 +229,7 @@ local function showMessageConfigPopup()
     messageConfigPopup:Show()
 end
 
--- Create cancel button
+-- Create close button for main frame
 local function createCancelButton(parentFrame)
     local cancelButton = CreateFrame("Button", "MultiWhisperAddonCancelButton", parentFrame, "UIPanelButtonTemplate")
     cancelButton:SetSize(80, 22)
@@ -245,7 +245,7 @@ local function createCancelButton(parentFrame)
     return cancelButton
 end
 
--- Create configure message button
+-- Create button to open message configuration popup
 local function createConfigureMessageButton(parentFrame)
     local configButton = CreateFrame("Button", "MultiWhisperAddonConfigButton", parentFrame, "UIPanelButtonTemplate")
     configButton:SetSize(130, 22)
@@ -259,7 +259,7 @@ local function createConfigureMessageButton(parentFrame)
     return configButton
 end
 
--- Create multi whisper button
+-- Create button to start multi-whisper flow via /w+
 local function createMultiWhisperButton(parentFrame)
     local whisperButton = CreateFrame("Button", "MultiWhisperAddonWhisperButton", parentFrame, "UIPanelButtonTemplate")
     whisperButton:SetSize(100, 22)
@@ -283,14 +283,14 @@ local function createMultiWhisperButton(parentFrame)
     return whisperButton
 end
 
--- Handle /w+ command
+-- Execute batch whisper send for /w+ command
 local function handleWhisperCommand(messageText)
     if storedPlayerNames and #storedPlayerNames > 0 then
         sendWhisperMessages(messageText, storedPlayerNames)
     end
 end
 
--- Show whisper window and update player list
+-- Show main whisper frame and refresh name list
 local function showWhisperWindow()
     if not whisperFrame then
         createWhisperFrame()
@@ -310,13 +310,13 @@ local function showWhisperWindow()
     end
 end
 
--- Slash command handler for /multiwhisper
+-- Register /multiwhisper command
 SLASH_MULTIWHISPER1 = "/multiwhisper"
 SlashCmdList["MULTIWHISPER"] = function(msg)
     showWhisperWindow()
 end
 
--- Slash command handler for /w+ 
+-- Register /w+ pseudo command for sending predefined message
 SLASH_WHISPERPLUS1 = "/w+"
 SlashCmdList["WHISPERPLUS"] = function(msg)
     if msg and msg ~= "" then
@@ -331,7 +331,7 @@ SlashCmdList["WHISPERPLUS"] = function(msg)
     end
 end
 
--- Event frame for addon initialization
+-- Initialize addon saved data when loaded
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:SetScript("OnEvent", function(self, event, loadedAddonName)

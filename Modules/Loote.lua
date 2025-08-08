@@ -1,15 +1,15 @@
--- Auto loot functionality with delay
+-- Auto loot functionality with slight delay to ensure loot list stability
 
 local lootTime = 0
 local LOOT_DELAY = 0.05
 
--- Set instant auto loot rate
+-- Set autoLootRate CVar to instant
 
 local function setInstantAutoLootRate()
     SetCVar("autoLootRate", 0)
 end
 
--- Handle auto loot with delay
+-- Perform delayed auto-loot iteration across slots
 
 local function handleAutoLootWithDelay()
     if GetCVarBool("autoLootDefault") ~= IsModifiedClick("AUTOLOOTTOGGLE") then

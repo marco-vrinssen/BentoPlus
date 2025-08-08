@@ -1,4 +1,4 @@
--- Update tab targeting based on the current PvP context.
+-- Update tab targeting binding based on current PvP context
 
 local function updateTabTargeting()
   local inInstance, instanceType = IsInInstance()
@@ -31,7 +31,7 @@ local function updateTabTargeting()
   end
 end
 
--- Register events for tab targeting updates.
+-- Register events to update tab targeting on zone changes
 
 local pvpTabTargetingFrame = CreateFrame("Frame")
 pvpTabTargetingFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")

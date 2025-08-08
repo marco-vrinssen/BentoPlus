@@ -1,4 +1,4 @@
--- Update alertSystem to mute obnoxious sound and hide talking head
+-- Mute obnoxious alert sound and hide talking head for cleaner UI
 
 local function configureAlertSystem()
   MuteSoundFile(569143)
@@ -6,7 +6,7 @@ local function configureAlertSystem()
   TalkingHeadFrame:Hide()
 end
 
--- Update alertSystem to apply config on player world entry
+-- Apply alert system configuration on player world entry for consistency
 
 local alertSystemFrame = CreateFrame("Frame")
 alertSystemFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

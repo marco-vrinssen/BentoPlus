@@ -18,7 +18,7 @@ local ALLOWED_PLAYER_CONTEXT_TYPES = {
     FOCUS = true
 }
 
--- Parse player name and realm from combined string
+-- Parse player name and realm from a full name string
 
 local function parsePlayerNameAndRealm(fullPlayerName)
     if not fullPlayerName then
@@ -29,7 +29,7 @@ local function parsePlayerNameAndRealm(fullPlayerName)
     return playerName or fullPlayerName, realmName or GetRealmName()
 end
 
--- Extract player data from group finder context
+-- Extract player data from LFG context frames
 
 local function extractGroupFinderPlayerData(frameOwner)
     if frameOwner.resultID then
@@ -52,7 +52,7 @@ local function extractGroupFinderPlayerData(frameOwner)
     return nil, nil
 end
 
--- Extract player data from battlenet account
+-- Extract player data from Battle.net account info
 
 local function extractBattlenetPlayerData(battlenetAccountInfo)
     if battlenetAccountInfo and battlenetAccountInfo.gameAccountInfo then
@@ -62,7 +62,7 @@ local function extractBattlenetPlayerData(battlenetAccountInfo)
     return nil, nil
 end
 
--- Resolve player data from menu context
+-- Resolve player name/realm from various menu context data cases
 
 local function resolvePlayerFromMenuContext(frameOwner, menuRootDescription, menuContextData)
     if not menuContextData then
@@ -116,7 +116,7 @@ local function resolvePlayerFromMenuContext(frameOwner, menuRootDescription, men
     return nil, nil
 end
 
--- Validate menu context for addon usage
+-- Validate that menu context is allowed for adding copy option
 
 local function validatePlayerMenuContext(menuRootDescription, menuContextData)
     if not menuContextData then
@@ -130,7 +130,7 @@ local function validatePlayerMenuContext(menuRootDescription, menuContextData)
     return false
 end
 
--- Create modal dialog for text copying
+-- Create modal dialog showing copyable full player name
 
 local function createPlayerNameCopyDialog(playerNameText)
     local dialogFrame = CreateFrame("Frame", "CopyFullNameFrame", UIParent, "BasicFrameTemplateWithInset")
@@ -177,7 +177,7 @@ local function createPlayerNameCopyDialog(playerNameText)
     dialogFrame:Show()
 end
 
--- Add copy name option to context menu
+-- Add custom menu button to copy full player name
 
 local function addPlayerNameCopyOption(frameOwner, menuRootDescription, menuContextData)
     if InCombatLockdown() then
@@ -205,7 +205,7 @@ local function addPlayerNameCopyOption(frameOwner, menuRootDescription, menuCont
     end
 end
 
--- Register context menu hooks for all player types
+-- Register modification hooks for all relevant player menus
 
 local function registerPlayerMenuHooks()
     if not (Menu and Menu.ModifyMenu) then
@@ -230,7 +230,7 @@ local function registerPlayerMenuHooks()
     end)
 end
 
--- Handle addon loading events
+-- On addon load, register player menu hooks then unregister event
 
 local socialShortcutEventFrame = CreateFrame("Frame")
 socialShortcutEventFrame:RegisterEvent("ADDON_LOADED")

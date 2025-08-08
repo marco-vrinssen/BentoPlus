@@ -1,10 +1,10 @@
--- Enable spacebar posting for auction house items.
+-- Enable spacebar posting for auction house items for faster listing
 
 local spacePostFrame = CreateFrame("Frame")
 local postKey = "SPACE"
 local isSpacePostEnabled = false
 
--- Post an auction item if possible.
+-- Post an auction item if possible respecting current frame context
 
 local function postAuctionItem()
   if not isSpacePostEnabled or not AuctionHouseFrame or not AuctionHouseFrame:IsShown() then
@@ -27,7 +27,7 @@ local function postAuctionItem()
   end
 end
 
--- Handle key presses for posting auction items.
+-- Handle key press capture for spacebar posting
 
 local function handleKeyDown(self, key)
   if key == postKey and isSpacePostEnabled then
@@ -38,7 +38,7 @@ local function handleKeyDown(self, key)
   end
 end
 
--- Handle auction house events for spacebar posting.
+-- Respond to auction house show/close for spacebar posting
 
 local function handleSpacePostEvent(self, event, ...)
   if event == "AUCTION_HOUSE_SHOW" then
@@ -61,11 +61,11 @@ spacePostFrame:SetScript("OnEvent", handleSpacePostEvent)
 
 
 
--- Automatically apply current expansion filter to auction house search.
+-- Automatically apply current expansion only filter to search
 
 local expFilterFrame = CreateFrame("Frame")
 
--- Apply the current expansion filter to the search bar.
+-- Apply current expansion filter state to the search bar button
 
 local function applyExpFilter()
   local searchBar = AuctionHouseFrame and AuctionHouseFrame.SearchBar
@@ -76,7 +76,7 @@ local function applyExpFilter()
   searchBar:UpdateClearFiltersButton()
 end
 
--- Handle auction house events for expansion filter.
+-- Hook search bar and apply filter when AH is shown
 
 local function handleExpEvent(self, event, ...)
   if event == "AUCTION_HOUSE_SHOW" then
@@ -97,12 +97,12 @@ expFilterFrame:SetScript("OnEvent", handleExpEvent)
 
 
 
--- Synchronize auction house favorite items across sessions.
+-- Persist and restore auction house favorite items across sessions
 
 local favFrame = CreateFrame("Frame")
 local favKey = "AuctionFavorites"
 
--- Initialize persistent storage for auction favorites.
+-- Initialize persistent storage for favorites table
 
 if not BentoDB then
   BentoDB = {}
@@ -111,7 +111,7 @@ if BentoDB[favKey] == nil then
   BentoDB[favKey] = {}
 end
 
--- Create a serialized string from an item key for storage.
+-- Serialize itemKey table into stable key string
 
 local function createKeyString(itemKey)
   local sortedKeys, keyValues = {}, {}
@@ -125,7 +125,7 @@ local function createKeyString(itemKey)
   return table.concat(keyValues, "-")
 end
 
--- Store a favorite item in the persistent database.
+-- Store or remove a favorite item entry
 
 local function storeFavItem(itemKey, isFavorite)
   if not BentoDB then
@@ -143,17 +143,17 @@ local function storeFavItem(itemKey, isFavorite)
   end
 end
 
--- Update the favorite status for a given item.
+-- Refresh stored favorite status for an item key
 
 local function updateFavStatus(itemKey)
   storeFavItem(itemKey, C_AuctionHouse.IsFavoriteItem(itemKey))
 end
 
--- Hook favorite changes to automatically update the database.
+-- Hook SetFavoriteItem to update persistence automatically
 
 hooksecurefunc(C_AuctionHouse, "SetFavoriteItem", storeFavItem)
 
--- Handle auction house events for favorites management.
+-- Handle auction house events to sync and refresh favorites
 
 local function handleFavEvent(self, event, ...)
   if event == "AUCTION_HOUSE_SHOW" then

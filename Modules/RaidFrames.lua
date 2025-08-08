@@ -1,8 +1,8 @@
--- Raid frame aura management constants and database initialization
+-- Raid frame aura visibility management constants and DB init
 
 local RAID_FRAME_AURAS_VISIBILITY_KEY = "RaidFrameAuras"
 
--- Initialize database for raid frame aura visibility state
+-- Initialize saved variable for raid frame aura visibility
 
 if not BentoDB then
   BentoDB = {}
@@ -11,7 +11,7 @@ if BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] == nil then
   BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] = false
 end
 
--- Core raid frame aura hiding functionality
+-- Hide buffs/debuffs on compact raid frames when disabled
 
 local function hideRaidFrameAuras(frame)
   if not frame or frame:IsForbidden() then
@@ -31,11 +31,11 @@ local function hideRaidFrameAuras(frame)
   end
 end
 
--- Hook into aura update system
+-- Hook aura update to enforce visibility preference
 
 hooksecurefunc("CompactUnitFrame_UpdateAuras", hideRaidFrameAuras)
 
--- Raid frame aura visibility toggle functionality
+-- Functions to refresh frames and toggle visibility
 
 local function refreshAllRaidFrameAuras()
   if not CompactRaidFrameContainer or not CompactRaidFrameContainer.memberUnitFrames then
@@ -63,12 +63,12 @@ local function toggleRaidFrameAuraVisibility()
   refreshAllRaidFrameAuras()
 end
 
--- Slash command registration for raid frame aura toggle
+-- Register slash command for raid frame aura visibility toggle
 
 SLASH_BENTOPLUS_RAIDFRAMEAURAS1 = "/bentoraid"
 SlashCmdList["BENTOPLUS_RAIDFRAMEAURAS"] = toggleRaidFrameAuraVisibility
 
--- Event handlers for login notifications
+-- Notify user on login about default aura visibility state
 
 local function handlePlayerLogin()
   if not BentoDB[RAID_FRAME_AURAS_VISIBILITY_KEY] then

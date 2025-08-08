@@ -1,4 +1,4 @@
--- Release ghost automatically in PvP zones for faster respawn because no self-resurrection option is available.
+-- Release ghost automatically in PvP zones when no self-resurrection exists
 
 local function autoReleasePvp()
   local selfResOptions = (C_DeathInfo and C_DeathInfo.GetSelfResurrectOptions) and C_DeathInfo.GetSelfResurrectOptions() or nil
@@ -24,7 +24,7 @@ local function autoReleasePvp()
   end
 end
 
--- Register death event for automatic ghost release because we only act immediately upon player death.
+-- Register death event to trigger ghost release logic on death
 
 local autoReleaseFrame = CreateFrame("Frame")
 autoReleaseFrame:RegisterEvent("PLAYER_DEAD")

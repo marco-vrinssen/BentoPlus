@@ -1,4 +1,4 @@
--- Hide XP bar at max level
+-- Hide XP bar when player is at max level
 
 local function hideXpBar()
   local currentLevel = UnitLevel("player")
@@ -14,7 +14,7 @@ local function hideXpBar()
   end
 end
 
--- Track level to toggle XP bar
+-- Track events to toggle XP bar visibility appropriately
 
 local xpBarFrame = CreateFrame("Frame")
 xpBarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")

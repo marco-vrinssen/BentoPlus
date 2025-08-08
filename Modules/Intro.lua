@@ -1,4 +1,4 @@
--- Display available commands and their descriptions on login
+-- Display available BentoPlus commands on login
 
 local function displayAvailableCommands()
   print("|cffffffffBentoPlus Available Commands:|r")
@@ -14,7 +14,7 @@ local function displayAvailableCommands()
   print("|cffffffffRight-click Main Menu button to reload UI|r")
 end
 
--- Register event listener for player login to show commands
+-- Register login event for delayed command list display
 
 local introMessageFrame = CreateFrame("Frame")
 introMessageFrame:RegisterEvent("PLAYER_LOGIN")

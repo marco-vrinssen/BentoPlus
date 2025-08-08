@@ -1,4 +1,4 @@
--- Initialize database for storing button glow visibility state
+-- Initialize database flag for button glow visibility
 
 local buttonGlowVisibilityState = "ButtonGlowVisibility"
 
@@ -9,13 +9,13 @@ if BentoDB[buttonGlowVisibilityState] == nil then
   BentoDB[buttonGlowVisibilityState] = false
 end
 
--- Check if button glow should be hidden
+-- Determine if button glow overlays should be hidden
 
 local function shouldHideButtonGlow()
   return not BentoDB[buttonGlowVisibilityState]
 end
 
--- Toggle visibility of button glow and show status message
+-- Toggle button glow visibility and print status
 
 local function toggleButtonGlowVisibility()
   BentoDB[buttonGlowVisibilityState] = not BentoDB[buttonGlowVisibilityState]
@@ -26,12 +26,12 @@ local function toggleButtonGlowVisibility()
   end
 end
 
--- Register slash command for toggling button glow
+-- Register slash command for button glow toggle
 
 SLASH_BENTOPLUS_BUTTONGLOW1 = "/bentoglow"
 SlashCmdList["BENTOPLUS_BUTTONGLOW"] = toggleButtonGlowVisibility
 
--- Show notification on login if button glow is hidden
+-- Notify user on login when button glow starts hidden
 
 local buttonGlowLoginFrame = CreateFrame("Frame")
 buttonGlowLoginFrame:RegisterEvent("PLAYER_LOGIN")
@@ -41,7 +41,7 @@ buttonGlowLoginFrame:SetScript("OnEvent", function()
   end
 end)
 
--- Blizzard Bars
+-- Hook Blizzard action button glow functions to hide overlays
 
 if ActionButtonSpellAlertManager and C_ActionBar.IsAssistedCombatAction then
 	local IsAssistedCombatAction = C_ActionBar.IsAssistedCombatAction

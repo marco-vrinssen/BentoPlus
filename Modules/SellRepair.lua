@@ -17,13 +17,13 @@ local function repairItems()
     end)
 end
 
--- Handle merchant interaction by selling junk and repairing items
+-- Handle merchant interaction by performing sell + repair
 local function handleMerchant()
     sellJunk()
     repairItems()
 end
 
--- Create and configure merchant event handler
+-- Create merchant event handler frame
 local merchantFrame = CreateFrame("Frame")
 merchantFrame:SetScript("OnEvent", handleMerchant)
 merchantFrame:RegisterEvent("MERCHANT_SHOW")
