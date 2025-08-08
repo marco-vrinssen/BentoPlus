@@ -1,8 +1,8 @@
--- Automatically apply current expansion only filter to search (split logic)
+-- Apply current expansion filter to search
 
 local expFilterFrame = CreateFrame("Frame")
 
--- Apply current expansion filter state to the search bar button
+-- Apply current expansion filter state to search bar button
 
 local function applyExpFilter()
   local searchBar = AuctionHouseFrame and AuctionHouseFrame.SearchBar
