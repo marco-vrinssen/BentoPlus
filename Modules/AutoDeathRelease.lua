@@ -1,25 +1,31 @@
--- Automatically release the ghost in PvP zones when no self-resurrect options are available.
+-- Release ghost automatically in PvP zones for faster respawn because no self-resurrection option is available.
 
-local function autoReleaseInPvP()
-  if C_DeathInfo.GetSelfResurrectOptions() and #C_DeathInfo.GetSelfResurrectOptions() > 0 then
-    return
-  end
+local function autoReleasePvp()
+  local selfResOptions = (C_DeathInfo and C_DeathInfo.GetSelfResurrectOptions) and C_DeathInfo.GetSelfResurrectOptions() or nil
 
-  local inInstance, instanceType = IsInInstance()
-  local zonePvpType = C_PvP.GetZonePVPInfo()
+  if selfResOptions and #selfResOptions > 0 then return end
+
+  local _, instanceType = IsInInstance()
+  local zonePvpType = GetZonePVPInfo()
 
   if instanceType == "pvp" or zonePvpType == "combat" then
-    C_Timer.After(0.5, function()
-      local deathDialog = StaticPopup_FindVisible("DEATH")
-      if deathDialog and deathDialog.button1 and deathDialog.button1:IsEnabled() then
-        deathDialog.button1:Click()
+    C_Timer.After(0.1, function()
+      if UnitIsDead("player") and not UnitIsGhost("player") then
+        if RepopMe then
+          RepopMe()
+        else
+          local deathDialog = StaticPopup_FindVisible and StaticPopup_FindVisible("DEATH")
+          if deathDialog and deathDialog.button1 and deathDialog.button1:IsEnabled() then
+            deathDialog.button1:Click()
+          end
+        end
       end
     end)
   end
 end
 
--- Register events for automatic ghost release.
+-- Register death event for automatic ghost release because we only act immediately upon player death.
 
-local pvpGhostReleaseFrame = CreateFrame("Frame")
-pvpGhostReleaseFrame:RegisterEvent("PLAYER_DEAD")
-pvpGhostReleaseFrame:SetScript("OnEvent", autoReleaseInPvP)
+local autoReleaseFrame = CreateFrame("Frame")
+autoReleaseFrame:RegisterEvent("PLAYER_DEAD")
+autoReleaseFrame:SetScript("OnEvent", autoReleasePvp)
