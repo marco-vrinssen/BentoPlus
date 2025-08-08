@@ -1,11 +1,10 @@
--- Hide experience bar when player reaches maximum level
+-- Hide XP bar at max level
 
-local function hideExperienceBarAtMaxLevel()
-  local currentPlayerLevel = UnitLevel("player")
-  local maximumPlayerLevel = GetMaxPlayerLevel()
-
+local function hideXpBar()
+  local currentLevel = UnitLevel("player")
+  local maxLevel = GetMaxPlayerLevel()
   if MainStatusTrackingBarContainer then
-    if currentPlayerLevel < maximumPlayerLevel then
+    if currentLevel < maxLevel then
       MainStatusTrackingBarContainer:Show()
       MainStatusTrackingBarContainer:SetScript("OnShow", nil)
     else
@@ -15,11 +14,11 @@ local function hideExperienceBarAtMaxLevel()
   end
 end
 
--- Monitor player level changes to update experience bar visibility
+-- Track level to toggle XP bar
 
-local experienceBarFrame = CreateFrame("Frame")
-experienceBarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-experienceBarFrame:RegisterEvent("PLAYER_LEVEL_UP")
-experienceBarFrame:SetScript("OnEvent", function(self, event)
-  C_Timer.After(0, hideExperienceBarAtMaxLevel)
+local xpBarFrame = CreateFrame("Frame")
+xpBarFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+xpBarFrame:RegisterEvent("PLAYER_LEVEL_UP")
+xpBarFrame:SetScript("OnEvent", function()
+  C_Timer.After(0, hideXpBar)
 end)
