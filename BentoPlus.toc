@@ -5,20 +5,22 @@
 ## Version: 1.0.0
 ## SavedVariables: BentoDB
 
-Modules/Alerts.lua
-Modules/ArenaFrames.lua
-Modules/Auction.lua
-Modules/AutoCommInv.lua
-Modules/AutoDeathRelease.lua
-Modules/ButtonGlow.lua
-Modules/Commands.lua
-Modules/Intro.lua
-Modules/Loote.lua
+Modules/AuctionSetExpac.lua
+Modules/AuctionSpacePost.lua
+Modules/AuctionSyncFav.lua
+Modules/AutoCommMsg.lua
+Modules/AutoRelease.lua
+Modules/AutoSellRepair.lua
+Modules/AutoTabBind.lua
+Modules/ChatCommands.lua
+Modules/CopyFullName.lua
+Modules/HideAlertBanners.lua
+Modules/HideBars.lua
+Modules/HidePlateAuras.lua
+Modules/HideVehicle.lua
+Modules/LootFaster.lua
 Modules/MultiWhisper.lua
-Modules/NameCopy.lua
-Modules/Nameplates.lua
-Modules/RaidFrames.lua
-Modules/SellRepair.lua
-Modules/StatusBars.lua
-Modules/TabBind.lua
-Modules/Vehicle.lua
+Modules/ShowIntro.lua
+Modules/ToggleGlow.lua
+Modules/UpdateArenaElements.lua
+Modules/UpdateRaidFrame.lua
