@@ -1,11 +1,11 @@
--- Define menu constants and valid context configurations
+-- Update menu constants and valid contexts so that we scope copy action
 
-local ALLOWED_CONTEXT_MENU_TAGS = {
+local allowedMenuTags = {
     MENU_LFG_FRAME_SEARCH_ENTRY = 1,
     MENU_LFG_FRAME_MEMBER_APPLY = 1
 }
 
-local ALLOWED_PLAYER_CONTEXT_TYPES = {
+local allowedPlayerTypes = {
     PLAYER = true,
     PARTY = true,
     RAID_PLAYER = true,
@@ -18,24 +18,24 @@ local ALLOWED_PLAYER_CONTEXT_TYPES = {
     FOCUS = true
 }
 
--- Parse player name and realm from a full name string
+-- Parse player name and realm from full name string
 
-local function parsePlayerNameAndRealm(fullPlayerName)
-    if not fullPlayerName then
+local function parseNameRealm(fullName)
+    if not fullName then
         return nil, nil
     end
 
-    local playerName, realmName = string.match(fullPlayerName, "^([^-]+)-(.+)$")
-    return playerName or fullPlayerName, realmName or GetRealmName()
+    local playerName, realmName = string.match(fullName, "^([^-]+)-(.+)$")
+    return playerName or fullName, realmName or GetRealmName()
 end
 
--- Extract player data from LFG context frames
+-- Extract player from group finder context frames
 
-local function extractGroupFinderPlayerData(frameOwner)
+local function extractFinderPlayer(frameOwner)
     if frameOwner.resultID then
         local searchResultInfo = C_LFGList.GetSearchResultInfo(frameOwner.resultID)
         if searchResultInfo and searchResultInfo.leaderName then
-            return parsePlayerNameAndRealm(searchResultInfo.leaderName)
+            return parseNameRealm(searchResultInfo.leaderName)
         end
     end
 
@@ -44,7 +44,7 @@ local function extractGroupFinderPlayerData(frameOwner)
         if parentFrame and parentFrame.applicantID then
             local applicantFullName = C_LFGList.GetApplicantMemberInfo(parentFrame.applicantID, frameOwner.memberIdx)
             if applicantFullName then
-                return parsePlayerNameAndRealm(applicantFullName)
+                return parseNameRealm(applicantFullName)
             end
         end
     end
@@ -52,87 +52,87 @@ local function extractGroupFinderPlayerData(frameOwner)
     return nil, nil
 end
 
--- Extract player data from Battle.net account info
+-- Extract player from battlenet account info
 
-local function extractBattlenetPlayerData(battlenetAccountInfo)
-    if battlenetAccountInfo and battlenetAccountInfo.gameAccountInfo then
-        local gameAccountInfo = battlenetAccountInfo.gameAccountInfo
+local function extractBattlenetPlayer(battlenetInfo)
+    if battlenetInfo and battlenetInfo.gameAccountInfo then
+        local gameAccountInfo = battlenetInfo.gameAccountInfo
         return gameAccountInfo.characterName, gameAccountInfo.realmName
     end
     return nil, nil
 end
 
--- Resolve player name/realm from various menu context data cases
+-- Resolve player name and realm from menu context
 
-local function resolvePlayerFromMenuContext(frameOwner, menuRootDescription, menuContextData)
-    if not menuContextData then
-        if ALLOWED_CONTEXT_MENU_TAGS[menuRootDescription.tag] == 1 then
-            return extractGroupFinderPlayerData(frameOwner)
+local function resolveMenuPlayer(frameOwner, menuRootDescription, menuContext)
+    if not menuContext then
+        if allowedMenuTags[menuRootDescription.tag] == 1 then
+            return extractFinderPlayer(frameOwner)
         end
         return nil, nil
     end
 
-    if menuContextData.name and menuContextData.server then
-        return menuContextData.name, menuContextData.server
+    if menuContext.name and menuContext.server then
+        return menuContext.name, menuContext.server
     end
 
-    if menuContextData.unit and UnitExists(menuContextData.unit) then
-        local unitFullName = UnitName(menuContextData.unit)
+    if menuContext.unit and UnitExists(menuContext.unit) then
+        local unitFullName = UnitName(menuContext.unit)
         if unitFullName then
-            local playerName, realmName = parsePlayerNameAndRealm(unitFullName)
-            return playerName, menuContextData.server or realmName
+            local playerName, realmName = parseNameRealm(unitFullName)
+            return playerName, menuContext.server or realmName
         end
     end
 
-    if menuContextData.accountInfo then
-        local playerName, realmName = extractBattlenetPlayerData(menuContextData.accountInfo)
+    if menuContext.accountInfo then
+        local playerName, realmName = extractBattlenetPlayer(menuContext.accountInfo)
         if playerName and realmName then
             return playerName, realmName
         end
     end
 
-    if menuContextData.name then
-        return parsePlayerNameAndRealm(menuContextData.name)
+    if menuContext.name then
+        return parseNameRealm(menuContext.name)
     end
 
-    if menuContextData.friendsList then
-        local friendInfo = C_FriendList.GetFriendInfoByIndex(menuContextData.friendsList)
+    if menuContext.friendsList then
+        local friendInfo = C_FriendList.GetFriendInfoByIndex(menuContext.friendsList)
         if friendInfo and friendInfo.name then
-            return parsePlayerNameAndRealm(friendInfo.name)
+            return parseNameRealm(friendInfo.name)
         end
     end
 
-    if menuContextData.chatTarget then
-        return parsePlayerNameAndRealm(menuContextData.chatTarget)
+    if menuContext.chatTarget then
+        return parseNameRealm(menuContext.chatTarget)
     end
 
-    if menuContextData.lineID and menuContextData.chatFrame then
-        local messageInfo = menuContextData.chatFrame:GetMessageInfo(menuContextData.lineID)
+    if menuContext.lineID and menuContext.chatFrame then
+        local messageInfo = menuContext.chatFrame:GetMessageInfo(menuContext.lineID)
         if messageInfo and messageInfo.sender then
-            return parsePlayerNameAndRealm(messageInfo.sender)
+            return parseNameRealm(messageInfo.sender)
         end
     end
 
     return nil, nil
 end
 
--- Validate that menu context is allowed for adding copy option
+-- Validate that menu context is allowed for copy option
 
-local function validatePlayerMenuContext(menuRootDescription, menuContextData)
-    if not menuContextData then
-        return ALLOWED_CONTEXT_MENU_TAGS[menuRootDescription.tag] ~= nil
+local function validateMenuPlayer(menuRootDescription, menuContext)
+    if not menuContext then
+        return allowedMenuTags[menuRootDescription.tag] ~= nil
     end
     
-    if menuContextData.which and ALLOWED_PLAYER_CONTEXT_TYPES[menuContextData.which] then
+    if menuContext.which and allowedPlayerTypes[menuContext.which] then
         return true
     end
     
     return false
 end
 
--- Create modal dialog showing copyable full player name
+-- Create dialog showing copyable full player name
 
-local function createPlayerNameCopyDialog(playerNameText)
+local function createCopyDialog(playerNameText)
     local dialogFrame = CreateFrame("Frame", "CopyFullNameFrame", UIParent, "BasicFrameTemplateWithInset")
     dialogFrame:SetSize(500, 150)
     dialogFrame:SetPoint("CENTER")
@@ -170,31 +170,31 @@ local function createPlayerNameCopyDialog(playerNameText)
     playerNameEditBox:EnableKeyboard(true)
     playerNameEditBox:SetScript("OnShow", function(self) self:SetFocus() end)
 
-    local copyInstruction = dialogFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-    copyInstruction:SetPoint("BOTTOM", dialogFrame, "BOTTOM", 0, 20)
-    copyInstruction:SetText("Press Ctrl+C (Cmd+C on macOS) to copy the name.")
+    local copyHelp = dialogFrame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    copyHelp:SetPoint("BOTTOM", dialogFrame, "BOTTOM", 0, 20)
+    copyHelp:SetText("Press Ctrl+C (Cmd+C on macOS) to copy the name.")
 
     dialogFrame:Show()
 end
 
--- Add custom menu button to copy full player name
+-- Add menu button to copy full player name
 
-local function addPlayerNameCopyOption(frameOwner, menuRootDescription, menuContextData)
+local function addCopyMenu(frameOwner, menuRootDescription, menuContext)
     if InCombatLockdown() then
         return
     end
 
-    if not validatePlayerMenuContext(menuRootDescription, menuContextData) then
+    if not validateMenuPlayer(menuRootDescription, menuContext) then
         return
     end
 
-    local playerName, realmName = resolvePlayerFromMenuContext(frameOwner, menuRootDescription, menuContextData)
+    local playerName, realmName = resolveMenuPlayer(frameOwner, menuRootDescription, menuContext)
     if playerName and realmName then
         local success = pcall(function()
             menuRootDescription:CreateDivider()
             menuRootDescription:CreateButton("Copy Full Name", function()
                 if not InCombatLockdown() then
-                    createPlayerNameCopyDialog(string.format("%s-%s", playerName, realmName))
+                    createCopyDialog(string.format("%s-%s", playerName, realmName))
                 end
             end)
         end)
@@ -205,38 +205,38 @@ local function addPlayerNameCopyOption(frameOwner, menuRootDescription, menuCont
     end
 end
 
--- Register modification hooks for all relevant player menus
+-- Register modification hooks for relevant player menus
 
-local function registerPlayerMenuHooks()
+local function registerMenuHooks()
     if not (Menu and Menu.ModifyMenu) then
         return
     end
 
     pcall(function()
-        Menu.ModifyMenu("MENU_LFG_FRAME_SEARCH_ENTRY", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_LFG_FRAME_MEMBER_APPLY", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_PLAYER", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_PARTY", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_FRIEND", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_BN_FRIEND", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_SELF", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_OTHER_PLAYER", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_ENEMY_PLAYER", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_TARGET", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_UNIT_FOCUS", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_CHAT_LOG_LINK", addPlayerNameCopyOption)
-        Menu.ModifyMenu("MENU_CHAT_LOG_FRAME", addPlayerNameCopyOption)
+        Menu.ModifyMenu("MENU_LFG_FRAME_SEARCH_ENTRY", addCopyMenu)
+        Menu.ModifyMenu("MENU_LFG_FRAME_MEMBER_APPLY", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_PLAYER", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_PARTY", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_RAID_PLAYER", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_FRIEND", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_BN_FRIEND", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_SELF", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_OTHER_PLAYER", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_ENEMY_PLAYER", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_TARGET", addCopyMenu)
+        Menu.ModifyMenu("MENU_UNIT_FOCUS", addCopyMenu)
+        Menu.ModifyMenu("MENU_CHAT_LOG_LINK", addCopyMenu)
+        Menu.ModifyMenu("MENU_CHAT_LOG_FRAME", addCopyMenu)
     end)
 end
 
--- On addon load, register player menu hooks then unregister event
+-- Register menu hooks on load then unregister event
 
-local socialShortcutEventFrame = CreateFrame("Frame")
-socialShortcutEventFrame:RegisterEvent("ADDON_LOADED")
-socialShortcutEventFrame:SetScript("OnEvent", function(_, _, loadedAddonName)
+local menuEventFrame = CreateFrame("Frame")
+menuEventFrame:RegisterEvent("ADDON_LOADED")
+menuEventFrame:SetScript("OnEvent", function(_, _, loadedAddonName)
     if loadedAddonName == "BentoPlus" then
-        registerPlayerMenuHooks()
-        socialShortcutEventFrame:UnregisterEvent("ADDON_LOADED")
+        registerMenuHooks()
+        menuEventFrame:UnregisterEvent("ADDON_LOADED")
     end
 end)

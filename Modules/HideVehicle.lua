@@ -1,4 +1,4 @@
--- Hide vehicle seat indicator permanently
+-- Update vehicle seat indicator to stay hidden so that we declutter screen
 
 local vehicleSeatIndicatorFrame = _G["VehicleSeatIndicator"]
 vehicleSeatIndicatorFrame:Hide()

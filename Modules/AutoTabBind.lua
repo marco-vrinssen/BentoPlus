@@ -1,8 +1,8 @@
--- Update tab targeting binding based on current PvP context
+-- Update tab targeting binding based on current player versus player context
 
 local function updateTabTargeting()
-  local inInstance, instanceType = IsInInstance()
-  local zonePvpType = C_PvP.GetZonePVPInfo()
+  local _, instanceType = IsInInstance()
+  local zoneCombatType = C_PvP.GetZonePVPInfo()
 
   local tabKey = "TAB"
   local bindingSet = GetCurrentBindingSet()
@@ -14,7 +14,7 @@ local function updateTabTargeting()
   local currentAction = GetBindingAction(tabKey)
   local targetAction
 
-  if instanceType == "arena" or instanceType == "pvp" or zonePvpType == "combat" then
+  if instanceType == "arena" or instanceType == "pvp" or zoneCombatType == "combat" then
     targetAction = "TARGETNEARESTENEMYPLAYER"
   else
     targetAction = "TARGETNEARESTENEMY"
@@ -24,16 +24,16 @@ local function updateTabTargeting()
     SetBinding(tabKey, targetAction)
     SaveBindings(bindingSet)
     if targetAction == "TARGETNEARESTENEMYPLAYER" then
-      print("|cffffffffBentoPlus: Tab targeting switched to |cffadc9ffPvP mode|r (enemy players only).")
+      print("|cffffffffBentoPlus: Tab targeting switched to |cffadc9ffplayer versus player mode|r (enemy players only).")
     else
-      print("|cffffffffBentoPlus: Tab targeting switched to |cffadc9ffPvE mode|r (all enemies).")
+      print("|cffffffffBentoPlus: Tab targeting switched to |cffadc9ffenvironment mode|r (all enemies).")
     end
   end
 end
 
 -- Register events to update tab targeting on zone changes
 
-local pvpTabTargetingFrame = CreateFrame("Frame")
-pvpTabTargetingFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-pvpTabTargetingFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-pvpTabTargetingFrame:SetScript("OnEvent", updateTabTargeting)
+local tabTargetingFrame = CreateFrame("Frame")
+tabTargetingFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+tabTargetingFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+tabTargetingFrame:SetScript("OnEvent", updateTabTargeting)

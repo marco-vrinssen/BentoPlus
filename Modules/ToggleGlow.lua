@@ -1,25 +1,25 @@
--- Initialize database flag for button glow visibility
+-- Update database to manage button glow visibility so that we control overlays
 
-local buttonGlowVisibilityState = "ButtonGlowVisibility"
+local buttonGlowKey = "ButtonGlowVisibility"
 
 if not BentoDB then
   BentoDB = {}
 end
-if BentoDB[buttonGlowVisibilityState] == nil then
-  BentoDB[buttonGlowVisibilityState] = false
+if BentoDB[buttonGlowKey] == nil then
+	BentoDB[buttonGlowKey] = false
 end
 
 -- Determine if button glow overlays should be hidden
 
 local function shouldHideButtonGlow()
-  return not BentoDB[buttonGlowVisibilityState]
+	return not BentoDB[buttonGlowKey]
 end
 
 -- Toggle button glow visibility and print status
 
 local function toggleButtonGlowVisibility()
-  BentoDB[buttonGlowVisibilityState] = not BentoDB[buttonGlowVisibilityState]
-  if BentoDB[buttonGlowVisibilityState] then
+	BentoDB[buttonGlowKey] = not BentoDB[buttonGlowKey]
+	if BentoDB[buttonGlowKey] then
     print("|cffffffffBentoPlus: Button glow effects are now |cffadc9ffvisible|r on action bars.")
   else
     print("|cffffffffBentoPlus: Button glow effects are now |cffadc9ffhidden|r for cleaner UI.")
@@ -33,10 +33,10 @@ SlashCmdList["BENTOPLUS_BUTTONGLOW"] = toggleButtonGlowVisibility
 
 -- Notify user on login when button glow starts hidden
 
-local buttonGlowLoginFrame = CreateFrame("Frame")
-buttonGlowLoginFrame:RegisterEvent("PLAYER_LOGIN")
-buttonGlowLoginFrame:SetScript("OnEvent", function()
-  if not BentoDB[buttonGlowVisibilityState] then
+local buttonGlowFrame = CreateFrame("Frame")
+buttonGlowFrame:RegisterEvent("PLAYER_LOGIN")
+buttonGlowFrame:SetScript("OnEvent", function()
+	if not BentoDB[buttonGlowKey] then
     print("|cffffffffBentoPlus: Button glow effects are |cffadc9ffhidden|r by default. Use |cffadc9ff/bentoglow|r to toggle.")
   end
 end)

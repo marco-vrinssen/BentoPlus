@@ -1,6 +1,7 @@
--- ClubInvMessage Addon core logic
+-- Update community invite message so that we auto whisper invited players
+
 local ClubInvMessage = CreateFrame("Frame")
-local addonName = "ClubInvMessage"
+local addonName = "BentoPlus"
 
 -- Initialize saved variables for invitation message and auto send state
 BentoDB = BentoDB or {}
@@ -8,16 +9,15 @@ BentoDB.clubInvitationMessage = BentoDB.clubInvitationMessage or BentoDB.recruit
 BentoDB.autoSendEnabled = BentoDB.autoSendEnabled ~= false
 
 -- Track invitation state through popup and chat confirmation flow
-local inviteButtonClicked = false
-local waitingForStaticPopup = false
-local waitingForChatMessage = false
+local inviteClick = false
+local staticPopupWait = false
+local chatMessageWait = false
 local checkStartTime = 0
 
 -- Pattern to match system chat invitation confirmation messages
 local INVITE_PATTERN = "You have invited (.+) to join"
 
--- Send configured invitation whisper to invited player
-local function SendClubInvitationWhisper(playerName)
+local function sendInviteWhisper(playerName)
     if BentoDB.autoSendEnabled and playerName and BentoDB.clubInvitationMessage and BentoDB.clubInvitationMessage ~= "" then
         SendChatMessage(BentoDB.clubInvitationMessage, "WHISPER", nil, playerName)
         print("|cff00ff00ClubInvMessage:|r Whispered " .. playerName)
@@ -26,14 +26,14 @@ local function SendClubInvitationWhisper(playerName)
     end
 end
 
--- Extract player name from system message using pattern
-local function ExtractPlayerName(message)
+-- Parse player name from system message using pattern
+local function parsePlayerName(message)
     local playerName = string.match(message, INVITE_PATTERN)
     return playerName
 end
 
--- Build settings popup frame for invitation message configuration
-local function CreateClubInvitationChildPopup()
+-- Create child popup for invite message configuration
+local function createInvitePopup()
     local childFrame = CreateFrame("Frame", "ClubInvMessageChildPopup", UIParent, "BasicFrameTemplateWithInset")
     childFrame:SetSize(480, 240)
     childFrame:SetFrameStrata("DIALOG")
@@ -51,7 +51,7 @@ local function CreateClubInvitationChildPopup()
     childFrame.title = childFrame:CreateFontString(nil, "OVERLAY")
     childFrame.title:SetFontObject("GameFontHighlight")
     childFrame.title:SetPoint("CENTER", childFrame.TitleBg, "CENTER", 0, 0)
-    childFrame.title:SetText("Club Invitation Message Settings")
+    childFrame.title:SetText("Club Invite Message Settings")
     
     -- Input text field label for recruitment message at top
     local messageLabel = childFrame:CreateFontString(nil, "OVERLAY")
@@ -60,16 +60,16 @@ local function CreateClubInvitationChildPopup()
     messageLabel:SetText("Club invitation message:")
     
     -- Create multi-line text input (no scroll, fixed size for 3 lines)
-    local messageEditBox = CreateFrame("EditBox", nil, childFrame)
-    messageEditBox:SetPoint("TOPLEFT", messageLabel, "BOTTOMLEFT", 0, -8)
-    messageEditBox:SetSize(432, 160)
-    messageEditBox:SetMultiLine(true)
-    messageEditBox:SetMaxLetters(260)
-    messageEditBox:SetAutoFocus(false)
-    messageEditBox:SetFontObject("ChatFontNormal")
+    local messageInput = CreateFrame("EditBox", nil, childFrame)
+    messageInput:SetPoint("TOPLEFT", messageLabel, "BOTTOMLEFT", 0, -8)
+    messageInput:SetSize(432, 160)
+    messageInput:SetMultiLine(true)
+    messageInput:SetMaxLetters(260)
+    messageInput:SetAutoFocus(false)
+    messageInput:SetFontObject("ChatFontNormal")
     
     -- Limit input to prevent scrolling beyond visible area
-    messageEditBox:SetScript("OnTextChanged", function(self)
+    messageInput:SetScript("OnTextChanged", function(self)
         local text = self:GetText()
         local lines = 1
         for _ in text:gmatch("\n") do
@@ -114,20 +114,20 @@ local function CreateClubInvitationChildPopup()
     local function InitializeControls()
         originalMessage = BentoDB.clubInvitationMessage or ""
         originalEnabled = BentoDB.autoSendEnabled
-        messageEditBox:SetText(originalMessage)
+        messageInput:SetText(originalMessage)
         enableCheckbox:SetChecked(originalEnabled)
     end
     
     -- Cancel button behavior - restore original values and close
     cancelButton:SetScript("OnClick", function()
-        messageEditBox:SetText(originalMessage)
+        messageInput:SetText(originalMessage)
         enableCheckbox:SetChecked(originalEnabled)
         childFrame:Hide()
     end)
     
     -- Save button behavior - persist values and close
     saveButton:SetScript("OnClick", function()
-        BentoDB.clubInvitationMessage = messageEditBox:GetText()
+        BentoDB.clubInvitationMessage = messageInput:GetText()
         BentoDB.autoSendEnabled = enableCheckbox:GetChecked()
         -- Update original values to match saved values
         originalMessage = BentoDB.clubInvitationMessage
@@ -137,7 +137,7 @@ local function CreateClubInvitationChildPopup()
     end)
     
     -- Store references for external access
-    childFrame.messageEditBox = messageEditBox
+    childFrame.messageInput = messageInput
     childFrame.enableCheckbox = enableCheckbox
     childFrame.InitializeControls = InitializeControls
     
@@ -145,10 +145,10 @@ local function CreateClubInvitationChildPopup()
 end
 
 -- Instantiate settings popup singleton
-local clubInvitationChildPopup = CreateClubInvitationChildPopup()
+local clubInvitationChildPopup = createInvitePopup()
 
 -- Show settings popup anchored to Communities frame
-local function ShowClubInvitationPopup()
+local function showInvitePopup()
     if not CommunitiesFrame or not CommunitiesFrame:IsShown() then
         return
     end
@@ -163,7 +163,7 @@ local function ShowClubInvitationPopup()
 end
 
 -- Create button to open invitation settings
-local function CreateInviteSettingsButton()
+local function createInviteButton()
     if not CommunitiesFrame or not CommunitiesFrame.CommunitiesControlFrame then
         return
     end
@@ -189,7 +189,7 @@ local function CreateInviteSettingsButton()
         if clubInvitationChildPopup:IsShown() then
             clubInvitationChildPopup:Hide()
         else
-            ShowClubInvitationPopup()
+            showInvitePopup()
         end
     end)
     
@@ -198,11 +198,11 @@ local function CreateInviteSettingsButton()
 end
 
 -- Monitor CommunitiesFrame visibility to show/hide settings
-local function MonitorCommunitiesFrame()
+local function watchCommunityFrame()
     if CommunitiesFrame then
         if CommunitiesFrame:IsShown() then
             -- Create invite settings button when CommunitiesFrame is visible
-            CreateInviteSettingsButton()
+            createInviteButton()
         else
             -- Hide settings panel when CommunitiesFrame is hidden
             clubInvitationChildPopup:Hide()
@@ -211,19 +211,19 @@ local function MonitorCommunitiesFrame()
 end
 
 -- Poll for static popup presence to hook accept button
-local function CheckForStaticPopup()
+local function checkStaticPopup()
     if StaticPopup1 and StaticPopup1:IsShown() then
-        waitingForStaticPopup = false
+    staticPopupWait = false
         -- Hook the button click
         if StaticPopup1Button1 then
             StaticPopup1Button1:HookScript("OnClick", function()
-                waitingForChatMessage = true
+                chatMessageWait = true
                 checkStartTime = GetTime()
             end)
         end
     elseif GetTime() - checkStartTime > 5 then
         -- Timeout after 5 seconds
-        waitingForStaticPopup = false
+    staticPopupWait = false
     end
 end
 
@@ -239,29 +239,29 @@ ClubInvMessage:SetScript("OnEvent", function(self, event, ...)
         end
     elseif event == "CHAT_MSG_SYSTEM" then
         local message = ...
-        if waitingForChatMessage and message then
-            local playerName = ExtractPlayerName(message)
+        if chatMessageWait and message then
+            local playerName = parsePlayerName(message)
             if playerName then
-                waitingForChatMessage = false
+                chatMessageWait = false
                 -- Wait 1 second before sending whisper
                 C_Timer.After(1, function()
-                    SendClubInvitationWhisper(playerName)
+                    sendInviteWhisper(playerName)
                 end)
             elseif GetTime() - checkStartTime > 10 then
                 -- Timeout after 10 seconds
-                waitingForChatMessage = false
+                chatMessageWait = false
             end
         end
     end
 end)
 
 -- Hook invite button to start tracking flow
-local function MonitorInviteButton()
+local function watchInviteButton()
     if CommunitiesFrame and CommunitiesFrame:IsShown() and CommunitiesFrame.InviteButton then
         if not CommunitiesFrame.InviteButton.hookedForClubInvMessage then
             CommunitiesFrame.InviteButton:HookScript("OnClick", function()
-                inviteButtonClicked = true
-                waitingForStaticPopup = true
+                inviteClick = true
+                staticPopupWait = true
                 checkStartTime = GetTime()
             end)
             CommunitiesFrame.InviteButton.hookedForClubInvMessage = true
@@ -270,15 +270,15 @@ local function MonitorInviteButton()
 end
 
 -- Per-frame update handler to poll invite flow state
-ClubInvMessage:SetScript("OnUpdate", function(self, elapsed)
+ClubInvMessage:SetScript("OnUpdate", function()
     -- Monitor for Communities frame and hook invite button
-    MonitorInviteButton()
+    watchInviteButton()
     
     -- Monitor CommunitiesFrame visibility to show/hide settings panel
-    MonitorCommunitiesFrame()
+    watchCommunityFrame()
     
     -- Check for static popup if waiting
-    if waitingForStaticPopup then
-        CheckForStaticPopup()
+    if staticPopupWait then
+        checkStaticPopup()
     end
 end)

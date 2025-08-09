@@ -1,13 +1,13 @@
--- Handle spacebar posting of auction listings only (split from previously combined file)
+-- Update auction posting to use spacebar so that we speed up listing
 
 local spacePostFrame = CreateFrame("Frame")
 local postKey = "SPACE"
-local isSpacePostEnabled = false
+local isPostEnabled = false
 
 -- Post current item/commodity respecting which sell sub-frame is active
 
 local function postAuctionItem()
-  if not isSpacePostEnabled or not AuctionHouseFrame or not AuctionHouseFrame:IsShown() then
+  if not isPostEnabled or not AuctionHouseFrame or not AuctionHouseFrame:IsShown() then
     return
   end
 
@@ -30,10 +30,10 @@ local function postAuctionItem()
   end
 end
 
--- Capture spacebar presses while AH is open
+-- Capture spacebar presses while auction house is open
 
 local function handleKeyDown(self, key)
-  if key == postKey and isSpacePostEnabled then
+  if key == postKey and isPostEnabled then
     postAuctionItem()
     self:SetPropagateKeyboardInput(false)
   else
@@ -41,17 +41,17 @@ local function handleKeyDown(self, key)
   end
 end
 
--- Enable/disable listener with Auction House
+-- Enable or disable listener with auction house
 
-local function handleSpacePostEvent(self, event)
+local function handlePostEvent(self, event)
   if event == "AUCTION_HOUSE_SHOW" then
-    isSpacePostEnabled = true
+  isPostEnabled = true
     self:SetScript("OnKeyDown", handleKeyDown)
     self:SetPropagateKeyboardInput(true)
     self:EnableKeyboard(true)
     self:SetFrameStrata("HIGH")
   elseif event == "AUCTION_HOUSE_CLOSED" then
-    isSpacePostEnabled = false
+  isPostEnabled = false
     self:SetScript("OnKeyDown", nil)
     self:EnableKeyboard(false)
   end
@@ -59,4 +59,4 @@ end
 
 spacePostFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
 spacePostFrame:RegisterEvent("AUCTION_HOUSE_CLOSED")
-spacePostFrame:SetScript("OnEvent", handleSpacePostEvent)
+spacePostFrame:SetScript("OnEvent", handlePostEvent)

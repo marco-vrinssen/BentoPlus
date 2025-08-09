@@ -1,6 +1,6 @@
--- Add batch whisper so that we message many players.
+-- Update whisper list to send batch messages so that we reach many players
 
-local addonName = "MultiWhisperAddon"
+local multiWhisperName = "MultiWhisperAddon"
 local whisperFrame = nil
 local namesScroll = nil
 local namesInput = nil
@@ -39,7 +39,7 @@ local function createWhisperFrame()
     whisperFrame.helperText = whisperFrame:CreateFontString(nil, "OVERLAY")
     whisperFrame.helperText:SetFontObject("GameFontNormal")
     whisperFrame.helperText:SetPoint("TOPLEFT", whisperFrame, "TOPLEFT", 15, -35)
-    whisperFrame.helperText:SetText('Use "/w+ MESSAGE" to send the MESSAGE to all players in this list')
+    whisperFrame.helperText:SetText('Use "/w+" to open this list, or "/w+ MESSAGE" to send the MESSAGE to all players here')
     whisperFrame.helperText:SetTextColor(0.7, 0.7, 0.7)
     
     return whisperFrame
@@ -47,10 +47,10 @@ end
 
 -- Parse player names so that we build a clean list.
 
-local function parsePlayerNames(nameText)
+local function parsePlayerNames(namesText)
     local names = {}
     
-    for line in nameText:gmatch("[^\r\n]+") do
+    for line in namesText:gmatch("[^\r\n]+") do
         local trimmedName = line:match("^%s*(.-)%s*$")
         if trimmedName and trimmedName ~= "" then
             table.insert(names, trimmedName)
@@ -98,15 +98,15 @@ local function createNameInput(parentFrame)
     end)
     
     namesInput:SetScript("OnTextChanged", function(self)
-        local text = self:GetText()
-        if text == "" then
+        local inputText = self:GetText()
+        if inputText == "" then
             placeholderText:Show()
             playerNames = nil
         else
             placeholderText:Hide()
-            playerNames = parsePlayerNames(text)
+            playerNames = parsePlayerNames(inputText)
         end
-        local lineCount = select(2, text:gsub('\n', '\n')) + 1
+        local lineCount = select(2, inputText:gsub('\n', '\n')) + 1
         local lineHeight = select(2, namesInput:GetFont()) or 14
         local newHeight = math.max(lineCount * lineHeight, namesScroll:GetHeight() - 20)
         self:SetHeight(newHeight)
@@ -296,9 +296,9 @@ local function createWhisperButton(parentFrame)
     whisperButton:SetScript("OnClick", function()
         -- Update names so that we use latest text.
         
-        local text = namesInput:GetText()
-        if text and text ~= "" then
-            playerNames = parsePlayerNames(text)
+        local namesText = namesInput:GetText()
+        if namesText and namesText ~= "" then
+            playerNames = parsePlayerNames(namesText)
         end
         
         -- Open chat so that we prefill command and message.
@@ -337,35 +337,34 @@ local function showWhisperFrame()
     
     -- Update names so that we sync from input.
     
-    local text = namesInput:GetText()
-    if text and text ~= "" then
-        playerNames = parsePlayerNames(text)
+    local namesText = namesInput:GetText()
+    if namesText and namesText ~= "" then
+        playerNames = parsePlayerNames(namesText)
     end
-end
-
--- Register command so that we open whisper frame.
-
-SLASH_MULTIWHISPER1 = "/multiwhisper"
-SlashCmdList["MULTIWHISPER"] = function(msg)
-    showWhisperFrame()
 end
 
 -- Register command so that we send batch whisper.
 
 SLASH_WHISPERPLUS1 = "/w+"
 SlashCmdList["WHISPERPLUS"] = function(messageText)
-    if messageText and messageText ~= "" then
+    if not messageText or messageText == "" then
         
-        -- Update names from current frame so that we use fresh input.
+        -- Open list so that user can edit names.
         
-        if whisperFrame and whisperFrame:IsShown() then
-            local text = namesInput:GetText()
-            if text and text ~= "" then
-                playerNames = parsePlayerNames(text)
-            end
-        end
-        runWhisperSend(messageText)
+        showWhisperFrame()
+        return
     end
+
+    -- Update names from current frame so that we use fresh input.
+    
+    if whisperFrame and whisperFrame:IsShown() then
+        local namesText = namesInput:GetText()
+        if namesText and namesText ~= "" then
+            playerNames = parsePlayerNames(namesText)
+        end
+    end
+    
+    runWhisperSend(messageText)
 end
 
 -- Initialize saved message so that defaults exist.
@@ -373,7 +372,7 @@ end
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:SetScript("OnEvent", function(self, event, loadedAddonName)
-    if event == "ADDON_LOADED" and loadedAddonName == addonName then
+    if event == "ADDON_LOADED" and loadedAddonName == multiWhisperName then
 
         -- Initialize saved variables so that we avoid nil.
         

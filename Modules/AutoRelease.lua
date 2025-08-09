@@ -1,9 +1,9 @@
--- Release ghost automatically in PvP zones when no self-resurrection exists
+-- Update death flow to auto release in player versus player zones so that we reduce downtime
 
-local function autoReleasePvp()
-  local selfResOptions = (C_DeathInfo and C_DeathInfo.GetSelfResurrectOptions) and C_DeathInfo.GetSelfResurrectOptions() or nil
+local function autoReleasePlayer()
+  local selfResurrectOptions = (C_DeathInfo and C_DeathInfo.GetSelfResurrectOptions) and C_DeathInfo.GetSelfResurrectOptions() or nil
 
-  if selfResOptions and #selfResOptions > 0 then return end
+  if selfResurrectOptions and #selfResurrectOptions > 0 then return end
 
   local _, instanceType = IsInInstance()
   local zonePvpType = GetZonePVPInfo()
@@ -24,8 +24,8 @@ local function autoReleasePvp()
   end
 end
 
--- Register death event to trigger ghost release logic on death
+-- Register death event to trigger release so that we automate flow
 
-local autoReleaseFrame = CreateFrame("Frame")
-autoReleaseFrame:RegisterEvent("PLAYER_DEAD")
-autoReleaseFrame:SetScript("OnEvent", autoReleasePvp)
+local releaseFrame = CreateFrame("Frame")
+releaseFrame:RegisterEvent("PLAYER_DEAD")
+releaseFrame:SetScript("OnEvent", autoReleasePlayer)

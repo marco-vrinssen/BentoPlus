@@ -1,20 +1,20 @@
--- Persist and restore auction house favorite items across sessions only (split logic)
+-- Update auction favorites to persist and restore so that we keep choices across sessions
 
-local favFrame = CreateFrame("Frame")
-local favKey = "AuctionFavorites"
+local favoriteFrame = CreateFrame("Frame")
+local favoriteKey = "AuctionFavorites"
 
 -- Initialize persistent storage for favorites table
 
 if not BentoDB then
   BentoDB = {}
 end
-if BentoDB[favKey] == nil then
-  BentoDB[favKey] = {}
+if BentoDB[favoriteKey] == nil then
+  BentoDB[favoriteKey] = {}
 end
 
 -- Serialize itemKey table into stable key string
 
-local function createKeyString(itemKey)
+local function buildKeyString(itemKey)
   local sortedKeys, keyValues = {}, {}
   for key in pairs(itemKey) do
     table.insert(sortedKeys, key)
@@ -28,39 +28,39 @@ end
 
 -- Store or remove a favorite item entry
 
-local function storeFavItem(itemKey, isFavorite)
+local function storeFavoriteItem(itemKey, isFavorite)
   if not BentoDB then
     BentoDB = {}
   end
-  if not BentoDB[favKey] then
-    BentoDB[favKey] = {}
+  if not BentoDB[favoriteKey] then
+    BentoDB[favoriteKey] = {}
   end
 
-  local keyString = createKeyString(itemKey)
+  local keyString = buildKeyString(itemKey)
   if isFavorite then
-    BentoDB[favKey][keyString] = itemKey
+    BentoDB[favoriteKey][keyString] = itemKey
   else
-    BentoDB[favKey][keyString] = nil
+    BentoDB[favoriteKey][keyString] = nil
   end
 end
 
 -- Refresh stored favorite status for an item key
 
-local function updateFavStatus(itemKey)
-  storeFavItem(itemKey, C_AuctionHouse.IsFavoriteItem(itemKey))
+local function refreshFavorite(itemKey)
+  storeFavoriteItem(itemKey, C_AuctionHouse.IsFavoriteItem(itemKey))
 end
 
 -- Hook SetFavoriteItem to update persistence automatically
 
-hooksecurefunc(C_AuctionHouse, "SetFavoriteItem", storeFavItem)
+hooksecurefunc(C_AuctionHouse, "SetFavoriteItem", storeFavoriteItem)
 
 -- Handle auction house events to sync and refresh favorites
 
-local function handleFavEvent(self, event, ...)
+local function handleFavoriteEvent(self, event, ...)
   if event == "AUCTION_HOUSE_SHOW" then
     local refreshNeeded = false
-    if BentoDB and BentoDB[favKey] then
-      for _, itemKey in pairs(BentoDB[favKey]) do
+    if BentoDB and BentoDB[favoriteKey] then
+      for _, itemKey in pairs(BentoDB[favoriteKey]) do
         C_AuctionHouse.SetFavoriteItem(itemKey, true)
         refreshNeeded = true
       end
@@ -70,24 +70,24 @@ local function handleFavEvent(self, event, ...)
     end
   elseif event == "AUCTION_HOUSE_BROWSE_RESULTS_UPDATED" then
     for _, result in ipairs(C_AuctionHouse.GetBrowseResults()) do
-      updateFavStatus(result.itemKey)
+      refreshFavorite(result.itemKey)
     end
   elseif event == "AUCTION_HOUSE_BROWSE_RESULTS_ADDED" then
     for _, result in ipairs(...) do
-      updateFavStatus(result.itemKey)
+      refreshFavorite(result.itemKey)
     end
   elseif event == "COMMODITY_SEARCH_RESULTS_UPDATED" or event == "COMMODITY_SEARCH_RESULTS_ADDED" then
-    updateFavStatus(C_AuctionHouse.MakeItemKey(...))
+    refreshFavorite(C_AuctionHouse.MakeItemKey(...))
   elseif event == "ITEM_SEARCH_RESULTS_UPDATED" or event == "ITEM_SEARCH_RESULTS_ADDED" then
-    updateFavStatus(...)
+    refreshFavorite(...)
   end
 end
 
-favFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-favFrame:RegisterEvent("AUCTION_HOUSE_BROWSE_RESULTS_UPDATED")
-favFrame:RegisterEvent("AUCTION_HOUSE_BROWSE_RESULTS_ADDED")
-favFrame:RegisterEvent("COMMODITY_SEARCH_RESULTS_UPDATED")
-favFrame:RegisterEvent("COMMODITY_SEARCH_RESULTS_ADDED")
-favFrame:RegisterEvent("ITEM_SEARCH_RESULTS_UPDATED")
-favFrame:RegisterEvent("ITEM_SEARCH_RESULTS_ADDED")
-favFrame:SetScript("OnEvent", handleFavEvent)
+favoriteFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+favoriteFrame:RegisterEvent("AUCTION_HOUSE_BROWSE_RESULTS_UPDATED")
+favoriteFrame:RegisterEvent("AUCTION_HOUSE_BROWSE_RESULTS_ADDED")
+favoriteFrame:RegisterEvent("COMMODITY_SEARCH_RESULTS_UPDATED")
+favoriteFrame:RegisterEvent("COMMODITY_SEARCH_RESULTS_ADDED")
+favoriteFrame:RegisterEvent("ITEM_SEARCH_RESULTS_UPDATED")
+favoriteFrame:RegisterEvent("ITEM_SEARCH_RESULTS_ADDED")
+favoriteFrame:SetScript("OnEvent", handleFavoriteEvent)

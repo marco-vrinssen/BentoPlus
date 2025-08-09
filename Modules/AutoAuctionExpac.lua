@@ -1,10 +1,10 @@
--- Apply current expansion filter to search
+-- Update search to apply current expansion filter so that we streamline auction results
 
-local expFilterFrame = CreateFrame("Frame")
+local expansionFilterFrame = CreateFrame("Frame")
 
 -- Apply current expansion filter state to search bar button
 
-local function applyExpFilter()
+local function applyExpansionFilter()
   local searchBar = AuctionHouseFrame and AuctionHouseFrame.SearchBar
   if not searchBar or not searchBar.FilterButton then
     return
@@ -13,20 +13,20 @@ local function applyExpFilter()
   searchBar:UpdateClearFiltersButton()
 end
 
--- Hook search bar and apply filter when AH is shown
+-- Hook search bar and apply filter when auction house is shown
 
-local function handleExpEvent(self, event, ...)
+local function handleExpansionEvent(self, event, ...)
   if event == "AUCTION_HOUSE_SHOW" then
     if AuctionHouseFrame and AuctionHouseFrame.SearchBar then
       local searchBar = AuctionHouseFrame.SearchBar
-      if not searchBar._bentoPlusFilterHooked then
-        searchBar:HookScript("OnShow", applyExpFilter)
-        searchBar._bentoPlusFilterHooked = true
+      if not searchBar._bentoFilterHooked then
+        searchBar:HookScript("OnShow", applyExpansionFilter)
+        searchBar._bentoFilterHooked = true
       end
-      applyExpFilter()
+      applyExpansionFilter()
     end
   end
 end
 
-expFilterFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-expFilterFrame:SetScript("OnEvent", handleExpEvent)
+expansionFilterFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+expansionFilterFrame:SetScript("OnEvent", handleExpansionEvent)

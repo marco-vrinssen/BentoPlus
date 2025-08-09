@@ -46,7 +46,7 @@ local maxArenaEnemies = _G.MAX_ARENA_ENEMIES or 5
 
 -- Iterate and style all arena member frames
 
-local function styleAllArenaFrames()
+local function styleArenaFrames()
   for i = 1, maxArenaEnemies do
     local arenaMemberFrame = _G["CompactArenaFrameMember" .. i]
     if arenaMemberFrame then
@@ -67,7 +67,7 @@ local function toggleArenaElements()
   BentoDB.ArenaFrameElements = not BentoDB.ArenaFrameElements
   arenaPrintHelper(BentoDB.ArenaFrameElements and "Arena frame elements restored (castbar shown)." or "Arena frame elements modified (castbar hidden).")
   applyCastbarVisibility()
-  styleAllArenaFrames()
+  styleArenaFrames()
 end
 
 -- Register slash command for arena element toggling
@@ -87,6 +87,6 @@ arenaEventFrame:SetScript("OnEvent", function(_, event)
       arenaPrintHelper("Arena frame elements modified by default (castbar hidden). Use /bentoarena to toggle.")
     end
   elseif event == "PLAYER_ENTERING_WORLD" then
-    styleAllArenaFrames()
+    styleArenaFrames()
   end
 end)
