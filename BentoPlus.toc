@@ -10,6 +10,7 @@ Modules/AutoCommMsg.lua
 Modules/AutoRelease.lua
 Modules/AutoSellRepair.lua
 Modules/AutoTabBind.lua
+Modules/AutoWarBank.lua
 Modules/Commands.lua
 Modules/CopyFullName.lua
 Modules/HideAlertBanners.lua
