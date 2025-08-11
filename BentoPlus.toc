@@ -1,4 +1,4 @@
-## Interface: 110700
+## Interface: 110200
 ## Title: Bento Plus
 ## Notes: Resource-efficient suite of quality-of-life enhancements designed to optimize and streamline the modern World of Warcraft experience.
 ## Author: MIYANKO
@@ -11,7 +11,6 @@ Modules/AutoRelease.lua
 Modules/AutoSellRepair.lua
 Modules/AutoTabBind.lua
 Modules/AutoWarBank.lua
-Modules/Commands.lua
 Modules/CopyFullName.lua
 Modules/HideAlertBanners.lua
 Modules/HideBars.lua
@@ -19,6 +18,7 @@ Modules/HidePlateAuras.lua
 Modules/HideVehicle.lua
 Modules/LootFast.lua
 Modules/PostItems.lua
+Modules/ReloadClick.lua
 Modules/ShowIntro.lua
 Modules/SyncAuctionFav.lua
 Modules/ToggleGlow.lua

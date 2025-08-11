@@ -42,12 +42,6 @@
   - Persistent player list management across sessions
   - Easy-to-use interface with helpful instructions
 
-- **Auto-invite messaging**: Automated welcome messages for guild/community invitations
-  - Automatically sends customizable whisper messages to invited players
-  - Configurable message content with easy-to-use interface
-  - Option to enable/disable auto-send functionality
-  - Smart detection of successful invitations
-
 ### Auction House Improvements
 
 - **Current expansion filter**: Automatically enables current expansion filter by default
@@ -55,18 +49,6 @@
 - **Persistent favorites**: Automatically manages and stores auction house favorites
 
 ### Slash Commands
-
-- **Toggle Lua errors**: `/errors`
-  - Toggles the display of Lua errors for debugging purposes
-
-- **Reload UI**: `/ui`
-  - Performs a clean UI reload
-
-- **Restart graphics**: `/gx`
-  - Restarts the graphics engine for applying graphics settings
-
-- **Full reload**: `/rl`
-  - Reloads UI, restarts graphics engine, and clears cache
 
 - **Toggle raid frame auras**: `/bentoraid`
   - Toggles visibility of auras on raid frames
@@ -79,7 +61,7 @@
 - **Toggle button glow**: `/bentoglow`
   - Toggles visibility of button glow effects on action buttons
 
-- **Open multi-whisper window**: `/multiwhisper`
+- **Open multi-whisper window**: `/w+`
   - Opens the multi-whisper interface for managing player lists and sending messages
 
 - **Send multi-whisper**: `/w+ MESSAGE`
