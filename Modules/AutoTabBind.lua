@@ -24,9 +24,9 @@ local function updateTabTargeting()
     SetBinding(tabKey, targetAction)
     SaveBindings(bindingSet)
     if targetAction == "TARGETNEARESTENEMYPLAYER" then
-      print("|cffffffffBentoPlus: Tab targeting switched to |cffadc9ffplayer versus player mode|r (enemy players only).")
+      print("|cffffffffBentoPlus: Tab Targeting: |cffffff80PvP|r|cffffffff.|r")
     else
-      print("|cffffffffBentoPlus: Tab targeting switched to |cffadc9ffenvironment mode|r (all enemies).")
+      print("|cffffffffBentoPlus: Tab Targeting: |cffffff80PvE|r|cffffffff.|r")
     end
   end
 end

@@ -223,7 +223,7 @@ local function createMessagePanel()
         BentoDB.multiWhisperMessage = messageInput:GetText()
         -- Update original message so that cancel remains accurate.
         originalMessage = BentoDB.multiWhisperMessage
-        print("|cff00ff00MultiWhisper:|r Message saved successfully!")
+    print("|cffffffffBentoPlus: Multi-whisper message |cffffff80saved|r|cffffffff.|r")
         childFrame:Hide()
     end)
     
@@ -371,6 +371,7 @@ end
 
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
+eventFrame:RegisterEvent("PLAYER_LOGIN")
 eventFrame:SetScript("OnEvent", function(self, event, loadedAddonName)
     if event == "ADDON_LOADED" and loadedAddonName == multiWhisperName then
 
@@ -378,5 +379,9 @@ eventFrame:SetScript("OnEvent", function(self, event, loadedAddonName)
         
         BentoDB = BentoDB or {}
         BentoDB.multiWhisperMessage = BentoDB.multiWhisperMessage or ""
+    elseif event == "PLAYER_LOGIN" then
+    -- Print feature help on login
+    print("|cffffff80/w+|r|cffffffff: Open multi-whisper list|r")
+    print("|cffffff80/w+ MESSAGE|r|cffffffff: Send MESSAGE to list|r")
     end
 end)

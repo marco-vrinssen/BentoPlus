@@ -51,9 +51,9 @@ end
 
 local function printAurasStatus()
   if BentoDB[raidFrameAurasKey] then
-    print("|cffffffffBentoPlus: Raid frame auras are now |cffadc9ffvisible|r on all frames.")
+  print("|cffffffffBentoPlus: Raid Auras: |cffffff80Visible|r|cffffffff.|r")
   else
-    print("|cffffffffBentoPlus: Raid frame auras are now |cffadc9ffhidden|r for better performance.")
+  print("|cffffffffBentoPlus: Raid Auras: |cffffff80Hidden|r|cffffffff.|r")
   end
 end
 
@@ -71,8 +71,10 @@ SlashCmdList["BENTOPLUS_RAIDFRAMEAURAS"] = toggleRaidAuras
 -- Notify user on login about default aura visibility state
 
 local function handlePlayerLogin()
+  -- Print feature help on login
+  print("|cffffff80/bentoraid|r|cffffffff: Toggle raid frame auras|r")
   if not BentoDB[raidFrameAurasKey] then
-    print("|cffffffffBentoPlus: Raid frame auras are |cffadc9ffhidden|r by default. Use |cffadc9ff/bentoraid|r to toggle.")
+    print("|cffffffffBentoPlus: Raid Auras: |cffffff80Hidden|r|cffffffff (default). Use |cffffff80/bentoraid|r|cffffffff to toggle.|r")
   end
 end
 

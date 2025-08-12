@@ -19,7 +19,6 @@ Modules/HideVehicle.lua
 Modules/LootFast.lua
 Modules/PostItems.lua
 Modules/ReloadClick.lua
-Modules/ShowIntro.lua
 Modules/SyncAuctionFav.lua
 Modules/ToggleGlow.lua
 Modules/UpdateArenaElements.lua

@@ -20,10 +20,10 @@ end
 local function toggleButtonGlowVisibility()
 	BentoDB[buttonGlowKey] = not BentoDB[buttonGlowKey]
 	if BentoDB[buttonGlowKey] then
-    print("|cffffffffBentoPlus: Button glow effects are now |cffadc9ffvisible|r on action bars.")
-  else
-    print("|cffffffffBentoPlus: Button glow effects are now |cffadc9ffhidden|r for cleaner UI.")
-  end
+		print("|cffffffffBentoPlus: Button Glow: |cffffff80Visible|r|cffffffff.|r")
+	else
+		print("|cffffffffBentoPlus: Button Glow: |cffffff80Hidden|r|cffffffff.|r")
+	end
 end
 
 -- Register slash command for button glow toggle
@@ -36,8 +36,10 @@ SlashCmdList["BENTOPLUS_BUTTONGLOW"] = toggleButtonGlowVisibility
 local buttonGlowFrame = CreateFrame("Frame")
 buttonGlowFrame:RegisterEvent("PLAYER_LOGIN")
 buttonGlowFrame:SetScript("OnEvent", function()
+	-- Print feature help on login
+	print("|cffffff80/bentoglow|r|cffffffff: Toggle button glow effect visibility|r")
 	if not BentoDB[buttonGlowKey] then
-    print("|cffffffffBentoPlus: Button glow effects are |cffadc9ffhidden|r by default. Use |cffadc9ff/bentoglow|r to toggle.")
+		print("|cffffffffBentoPlus: Button Glow: |cffffff80Hidden|r|cffffffff (default). Use |cffffff80/bentoglow|r|cffffffff to toggle.|r")
   end
 end)
 

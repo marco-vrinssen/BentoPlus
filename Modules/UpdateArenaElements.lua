@@ -9,7 +9,7 @@ end
 
 local function arenaPrintHelper(msg)
   if msg then
-    print("BentoPlus: " .. msg)
+    print("|cffffffffBentoPlus:|r |cffffffff" .. msg .. "|r")
   end
 end
 
@@ -65,7 +65,11 @@ end
 
 local function toggleArenaElements()
   BentoDB.ArenaFrameElements = not BentoDB.ArenaFrameElements
-  arenaPrintHelper(BentoDB.ArenaFrameElements and "Arena frame elements restored (castbar shown)." or "Arena frame elements modified (castbar hidden).")
+  if BentoDB.ArenaFrameElements then
+  arenaPrintHelper("Arena Elements: |cffffff80Restored|r|cffffffff (Cast Bar: |cffffff80Shown|r|cffffffff).|r")
+  else
+  arenaPrintHelper("Arena Elements: |cffffff80Modified|r|cffffffff (Cast Bar: |cffffff80Hidden|r|cffffffff).|r")
+  end
   applyCastbarVisibility()
   styleArenaFrames()
 end
@@ -82,9 +86,11 @@ arenaEventFrame:RegisterEvent("PLAYER_LOGIN")
 arenaEventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 arenaEventFrame:SetScript("OnEvent", function(_, event)
   if event == "PLAYER_LOGIN" then
+  -- Print feature help on login
+  print("|cffffff80/bentoarena|r|cffffffff: Toggle arena elements|r")
     applyCastbarVisibility()
     if not BentoDB.ArenaFrameElements then
-      arenaPrintHelper("Arena frame elements modified by default (castbar hidden). Use /bentoarena to toggle.")
+  arenaPrintHelper("Arena Elements: |cffffff80Modified|r|cffffffff (default) (Cast Bar: |cffffff80Hidden|r|cffffffff). Use |cffffff80/bentoarena|r|cffffffff to toggle.|r")
     end
   elseif event == "PLAYER_ENTERING_WORLD" then
     styleArenaFrames()

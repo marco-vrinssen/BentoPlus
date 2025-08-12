@@ -20,9 +20,9 @@ local INVITE_PATTERN = "You have invited (.+) to join"
 local function sendInviteWhisper(playerName)
     if BentoDB.autoSendEnabled and playerName and BentoDB.clubInvitationMessage and BentoDB.clubInvitationMessage ~= "" then
         SendChatMessage(BentoDB.clubInvitationMessage, "WHISPER", nil, playerName)
-        print("|cff00ff00ClubInvMessage:|r Whispered " .. playerName)
+    print("|cffffffffBentoPlus: Whispered invite message to |cffffff80" .. playerName .. "|r|cffffffff.|r")
     elseif not BentoDB.autoSendEnabled then
-        print("|cff00ff00ClubInvMessage:|r Auto-send disabled, skipping whisper to " .. (playerName or "unknown"))
+    print("|cffffffffBentoPlus: Auto-send is |cffffff80disabled|r|cffffffff; skipping whisper to |cffffff80" .. (playerName or "unknown") .. "|r|cffffffff.|r")
     end
 end
 
@@ -132,7 +132,7 @@ local function createInvitePopup()
         -- Update original values to match saved values
         originalMessage = BentoDB.clubInvitationMessage
         originalEnabled = BentoDB.autoSendEnabled
-        print("|cff00ff00ClubInvMessage:|r Settings saved successfully!")
+    print("|cffffffffBentoPlus: Invite message settings |cffffff80saved|r|cffffffff.|r")
         childFrame:Hide()
     end)
     
@@ -235,7 +235,7 @@ ClubInvMessage:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local addonName = ...
         if addonName == "ClubInvMessage" then
-            print("|cff00ff00ClubInvMessage loaded!|r Club invitation message settings available in guild invitation popups.")
+            print("|cffffffffBentoPlus: Invite message settings available in |cffffff80Communities|r|cffffffff invitation popups.|r")
         end
     elseif event == "CHAT_MSG_SYSTEM" then
         local message = ...
