@@ -15,7 +15,7 @@ local loginHintFrame = CreateFrame("Frame")
 loginHintFrame:RegisterEvent("PLAYER_LOGIN")
 loginHintFrame:SetScript("OnEvent", function()
   C_Timer.After(2, function()
-  print("BentoPlus: type /bento for commands")
+  print("BentoPlus: type /bento for commands — toggle Solo Shuffle chat with /bentoshuffle")
   end)
 end)
 

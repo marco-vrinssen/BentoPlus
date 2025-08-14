@@ -20,6 +20,7 @@ Modules/Nameplates.lua
 Modules/RaidFrames.lua
 Modules/ReloadClick.lua
 Modules/SellRepair.lua
+Modules/SilentShuffle.lua
 Modules/SpacePost.lua
 Modules/StatusBars.lua
 Modules/TabBind.lua
