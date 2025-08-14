@@ -23,9 +23,4 @@ MainMenuMicroButton:HookScript("OnLeave", function()
   menuTooltip:Hide()
 end)
 
--- Print a one-time hint on login
-local reloadHint = CreateFrame("Frame")
-reloadHint:RegisterEvent("PLAYER_LOGIN")
-reloadHint:SetScript("OnEvent", function()
-  print("|cffffffffRight-click Main Menu button to reload UI|r")
-end)
+-- Removed login helper print; consolidated in Intro.lua

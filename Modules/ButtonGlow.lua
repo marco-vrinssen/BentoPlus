@@ -31,17 +31,7 @@ end
 SLASH_BENTOPLUS_BUTTONGLOW1 = "/bentoglow"
 SlashCmdList["BENTOPLUS_BUTTONGLOW"] = toggleButtonGlowVisibility
 
--- Notify user on login when button glow starts hidden
-
-local buttonGlowFrame = CreateFrame("Frame")
-buttonGlowFrame:RegisterEvent("PLAYER_LOGIN")
-buttonGlowFrame:SetScript("OnEvent", function()
-	-- Print feature help on login
-	print("|cffffff80/bentoglow|r|cffffffff: Toggle button glow effect visibility|r")
-	if not BentoDB[buttonGlowKey] then
-		print("|cffffffffBentoPlus: Button Glow: |cffffff80Hidden|r|cffffffff (default). Use |cffffff80/bentoglow|r|cffffffff to toggle.|r")
-  end
-end)
+-- No extra login prints here; Intro.lua shows the /bento help.
 
 -- Hook Blizzard action button glow functions to hide overlays
 

@@ -68,16 +68,4 @@ end
 SLASH_BENTOPLUS_RAIDFRAMEAURAS1 = "/bentoraid"
 SlashCmdList["BENTOPLUS_RAIDFRAMEAURAS"] = toggleRaidAuras
 
--- Notify user on login about default aura visibility state
-
-local function handlePlayerLogin()
-  -- Print feature help on login
-  print("|cffffff80/bentoraid|r|cffffffff: Toggle raid frame auras|r")
-  if not BentoDB[raidFrameAurasKey] then
-    print("|cffffffffBentoPlus: Raid Auras: |cffffff80Hidden|r|cffffffff (default). Use |cffffff80/bentoraid|r|cffffffff to toggle.|r")
-  end
-end
-
-local raidLoginFrame = CreateFrame("Frame")
-raidLoginFrame:RegisterEvent("PLAYER_LOGIN")
-raidLoginFrame:SetScript("OnEvent", handlePlayerLogin)
+-- No extra login prints here; Intro.lua shows the /bento help.

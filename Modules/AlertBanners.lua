@@ -1,13 +1,19 @@
--- Mute obnoxious alert sound and hide talking head for cleaner UI
+-- Mute alert sound and hide talking head for cleaner UI
 
-local function configureAlertSystem()
+local function hideAlerts()
   MuteSoundFile(569143)
+  
   AlertFrame:UnregisterAllEvents()
+  AlertFrame:Hide()
+  AlertFrame:SetAlpha(0)
+  
+  TalkingHeadFrame:UnregisterAllEvents()
   TalkingHeadFrame:Hide()
+  TalkingHeadFrame:SetAlpha(0)
 end
 
--- Apply alert system configuration on player world entry for consistency
+-- Apply configuration on world entry
 
-local alertSystemFrame = CreateFrame("Frame")
-alertSystemFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-alertSystemFrame:SetScript("OnEvent", configureAlertSystem)
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:SetScript("OnEvent", hideAlerts)

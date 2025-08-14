@@ -1,32 +1,32 @@
--- Update search to apply current expansion filter so that we streamline auction results
+-- Keep AH searches scoped to the current expansion for cleaner results
 
-local expansionFilterFrame = CreateFrame("Frame")
+local ahEventFrame = CreateFrame("Frame")
 
--- Apply current expansion filter state to search bar button
-
-local function applyExpansionFilter()
+-- Apply current-expansion-only filter on the search bar
+local function applyCurrExpFilter()
   local searchBar = AuctionHouseFrame and AuctionHouseFrame.SearchBar
-  if not searchBar or not searchBar.FilterButton then
-    return
-  end
-  searchBar.FilterButton.filters[Enum.AuctionHouseFilter.CurrentExpansionOnly] = true
+  local filterBtn = searchBar and searchBar.FilterButton
+  if not filterBtn then return end
+
+  filterBtn.filters = filterBtn.filters or {}
+  filterBtn.filters[Enum.AuctionHouseFilter.CurrentExpansionOnly] = true
   searchBar:UpdateClearFiltersButton()
 end
 
--- Hook search bar and apply filter when auction house is shown
+-- Hook and apply on AH show
+local function onAHEvent(_, event)
+  if event ~= "AUCTION_HOUSE_SHOW" then return end
 
-local function handleExpansionEvent(self, event, ...)
-  if event == "AUCTION_HOUSE_SHOW" then
-    if AuctionHouseFrame and AuctionHouseFrame.SearchBar then
-      local searchBar = AuctionHouseFrame.SearchBar
-      if not searchBar._bentoFilterHooked then
-        searchBar:HookScript("OnShow", applyExpansionFilter)
-        searchBar._bentoFilterHooked = true
-      end
-      applyExpansionFilter()
-    end
+  local searchBar = AuctionHouseFrame and AuctionHouseFrame.SearchBar
+  if not searchBar then return end
+
+  if not searchBar._bentoExpHooked then
+    searchBar:HookScript("OnShow", applyCurrExpFilter)
+    searchBar._bentoExpHooked = true
   end
+
+  applyCurrExpFilter()
 end
 
-expansionFilterFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
-expansionFilterFrame:SetScript("OnEvent", handleExpansionEvent)
+ahEventFrame:RegisterEvent("AUCTION_HOUSE_SHOW")
+ahEventFrame:SetScript("OnEvent", onAHEvent)
