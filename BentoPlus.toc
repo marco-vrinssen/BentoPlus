@@ -12,7 +12,6 @@ Modules/AuctionFavorites.lua
 Modules/ButtonGlow.lua
 Modules/CommunityInvite.lua
 Modules/CopyName.lua
-Modules/CraftOrderFavorites.lua
 Modules/GhostReleasse.lua
 Modules/Intro.lua
 Modules/LootFast.lua
