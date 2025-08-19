@@ -1,27 +1,27 @@
 -- Update nameplates to hide buffs so that we simplify view
 
-local function hideNameplateBuffs(unitToken)
-  local nameplate = C_NamePlate.GetNamePlateForUnit(unitToken)
-  local unitFrame = nameplate and nameplate.UnitFrame
+local function suppressNameplateBuffs(unitToken)
+  local targetNameplate = C_NamePlate.GetNamePlateForUnit(unitToken)
+  local nameplateUnitFrame = targetNameplate and targetNameplate.UnitFrame
 
-  if not unitFrame or unitFrame:IsForbidden() then
+  if not nameplateUnitFrame or nameplateUnitFrame:IsForbidden() then
     return
   end
 
-  unitFrame.BuffFrame:SetScript("OnShow", function(frame)
-    frame:Hide()
+  nameplateUnitFrame.BuffFrame:SetScript("OnShow", function(buffFrame)
+    buffFrame:Hide()
   end)
-  unitFrame.BuffFrame:Hide()
+  nameplateUnitFrame.BuffFrame:Hide()
 end
 
 -- Handle nameplate add so that we hide buffs
 
-local function handleNameplateAdded(_, _, unitToken)
-  hideNameplateBuffs(unitToken)
+local function processNameplateAdded(_, _, unitToken)
+  suppressNameplateBuffs(unitToken)
 end
 
 -- Register nameplate events to hide buffs so that we enforce setting
 
-local nameplateEventsFrame = CreateFrame("Frame")
-nameplateEventsFrame:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-nameplateEventsFrame:SetScript("OnEvent", handleNameplateAdded)
+local nameplateEventListener = CreateFrame("Frame")
+nameplateEventListener:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+nameplateEventListener:SetScript("OnEvent", processNameplateAdded)
