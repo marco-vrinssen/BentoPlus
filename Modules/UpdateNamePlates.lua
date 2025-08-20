@@ -1,20 +1,24 @@
 -- Update nameplates to hide buffs so that we simplify view
 
+-- Do idempotent buff hiding on spawned nameplates so that buffs stay hidden without clobbering other scripts
 local function suppressNameplateBuffs(unitToken)
   local targetNameplate = C_NamePlate.GetNamePlateForUnit(unitToken)
   local nameplateUnitFrame = targetNameplate and targetNameplate.UnitFrame
+  if not nameplateUnitFrame or nameplateUnitFrame:IsForbidden() then return end
 
-  if not nameplateUnitFrame or nameplateUnitFrame:IsForbidden() then
-    return
+  local buffsFrame = nameplateUnitFrame.BuffFrame
+  if not buffsFrame then return end
+
+  if not buffsFrame._bentoPlusHideHook then
+    buffsFrame._bentoPlusHideHook = true
+    buffsFrame:HookScript("OnShow", function(frameToHide)
+      frameToHide:Hide()
+    end)
   end
-
-  nameplateUnitFrame.BuffFrame:SetScript("OnShow", function(buffFrame)
-    buffFrame:Hide()
-  end)
-  nameplateUnitFrame.BuffFrame:Hide()
+  buffsFrame:Hide()
 end
 
--- Add friendly-name suppression so that friendly player names never show, even when selected
+-- Do hide friendly name text on friendly nameplates so that friendly names never show, even when selected
 local function suppressFriendlyNameText(unitToken)
   if not UnitIsFriend("player", unitToken) then return end
 
@@ -22,22 +26,20 @@ local function suppressFriendlyNameText(unitToken)
   local nameplateUnitFrame = friendlyNameplate and friendlyNameplate.UnitFrame
   if not nameplateUnitFrame or nameplateUnitFrame:IsForbidden() then return end
 
-  -- Try common fontstring fields used by Blizzard nameplates
-  local nameTextRegion = nameplateUnitFrame.name
+  local nameTextField = nameplateUnitFrame.name
     or nameplateUnitFrame.Name
     or nameplateUnitFrame.nameText
     or nameplateUnitFrame.NameText
     or (nameplateUnitFrame.healthBar and (nameplateUnitFrame.healthBar.name or nameplateUnitFrame.healthBar.Name))
 
-  if nameTextRegion then
-    nameTextRegion:SetAlpha(0)
-    nameTextRegion:Hide()
-    -- Re-hide on show so that UI updates do not restore it
-    if not nameTextRegion._bentoPlusHideHook then
-      nameTextRegion._bentoPlusHideHook = true
-      nameTextRegion:HookScript("OnShow", function(self)
-        self:SetAlpha(0)
-        self:Hide()
+  if nameTextField then
+    nameTextField:SetAlpha(0)
+    nameTextField:Hide()
+    if not nameTextField._bentoPlusHideHook then
+      nameTextField._bentoPlusHideHook = true
+      nameTextField:HookScript("OnShow", function(shownNameRegion)
+        shownNameRegion:SetAlpha(0)
+        shownNameRegion:Hide()
       end)
     end
   end
@@ -55,20 +57,21 @@ local function applyNameplateCVarsOnLogin()
   SetCVar("UnitNameFriendlyPlayerName", 0)
 end
 
--- Handle nameplate add so that we hide buffs and friendly names
-local function processNameplateAdded(_, _, unitToken)
+-- Do sanitize spawned nameplates so that buffs and friendly names are hidden consistently
+local function handleNameplateUnitAdded(unitToken)
   suppressNameplateBuffs(unitToken)
   suppressFriendlyNameText(unitToken)
 end
 
--- Register events and dispatch so that CVars apply at login and plates are sanitized on spawn
-local nameplateEventListener = CreateFrame("Frame")
-nameplateEventListener:RegisterEvent("PLAYER_LOGIN")
-nameplateEventListener:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-nameplateEventListener:SetScript("OnEvent", function(_, eventName, ...)
+-- Do register events and dispatch minimally so that CVars apply at login and plates sanitize on spawn
+local nameplateEventsDispatcher = CreateFrame("Frame")
+nameplateEventsDispatcher:RegisterEvent("PLAYER_LOGIN")
+nameplateEventsDispatcher:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+nameplateEventsDispatcher:SetScript("OnEvent", function(_, eventName, ...)
   if eventName == "PLAYER_LOGIN" then
     applyNameplateCVarsOnLogin()
   elseif eventName == "NAME_PLATE_UNIT_ADDED" then
-    processNameplateAdded(_, eventName, ...)
+    local unitToken = ...
+    handleNameplateUnitAdded(unitToken)
   end
 end)
