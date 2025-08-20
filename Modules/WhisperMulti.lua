@@ -380,3 +380,27 @@ eventFrame:SetScript("OnEvent", function(self, event, loadedAddonName)
         BentoDB.multiWhisperMessage = BentoDB.multiWhisperMessage or ""
     end
 end)
+
+
+
+
+-- Show hint on login and provide /bento to list commands
+
+local function printCommandList()
+  print("Multi Whisper Commands")
+  print("/w+: Open multi-whisper UI")
+  print("/w+ MESSAGE: Send MESSAGE to whisper list")
+end
+
+-- Display login hint shortly after login
+local loginHintFrame = CreateFrame("Frame")
+loginHintFrame:RegisterEvent("PLAYER_LOGIN")
+loginHintFrame:SetScript("OnEvent", function()
+  C_Timer.After(2, function()
+  print("BentoPlus: type /bento for commands.")
+  end)
+end)
+
+-- Register slash command to display the command list
+SLASH_BENTOPLUS1 = "/multiwhisper"
+SlashCmdList["BENTOPLUS"] = printCommandList

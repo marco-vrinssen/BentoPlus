@@ -1,62 +1,35 @@
--- Update database to manage button glow visibility so that we control overlays
+-- Hide Blizzard action button glow overlays (spell activation and assisted rotation)
 
-local buttonGlowKey = "ButtonGlowVisibility"
+-- hide overlays for a given action button
 
-if not BentoDB then
-  BentoDB = {}
-end
-if BentoDB[buttonGlowKey] == nil then
-	BentoDB[buttonGlowKey] = false
-end
+local function hide(btn)
+	if not btn then return end
 
--- Determine if button glow overlays should be hidden
+	-- hide assisted rotation alert
+	local acr = btn.AssistedCombatRotationFrame
+	if acr and acr.SpellActivationAlert then
+		acr.SpellActivationAlert:Hide()
+	end
 
-local function shouldHideButtonGlow()
-	return not BentoDB[buttonGlowKey]
-end
-
--- Toggle button glow visibility and print status
-
-local function toggleButtonGlowVisibility()
-	BentoDB[buttonGlowKey] = not BentoDB[buttonGlowKey]
-	if BentoDB[buttonGlowKey] then
-		print("|cffffffffBentoPlus: Button Glow: |cffffff80Visible|r|cffffffff.|r")
-	else
-		print("|cffffffffBentoPlus: Button Glow: |cffffff80Hidden|r|cffffffff.|r")
+	-- hide classic overlay variants
+	if btn.overlay then
+		btn.overlay:Hide()
+	end
+	if btn.SpellActivationAlert then
+		btn.SpellActivationAlert:Hide()
 	end
 end
 
--- Register slash command for button glow toggle
+-- hook modern alert manager if available
 
-SLASH_BENTOPLUS_BUTTONGLOW1 = "/bentoglow"
-SlashCmdList["BENTOPLUS_BUTTONGLOW"] = toggleButtonGlowVisibility
-
--- No extra login prints here; Intro.lua shows the /bento help.
-
--- Hook Blizzard action button glow functions to hide overlays
-
-if ActionButtonSpellAlertManager and C_ActionBar.IsAssistedCombatAction then
-	local IsAssistedCombatAction = C_ActionBar.IsAssistedCombatAction
-	hooksecurefunc(ActionButtonSpellAlertManager, "ShowAlert", function(_, actionButton)
-		if shouldHideButtonGlow() then
-			local action = actionButton.action
-			if action and IsAssistedCombatAction(action) then
-				if actionButton.AssistedCombatRotationFrame and actionButton.AssistedCombatRotationFrame.SpellActivationAlert then
-					actionButton.AssistedCombatRotationFrame.SpellActivationAlert:Hide()
-				end
-			elseif actionButton.SpellActivationAlert then
-				actionButton.SpellActivationAlert:Hide()
-			end
-		end
+if ActionButtonSpellAlertManager then
+	hooksecurefunc(ActionButtonSpellAlertManager, "ShowAlert", function(_, btn)
+		hide(btn)
 	end)
+
+-- fallback to legacy overlay hook
 else
-	hooksecurefunc("ActionButton_ShowOverlayGlow", function(actionButton)
-		if shouldHideButtonGlow() and actionButton then
-			if actionButton.overlay then
-				actionButton.overlay:Hide()
-			elseif actionButton.SpellActivationAlert then
-				actionButton.SpellActivationAlert:Hide()
-			end
-		end
+	hooksecurefunc("ActionButton_ShowOverlayGlow", function(btn)
+		hide(btn)
 	end)
 end

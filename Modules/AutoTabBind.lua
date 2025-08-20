@@ -1,39 +1,37 @@
--- Update tab targeting binding based on current player versus player context
+-- Auto-update TAB target binding based on PvP/PvE context
 
-local function updateTabTargeting()
-  local _, instanceType = IsInInstance()
-  local zoneCombatType = C_PvP.GetZonePVPInfo()
+-- update TAB binding on zone/instance change
 
-  local tabKey = "TAB"
-  local bindingSet = GetCurrentBindingSet()
+local function tab_bind_update()
+  local _, inst = IsInInstance()
+  local zone = C_PvP.GetZonePVPInfo()
 
-  if InCombatLockdown() or (bindingSet ~= 1 and bindingSet ~= 2) then
-    return
-  end
+  local key = "TAB"
+  local set = GetCurrentBindingSet()
 
-  local currentAction = GetBindingAction(tabKey)
-  local targetAction
+  -- guard: skip during combat or when using account-wide bindings
+  if InCombatLockdown() or (set ~= 1 and set ~= 2) then return end
 
-  if instanceType == "arena" or instanceType == "pvp" or zoneCombatType == "combat" then
-    targetAction = "TARGETNEARESTENEMYPLAYER"
-  else
-    targetAction = "TARGETNEARESTENEMY"
-  end
+  local cur = GetBindingAction(key)
 
-  if currentAction ~= targetAction then
-    SetBinding(tabKey, targetAction)
-    SaveBindings(bindingSet)
-    if targetAction == "TARGETNEARESTENEMYPLAYER" then
-      print("|cffffffffBentoPlus: Tab Targeting: |cffffff80PvP|r|cffffffff.|r")
-    else
-      print("|cffffffffBentoPlus: Tab Targeting: |cffffff80PvE|r|cffffffff.|r")
-    end
-  end
+  -- pick action based on PvP/PvE context
+  local act = (inst == "arena" or inst == "pvp" or zone == "combat")
+    and "TARGETNEARESTENEMYPLAYER"
+    or  "TARGETNEARESTENEMY"
+
+  if cur == act then return end
+
+  -- write binding and notify
+  SetBinding(key, act)
+  SaveBindings(set)
+
+  local mode = (act == "TARGETNEARESTENEMYPLAYER") and "PVP TAB" or "PVE TAB"
+  print(mode)
 end
 
--- Register events to update tab targeting on zone changes
+-- register events for binding updates
 
-local tabTargetingFrame = CreateFrame("Frame")
-tabTargetingFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-tabTargetingFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-tabTargetingFrame:SetScript("OnEvent", updateTabTargeting)
+local f = CreateFrame("Frame")
+f:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:SetScript("OnEvent", tab_bind_update)

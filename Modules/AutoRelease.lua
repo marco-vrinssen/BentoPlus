@@ -1,31 +1,36 @@
--- Update death flow to auto release in player versus player zones so that we reduce downtime
+-- Auto-release in PvP zones to reduce downtime
 
-local function autoReleasePlayer()
-  local selfResurrectOptions = (C_DeathInfo and C_DeathInfo.GetSelfResurrectOptions) and C_DeathInfo.GetSelfResurrectOptions() or nil
+local function auto_release()
+  -- Skip when self-res is available
 
-  if selfResurrectOptions and #selfResurrectOptions > 0 then return end
+  local opts = (C_DeathInfo and C_DeathInfo.GetSelfResurrectOptions) and C_DeathInfo.GetSelfResurrectOptions() or nil
+  if opts and #opts > 0 then return end
 
-  local _, instanceType = IsInInstance()
-  local zonePvpType = GetZonePVPInfo()
+  -- Only act in PvP or active combat zones
 
-  if instanceType == "pvp" or zonePvpType == "combat" then
-    C_Timer.After(0.1, function()
-      if UnitIsDead("player") and not UnitIsGhost("player") then
-        if RepopMe then
-          RepopMe()
-        else
-          local deathDialog = StaticPopup_FindVisible and StaticPopup_FindVisible("DEATH")
-          if deathDialog and deathDialog.button1 and deathDialog.button1:IsEnabled() then
-            deathDialog.button1:Click()
-          end
-        end
-      end
-    end)
-  end
+  local _, itype = IsInInstance()
+  local pvp = GetZonePVPInfo()
+  if not (itype == "pvp" or pvp == "combat") then return end
+
+  -- Defer slightly to let death UI settle
+
+  C_Timer.After(0.1, function()
+    if not UnitIsDead("player") or UnitIsGhost("player") then return end
+
+    if RepopMe then
+      RepopMe()
+      return
+    end
+
+    local dlg = StaticPopup_FindVisible and StaticPopup_FindVisible("DEATH")
+    if dlg and dlg.button1 and dlg.button1:IsEnabled() then
+      dlg.button1:Click()
+    end
+  end)
 end
 
--- Register death event to trigger release so that we automate flow
+-- Hook death event to auto-release
 
-local releaseFrame = CreateFrame("Frame")
-releaseFrame:RegisterEvent("PLAYER_DEAD")
-releaseFrame:SetScript("OnEvent", autoReleasePlayer)
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_DEAD")
+f:SetScript("OnEvent", auto_release)
